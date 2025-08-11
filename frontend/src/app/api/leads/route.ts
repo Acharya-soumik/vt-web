@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { supabaseServer } from '@/lib/supabase-server';
+import { getSupabaseServer } from '@/lib/supabase-server';
 import { leadFormSchema } from '@/lib/validators/lead-form';
 import { validatePhoneNumber } from '@/lib/validators/phone-validation';
 import { countryCodes } from '@/data/indian-cities';
@@ -92,7 +92,7 @@ export async function POST(request: NextRequest): Promise<NextResponse<LeadSubmi
     console.log('Data being inserted:', JSON.stringify(validatedLeadData, null, 2));
     
     // Insert into Supabase
-    const { data, error } = await supabaseServer
+    const { data, error } = await getSupabaseServer()
       .from('leads')
       .insert([validatedLeadData])
       .select('id, custom_id')

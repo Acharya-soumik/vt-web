@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { supabaseServer } from '@/lib/supabase-server';
+import { getSupabaseServer } from '@/lib/supabase-server';
 
 interface LeadUpdateRequest {
   payment_status?: 'pending' | 'paid' | 'failed';
@@ -57,7 +57,7 @@ export async function PUT(
     };
 
     // Update lead in Supabase
-    const { data, error } = await supabaseServer
+    const { data, error } = await getSupabaseServer()
       .from('leads')
       .update(dataToUpdate)
       .eq('id', leadId)

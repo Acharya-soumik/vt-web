@@ -1,7 +1,10 @@
-import { NextRequest, NextResponse } from 'next/server';
-import { verifyPaymentSignature, getPaymentDetails } from '@/lib/razorpay-client';
-import { supabaseServer } from '@/lib/supabase-server';
-import { PaymentVerificationResponse } from '@/lib/payment-config';
+import { NextRequest, NextResponse } from "next/server";
+import {
+  verifyPaymentSignature,
+  getPaymentDetails,
+} from "@/lib/razorpay-client";
+import { getSupabaseServer } from "@/lib/supabase-server";
+import { PaymentVerificationResponse } from "@/lib/payment-config";
 
 interface PaymentVerificationRequest {
   paymentId: string;
@@ -9,7 +12,9 @@ interface PaymentVerificationRequest {
   signature: string;
 }
 
-export async function POST(request: NextRequest): Promise<NextResponse<PaymentVerificationResponse>> {
+export async function POST(
+  request: NextRequest
+): Promise<NextResponse<PaymentVerificationResponse>> {
   try {
     // Parse request body
     const body: PaymentVerificationRequest = await request.json();
@@ -20,21 +25,25 @@ export async function POST(request: NextRequest): Promise<NextResponse<PaymentVe
       return NextResponse.json(
         {
           success: false,
-          error: 'Missing required fields',
-          message: 'Payment ID, Order ID, and signature are required.'
+          error: "Missing required fields",
+          message: "Payment ID, Order ID, and signature are required.",
         },
         { status: 400 }
       );
     }
 
     // Verify payment signature
-    const isSignatureValid = verifyPaymentSignature(paymentId, orderId, signature);
+    const isSignatureValid = verifyPaymentSignature(
+      paymentId,
+      orderId,
+      signature
+    );
     if (!isSignatureValid) {
       return NextResponse.json(
         {
           success: false,
-          error: 'Invalid signature',
-          message: 'Payment signature verification failed.'
+          error: "Invalid signature",
+          message: "Payment signature verification failed.",
         },
         { status: 400 }
       );
@@ -42,14 +51,14 @@ export async function POST(request: NextRequest): Promise<NextResponse<PaymentVe
 
     // Get payment details from Razorpay
     const paymentDetails = await getPaymentDetails(paymentId);
-    
+
     // Check if payment is successful
-    if (paymentDetails.status !== 'captured') {
+    if (paymentDetails.status !== "captured") {
       return NextResponse.json(
         {
           success: false,
-          error: 'Payment not captured',
-          message: 'Payment has not been captured successfully.'
+          error: "Payment not captured",
+          message: "Payment has not been captured successfully.",
         },
         { status: 400 }
       );
@@ -61,31 +70,31 @@ export async function POST(request: NextRequest): Promise<NextResponse<PaymentVe
       return NextResponse.json(
         {
           success: false,
-          error: 'Lead ID not found',
-          message: 'Lead ID not found in payment details.'
+          error: "Lead ID not found",
+          message: "Lead ID not found in payment details.",
         },
         { status: 400 }
       );
     }
 
     // Update lead status in Supabase
-    const { error: updateError } = await supabaseServer
-      .from('leads')
+    const { error: updateError } = await getSupabaseServer()
+      .from("leads")
       .update({
-        payment_status: 'paid',
+        payment_status: "paid",
         payment_id: paymentId,
         payment_amount: paymentDetails.amount,
-        updated_at: new Date().toISOString()
+        updated_at: new Date().toISOString(),
       })
-      .eq('id', leadId);
+      .eq("id", leadId);
 
     if (updateError) {
-      console.error('Error updating lead payment status:', updateError);
+      console.error("Error updating lead payment status:", updateError);
       return NextResponse.json(
         {
           success: false,
-          error: 'Database update failed',
-          message: 'Failed to update lead payment status.'
+          error: "Database update failed",
+          message: "Failed to update lead payment status.",
         },
         { status: 500 }
       );
@@ -96,20 +105,19 @@ export async function POST(request: NextRequest): Promise<NextResponse<PaymentVe
         success: true,
         paymentId,
         leadId,
-        message: 'Payment verified and lead updated successfully!'
+        message: "Payment verified and lead updated successfully!",
       },
       { status: 200 }
     );
-
   } catch (error) {
-    console.error('Payment verification error:', error);
-    
+    console.error("Payment verification error:", error);
+
     if (error instanceof Error) {
       return NextResponse.json(
         {
           success: false,
-          error: 'Verification failed',
-          message: error.message
+          error: "Verification failed",
+          message: error.message,
         },
         { status: 500 }
       );
@@ -118,8 +126,8 @@ export async function POST(request: NextRequest): Promise<NextResponse<PaymentVe
     return NextResponse.json(
       {
         success: false,
-        error: 'Internal server error',
-        message: 'Something went wrong during payment verification.'
+        error: "Internal server error",
+        message: "Something went wrong during payment verification.",
       },
       { status: 500 }
     );
@@ -128,22 +136,13 @@ export async function POST(request: NextRequest): Promise<NextResponse<PaymentVe
 
 // Handle unsupported methods
 export async function GET() {
-  return NextResponse.json(
-    { error: 'Method not allowed' },
-    { status: 405 }
-  );
+  return NextResponse.json({ error: "Method not allowed" }, { status: 405 });
 }
 
 export async function PUT() {
-  return NextResponse.json(
-    { error: 'Method not allowed' },
-    { status: 405 }
-  );
+  return NextResponse.json({ error: "Method not allowed" }, { status: 405 });
 }
 
 export async function DELETE() {
-  return NextResponse.json(
-    { error: 'Method not allowed' },
-    { status: 405 }
-  );
-} 
+  return NextResponse.json({ error: "Method not allowed" }, { status: 405 });
+}

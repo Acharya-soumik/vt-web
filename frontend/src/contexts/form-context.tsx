@@ -1,11 +1,17 @@
-"use client"
+"use client";
 
-import React, { createContext, useContext, useState, useCallback } from 'react';
-import { LeadFormData } from '@/types/lead-form';
-import { submitLead } from '@/services/lead-service';
-import { initializePayment } from '@/services/payment-service';
-import { createPaymentRequest } from '@/lib/payment-config';
-import { useAnalytics } from '@/hooks/use-analytics';
+import React, {
+  createContext,
+  useContext,
+  useState,
+  useCallback,
+  useEffect,
+} from "react";
+import { LeadFormData } from "@/types/lead-form";
+import { submitLead } from "@/services/lead-service";
+import { initializePayment } from "@/services/payment-service";
+import { createPaymentRequest } from "@/lib/payment-config";
+import { useAnalytics } from "@/hooks/use-analytics";
 
 interface FormContextType {
   currentStep: number;
@@ -24,7 +30,7 @@ interface FormContextType {
   processPayment: () => Promise<void>;
   submissionError: string | null;
   paymentError: string | null;
-  paymentStatus: 'pending' | 'success' | 'failed' | null;
+  paymentStatus: "pending" | "success" | "failed" | null;
 }
 
 interface FormProviderProps {
@@ -34,17 +40,32 @@ interface FormProviderProps {
 
 const FormContext = createContext<FormContextType | undefined>(undefined);
 
-export const FormProvider: React.FC<FormProviderProps> = ({ children, initialService }) => {
+export const FormProvider: React.FC<FormProviderProps> = ({
+  children,
+  initialService,
+}) => {
+  const PAYMENT_STORAGE_KEY = "vt-payment-pending";
+
+  type StoredPayment = {
+    leadId: string;
+    service: LeadFormData["service"];
+    name: string;
+    whatsappNumber?: string;
+    status: "pending" | "failed";
+    createdAt: string;
+  };
   const [currentStep, setCurrentStep] = useState(1);
   const [formData, setFormData] = useState<Partial<LeadFormData>>(
-    initialService ? { service: initialService as LeadFormData['service'] } : {}
+    initialService ? { service: initialService as LeadFormData["service"] } : {}
   );
   const [isFormOpen, setIsFormOpen] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isProcessingPayment, setIsProcessingPayment] = useState(false);
   const [submissionError, setSubmissionError] = useState<string | null>(null);
   const [paymentError, setPaymentError] = useState<string | null>(null);
-  const [paymentStatus, setPaymentStatus] = useState<'pending' | 'success' | 'failed' | null>(null);
+  const [paymentStatus, setPaymentStatus] = useState<
+    "pending" | "success" | "failed" | null
+  >(null);
 
   const updateFormData = useCallback((data: Partial<LeadFormData>) => {
     setFormData((prev) => ({ ...prev, ...data }));
@@ -69,38 +90,50 @@ export const FormProvider: React.FC<FormProviderProps> = ({ children, initialSer
     setPaymentStatus(null);
   }, []);
 
-  const openForm = useCallback((serviceType?: string) => {
-    if (serviceType) {
-      setFormData((prev) => ({ ...prev, service: serviceType as LeadFormData['service'] }));
-      // If service is already selected, skip to step 3 (review)
-      if (formData.service === serviceType) {
-        setCurrentStep(3);
+  const openForm = useCallback(
+    (serviceType?: string) => {
+      if (serviceType) {
+        setFormData((prev) => ({
+          ...prev,
+          service: serviceType as LeadFormData["service"],
+        }));
+        // If service is already selected, skip to step 3 (review)
+        if (formData.service === serviceType) {
+          setCurrentStep(3);
+        } else {
+          setCurrentStep(1);
+        }
       } else {
         setCurrentStep(1);
       }
-    } else {
-      setCurrentStep(1);
-    }
-    setIsFormOpen(true);
-    setPaymentStatus(null); // Reset payment status when opening form
-  }, [formData.service]);
+      setIsFormOpen(true);
+      setPaymentStatus(null); // Reset payment status when opening form
+    },
+    [formData.service]
+  );
 
   const closeForm = useCallback(() => {
-    // Clean up any modal CSS classes
     const formModal = document.querySelector('[role="dialog"]');
     if (formModal) {
-      formModal.classList.remove('form-modal-during-payment', 'form-modal-after-payment');
+      formModal.classList.remove(
+        "form-modal-during-payment",
+        "form-modal-after-payment"
+      );
     }
-    
+    // Only close the modal; do not reset form state so payment can proceed and we can reopen
     setIsFormOpen(false);
-    resetForm();
-  }, [resetForm]);
+  }, []);
 
   const { logEvent } = useAnalytics();
 
   const submitForm = useCallback(async () => {
-    if (!formData.name || !formData.location || !formData.whatsappNumber || !formData.service) {
-      setSubmissionError('Please complete all required fields');
+    if (
+      !formData.name ||
+      !formData.location ||
+      !formData.whatsappNumber ||
+      !formData.service
+    ) {
+      setSubmissionError("Please complete all required fields");
       return;
     }
 
@@ -115,10 +148,10 @@ export const FormProvider: React.FC<FormProviderProps> = ({ children, initialSer
         whatsappNumber: formData.whatsappNumber!,
         service: formData.service!,
         serviceDetails: formData.serviceDetails || undefined,
-        paymentChoice: formData.paymentChoice || 'submit-only',
+        paymentChoice: formData.paymentChoice || "submit-only",
         whatsappConsent: formData.whatsappConsent ?? true,
         step: currentStep,
-        submittedAt: new Date()
+        submittedAt: new Date(),
       };
 
       const result = await submitLead(completeFormData);
@@ -129,10 +162,10 @@ export const FormProvider: React.FC<FormProviderProps> = ({ children, initialSer
           leadId: result.leadId,
           customId: result.customId,
           submissionSuccess: true,
-          paymentChoice: completeFormData.paymentChoice
+          paymentChoice: completeFormData.paymentChoice,
         });
         // Analytics: Lead form submitted
-        logEvent('lead_form_submitted', {
+        logEvent("lead_form_submitted", {
           service: completeFormData.service,
           payment_choice: completeFormData.paymentChoice,
           form_step_count: completeFormData.step,
@@ -140,11 +173,13 @@ export const FormProvider: React.FC<FormProviderProps> = ({ children, initialSer
         // Move to next step
         nextStep();
       } else {
-        setSubmissionError(result.message || 'Failed to submit lead. Please try again.');
+        setSubmissionError(
+          result.message || "Failed to submit lead. Please try again."
+        );
       }
     } catch (err) {
-      setSubmissionError('An unexpected error occurred. Please try again.');
-      console.error('Form submission error:', err);
+      setSubmissionError("An unexpected error occurred. Please try again.");
+      console.error("Form submission error:", err);
     } finally {
       setIsSubmitting(false);
     }
@@ -152,13 +187,13 @@ export const FormProvider: React.FC<FormProviderProps> = ({ children, initialSer
 
   const processPayment = useCallback(async () => {
     if (!formData.leadId || !formData.service || !formData.name) {
-      setPaymentError('Missing required data for payment');
+      setPaymentError("Missing required data for payment");
       return;
     }
 
     setIsProcessingPayment(true);
     setPaymentError(null);
-    setPaymentStatus('pending'); // Set payment status to pending
+    setPaymentStatus("pending"); // Set payment status to pending
 
     try {
       // Create payment request
@@ -169,56 +204,113 @@ export const FormProvider: React.FC<FormProviderProps> = ({ children, initialSer
       );
 
       if (!paymentRequest) {
-        setPaymentError('Failed to create payment request');
-        setPaymentStatus('failed');
+        setPaymentError("Failed to create payment request");
+        setPaymentStatus("failed");
         return;
       }
+
+      // Persist pending state before opening Razorpay so it survives refresh/navigation
+      try {
+        const toStore: StoredPayment = {
+          leadId: formData.leadId,
+          service: formData.service,
+          name: formData.name,
+          whatsappNumber: formData.whatsappNumber,
+          status: "pending",
+          createdAt: new Date().toISOString(),
+        };
+        localStorage.setItem(PAYMENT_STORAGE_KEY, JSON.stringify(toStore));
+      } catch {}
+
+      // Close modal before opening Razorpay to avoid z-index overlap
+      setIsFormOpen(false);
 
       // Initialize payment
       await initializePayment(
         paymentRequest,
         formData.name,
-        formData.whatsappNumber || '',
+        formData.whatsappNumber || "",
         (response) => {
           // Payment successful
           updateFormData({
             paymentSuccess: true,
-            paymentId: response.razorpay_payment_id
+            paymentId: response.razorpay_payment_id,
           });
-          setPaymentStatus('success');
+          setPaymentStatus("success");
+          // Clear persisted pending state on success
+          try {
+            localStorage.removeItem(PAYMENT_STORAGE_KEY);
+          } catch {}
           // Analytics: Advance paid
-          logEvent('advance_paid', {
+          logEvent("advance_paid", {
             service: formData.service,
             payment_amount: paymentRequest.amount,
-            payment_method: 'razorpay',
+            payment_method: "razorpay",
             lead_id: formData.leadId,
           });
-          nextStep();
+          // Reopen modal on step 4 (success screen)
+          setIsFormOpen(true);
+          setCurrentStep(4);
         },
         (error) => {
           setPaymentError(error);
-          setPaymentStatus('failed');
+          setPaymentStatus("failed");
+          // Mark persisted state as failed (still allows retry)
+          try {
+            const raw = localStorage.getItem(PAYMENT_STORAGE_KEY);
+            if (raw) {
+              const parsed: StoredPayment = JSON.parse(raw);
+              localStorage.setItem(
+                PAYMENT_STORAGE_KEY,
+                JSON.stringify({ ...parsed, status: "failed" })
+              );
+            }
+          } catch {}
+          // Show pending indicator with retry by keeping form closed; header will surface retry
         }
       );
-
     } catch (err) {
-      setPaymentError('Payment initialization failed. Please try again.');
-      setPaymentStatus('failed');
-      console.error('Payment error:', err);
+      setPaymentError("Payment initialization failed. Please try again.");
+      setPaymentStatus("failed");
+      console.error("Payment error:", err);
     } finally {
       setIsProcessingPayment(false);
     }
   }, [formData, updateFormData, nextStep, logEvent]);
 
+  // Hydrate payment pending state from localStorage on mount
+  useEffect(() => {
+    try {
+      const raw =
+        typeof window !== "undefined"
+          ? localStorage.getItem(PAYMENT_STORAGE_KEY)
+          : null;
+      if (!raw) return;
+
+      const stored: StoredPayment | null = JSON.parse(raw);
+      if (!stored || !stored.leadId || !stored.service || !stored.name) return;
+
+      // Restore minimal form data required to retry payment
+      setFormData((prev) => ({
+        ...prev,
+        leadId: stored.leadId,
+        service: stored.service,
+        name: stored.name,
+        whatsappNumber: stored.whatsappNumber,
+      }));
+      setPaymentStatus(stored.status || "pending");
+    } catch {}
+  }, []);
+
   return (
     <FormContext.Provider
-      value={{ 
-        currentStep, 
-        formData, 
-        updateFormData, 
-        nextStep, 
-        prevStep, 
-        goToStep, 
+      value={{
+        currentStep,
+        formData,
+        updateFormData,
+        nextStep,
+        prevStep,
+        goToStep,
         resetForm,
         openForm,
         closeForm,
@@ -229,7 +321,7 @@ export const FormProvider: React.FC<FormProviderProps> = ({ children, initialSer
         processPayment,
         submissionError,
         paymentError,
-        paymentStatus
+        paymentStatus,
       }}
     >
       {children}
@@ -239,6 +331,7 @@ export const FormProvider: React.FC<FormProviderProps> = ({ children, initialSer
 
 export const useFormContext = () => {
   const ctx = useContext(FormContext);
-  if (!ctx) throw new Error('useFormContext must be used within a FormProvider');
+  if (!ctx)
+    throw new Error("useFormContext must be used within a FormProvider");
   return ctx;
-}; 
+};

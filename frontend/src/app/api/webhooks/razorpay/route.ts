@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { supabaseServer } from '@/lib/supabase-server';
+import { getSupabaseServer } from '@/lib/supabase-server';
 import crypto from 'crypto';
 
 interface WebhookEvent {
@@ -119,7 +119,7 @@ async function handlePaymentCaptured(payment: WebhookEvent['payload']['payment']
     }
 
     // Update lead status to paid
-    const { error } = await supabaseServer
+    const { error } = await getSupabaseServer()
       .from('leads')
       .update({
         payment_status: 'paid',
@@ -149,7 +149,7 @@ async function handlePaymentFailed(payment: WebhookEvent['payload']['payment']['
     }
 
     // Update lead status to failed
-    const { error } = await supabaseServer
+    const { error } = await getSupabaseServer()
       .from('leads')
       .update({
         payment_status: 'failed',
@@ -178,7 +178,7 @@ async function handleRefundProcessed(payment: WebhookEvent['payload']['payment']
     }
 
     // Update lead with refund information
-    const { error } = await supabaseServer
+    const { error } = await getSupabaseServer()
       .from('leads')
       .update({
         payment_status: 'refunded',
