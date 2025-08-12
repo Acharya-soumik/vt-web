@@ -17,6 +17,7 @@ export interface PaymentOptions {
   key: string;
   amount: number;
   currency: string;
+  order_id?: string;
   name: string;
   description: string;
   receipt: string;
@@ -94,10 +95,40 @@ export class PaymentService {
         formModal.classList.add("form-modal-during-payment");
       }
 
+      // Create an order on the server to ensure signature verification stability
+      let orderId: string | undefined;
+      try {
+        const orderResponse = await fetch("/api/payment/order", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            amount: paymentRequest.amount,
+            currency: paymentRequest.currency,
+            receipt: paymentRequest.receipt,
+            notes: paymentRequest.notes,
+          }),
+        });
+        if (orderResponse.ok) {
+          const order = await orderResponse.json();
+          orderId = order?.id;
+        } else {
+          // If order creation fails, proceed without explicit order (Razorpay can still generate one)
+          console.warn(
+            "Razorpay order creation failed; proceeding without order_id"
+          );
+        }
+      } catch (e) {
+        console.warn(
+          "Razorpay order creation error; proceeding without order_id",
+          e
+        );
+      }
+
       const options: PaymentOptions = {
         key: keyId,
         amount: paymentRequest.amount,
         currency: paymentRequest.currency,
+        order_id: orderId,
         name: "Vakil Tech",
         description: "Legal Services Payment",
         receipt: paymentRequest.receipt,
@@ -115,10 +146,9 @@ export class PaymentService {
             }
             // no-op
 
-            // Verify payment on server
-            const verificationResult = await PaymentService.verifyPayment(
-              response
-            );
+            // Verify payment on server with retry (handles capture propagation delays)
+            const verificationResult =
+              await PaymentService.verifyPaymentWithRetry(response, 4);
             if (verificationResult.success) {
               onSuccess(response);
             } else {

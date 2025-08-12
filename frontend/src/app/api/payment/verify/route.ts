@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import {
   verifyPaymentSignature,
   getPaymentDetails,
+  capturePayment,
 } from "@/lib/razorpay-client";
 import { getSupabaseServer } from "@/lib/supabase-server";
 import { PaymentVerificationResponse } from "@/lib/payment-config";
@@ -50,7 +51,27 @@ export async function POST(
     }
 
     // Get payment details from Razorpay
-    const paymentDetails = await getPaymentDetails(paymentId);
+    let paymentDetails = await getPaymentDetails(paymentId);
+
+    // If authorized, capture it server-side
+    if (paymentDetails.status === "authorized" && !paymentDetails.captured) {
+      try {
+        paymentDetails = await capturePayment(
+          paymentId,
+          Number(paymentDetails.amount),
+          String(paymentDetails.currency)
+        );
+      } catch (e) {
+        return NextResponse.json(
+          {
+            success: false,
+            error: "Capture failed",
+            message: "Payment authorized but capture failed.",
+          },
+          { status: 400 }
+        );
+      }
+    }
 
     // Check if payment is successful
     if (paymentDetails.status !== "captured") {

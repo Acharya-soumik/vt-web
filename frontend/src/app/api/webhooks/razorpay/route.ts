@@ -1,6 +1,6 @@
-import { NextRequest, NextResponse } from 'next/server';
-import { getSupabaseServer } from '@/lib/supabase-server';
-import crypto from 'crypto';
+import { NextRequest, NextResponse } from "next/server";
+import { getSupabaseServer } from "@/lib/supabase-server";
+import crypto from "crypto";
 
 interface WebhookEvent {
   entity: string;
@@ -48,188 +48,214 @@ interface WebhookEvent {
 export async function POST(request: NextRequest): Promise<NextResponse> {
   try {
     // Get the webhook signature from headers
-    const signature = request.headers.get('x-razorpay-signature');
+    const signature = request.headers.get("x-razorpay-signature");
     const webhookSecret = process.env.RAZORPAY_WEBHOOK_SECRET;
 
     if (!signature || !webhookSecret) {
-      console.error('Missing webhook signature or secret');
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+      console.error("Missing webhook signature or secret");
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
     // Get the raw body for signature verification
     const body = await request.text();
-    
+
     // Verify webhook signature
     const expectedSignature = crypto
-      .createHmac('sha256', webhookSecret)
+      .createHmac("sha256", webhookSecret)
       .update(body)
-      .digest('hex');
+      .digest("hex");
 
     if (signature !== expectedSignature) {
-      console.error('Invalid webhook signature');
-      return NextResponse.json({ error: 'Invalid signature' }, { status: 401 });
+      console.error("Invalid webhook signature");
+      return NextResponse.json({ error: "Invalid signature" }, { status: 401 });
     }
 
     // Parse the webhook payload
     const webhookEvent: WebhookEvent = JSON.parse(body);
     const { event, payload } = webhookEvent;
 
-    console.log('Received webhook event:', event, 'for payment:', payload.payment.entity.id);
+    console.log(
+      "Received webhook event:",
+      event,
+      "for payment:",
+      payload.payment.entity.id
+    );
 
     // Handle different webhook events
     switch (event) {
-      case 'payment.captured':
+      case "payment.captured":
         await handlePaymentCaptured(payload.payment.entity);
         break;
-      
-      case 'payment.failed':
+
+      case "payment.failed":
         await handlePaymentFailed(payload.payment.entity);
         break;
-      
-      case 'refund.processed':
+      case "payment.authorized":
+        // Optional: attempt capture on authorized webhook
+        await handlePaymentAuthorized(payload.payment.entity);
+        break;
+
+      case "refund.processed":
         await handleRefundProcessed(payload.payment.entity);
         break;
-      
-      case 'refund.failed':
+
+      case "refund.failed":
         await handleRefundFailed(payload.payment.entity);
         break;
-      
+
       default:
-        console.log('Unhandled webhook event:', event);
+        console.log("Unhandled webhook event:", event);
     }
 
     return NextResponse.json({ success: true });
-
   } catch (error) {
-    console.error('Webhook processing error:', error);
+    console.error("Webhook processing error:", error);
     return NextResponse.json(
-      { error: 'Webhook processing failed' },
+      { error: "Webhook processing failed" },
       { status: 500 }
     );
   }
 }
 
 // Handle successful payment capture
-async function handlePaymentCaptured(payment: WebhookEvent['payload']['payment']['entity']) {
+async function handlePaymentCaptured(
+  payment: WebhookEvent["payload"]["payment"]["entity"]
+) {
   try {
     const leadId = payment.notes?.leadId;
     if (!leadId) {
-      console.error('No lead ID found in payment notes');
+      console.error("No lead ID found in payment notes");
       return;
     }
 
     // Update lead status to paid
     const { error } = await getSupabaseServer()
-      .from('leads')
+      .from("leads")
       .update({
-        payment_status: 'paid',
+        payment_status: "paid",
         payment_id: payment.id,
         payment_amount: payment.amount,
-        updated_at: new Date().toISOString()
+        updated_at: new Date().toISOString(),
       })
-      .eq('id', leadId);
+      .eq("id", leadId);
 
     if (error) {
-      console.error('Error updating lead payment status:', error);
+      console.error("Error updating lead payment status:", error);
     } else {
-      console.log('Lead payment status updated successfully:', leadId);
+      console.log("Lead payment status updated successfully:", leadId);
     }
   } catch (error) {
-    console.error('Error handling payment captured:', error);
+    console.error("Error handling payment captured:", error);
   }
 }
 
 // Handle failed payment
-async function handlePaymentFailed(payment: WebhookEvent['payload']['payment']['entity']) {
+async function handlePaymentFailed(
+  payment: WebhookEvent["payload"]["payment"]["entity"]
+) {
   try {
     const leadId = payment.notes?.leadId;
     if (!leadId) {
-      console.error('No lead ID found in payment notes');
+      console.error("No lead ID found in payment notes");
       return;
     }
 
     // Update lead status to failed
     const { error } = await getSupabaseServer()
-      .from('leads')
+      .from("leads")
       .update({
-        payment_status: 'failed',
+        payment_status: "failed",
         payment_id: payment.id,
-        updated_at: new Date().toISOString()
+        updated_at: new Date().toISOString(),
       })
-      .eq('id', leadId);
+      .eq("id", leadId);
 
     if (error) {
-      console.error('Error updating lead payment status:', error);
+      console.error("Error updating lead payment status:", error);
     } else {
-      console.log('Lead payment status updated to failed:', leadId);
+      console.log("Lead payment status updated to failed:", leadId);
     }
   } catch (error) {
-    console.error('Error handling payment failed:', error);
+    console.error("Error handling payment failed:", error);
   }
 }
 
 // Handle refund processed
-async function handleRefundProcessed(payment: WebhookEvent['payload']['payment']['entity']) {
+async function handleRefundProcessed(
+  payment: WebhookEvent["payload"]["payment"]["entity"]
+) {
   try {
     const leadId = payment.notes?.leadId;
     if (!leadId) {
-      console.error('No lead ID found in payment notes');
+      console.error("No lead ID found in payment notes");
       return;
     }
 
     // Update lead with refund information
     const { error } = await getSupabaseServer()
-      .from('leads')
+      .from("leads")
       .update({
-        payment_status: 'refunded',
-        updated_at: new Date().toISOString()
+        payment_status: "refunded",
+        updated_at: new Date().toISOString(),
       })
-      .eq('id', leadId);
+      .eq("id", leadId);
 
     if (error) {
-      console.error('Error updating lead refund status:', error);
+      console.error("Error updating lead refund status:", error);
     } else {
-      console.log('Lead refund status updated:', leadId);
+      console.log("Lead refund status updated:", leadId);
     }
   } catch (error) {
-    console.error('Error handling refund processed:', error);
+    console.error("Error handling refund processed:", error);
   }
 }
 
 // Handle refund failed
-async function handleRefundFailed(payment: WebhookEvent['payload']['payment']['entity']) {
+async function handleRefundFailed(
+  payment: WebhookEvent["payload"]["payment"]["entity"]
+) {
   try {
     const leadId = payment.notes?.leadId;
     if (!leadId) {
-      console.error('No lead ID found in payment notes');
+      console.error("No lead ID found in payment notes");
       return;
     }
 
-    console.log('Refund failed for lead:', leadId);
+    console.log("Refund failed for lead:", leadId);
     // You might want to log this or send notifications
   } catch (error) {
-    console.error('Error handling refund failed:', error);
+    console.error("Error handling refund failed:", error);
+  }
+}
+
+// Handle payment authorized → attempt capture
+async function handlePaymentAuthorized(
+  payment: WebhookEvent["payload"]["payment"]["entity"]
+) {
+  try {
+    const leadId = payment.notes?.leadId;
+    if (!leadId) return;
+    if (payment.status === "authorized" && !payment.captured) {
+      // Best-effort capture; ignore failure as verify API also handles capture
+      try {
+        const { capturePayment } = await import("@/lib/razorpay-client");
+        await capturePayment(payment.id, payment.amount, payment.currency);
+      } catch {}
+    }
+  } catch (error) {
+    console.error("Error handling payment authorized:", error);
   }
 }
 
 // Handle unsupported methods
 export async function GET() {
-  return NextResponse.json(
-    { error: 'Method not allowed' },
-    { status: 405 }
-  );
+  return NextResponse.json({ error: "Method not allowed" }, { status: 405 });
 }
 
 export async function PUT() {
-  return NextResponse.json(
-    { error: 'Method not allowed' },
-    { status: 405 }
-  );
+  return NextResponse.json({ error: "Method not allowed" }, { status: 405 });
 }
 
 export async function DELETE() {
-  return NextResponse.json(
-    { error: 'Method not allowed' },
-    { status: 405 }
-  );
-} 
+  return NextResponse.json({ error: "Method not allowed" }, { status: 405 });
+}
