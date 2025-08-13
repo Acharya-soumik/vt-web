@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState, type MouseEventHandler } from "react";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
 import { Menu, ChevronDown, X } from "lucide-react";
@@ -34,7 +34,7 @@ export function Header() {
   };
 
   // Decide whether to show payment banner, honoring a two-dismiss, 12-hour TTL session
-  React.useEffect(() => {
+  useEffect(() => {
     if (!(paymentStatus === "pending" || paymentStatus === "failed")) {
       setShowPaymentBanner(false);
       return;
@@ -74,7 +74,7 @@ export function Header() {
     }
   }, [paymentStatus]);
 
-  const handleBannerClose: React.MouseEventHandler<HTMLButtonElement> = (e) => {
+  const handleBannerClose: MouseEventHandler<HTMLButtonElement> = (e) => {
     e.preventDefault();
     e.stopPropagation();
     try {
