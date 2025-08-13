@@ -1,52 +1,57 @@
-"use client"
+"use client";
 
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { useFormContext } from "@/contexts/form-context";
 import { SimpleProcess } from "../homepage/simple-process";
 
-export function ConsultationLanding() {
+export function ConsultationLanding({ city }: { city?: string } = {}) {
   const { openForm } = useFormContext();
-  
+
   const features = [
     {
       title: "Business Legal Advice",
-      description: "Expert consultation on business formation, compliance, and regulatory requirements",
-      icon: "🏢"
+      description:
+        "Expert consultation on business formation, compliance, and regulatory requirements",
+      icon: "🏢",
     },
     {
-      title: "Contract Review", 
-      description: "Professional review and analysis of business contracts and agreements",
-      icon: "📋"
+      title: "Contract Review",
+      description:
+        "Professional review and analysis of business contracts and agreements",
+      icon: "📋",
     },
     {
       title: "Compliance Guidance",
-      description: "Guidance on legal compliance for Indian businesses and startups",
-      icon: "⚖️"
-    }
+      description:
+        "Guidance on legal compliance for Indian businesses and startups",
+      icon: "⚖️",
+    },
   ];
 
   const processSteps = [
     {
       icon: "💰",
       title: "Book Consultation",
-      description: "Pay ₹1,000 advance to schedule your consultation session"
+      description: "Pay ₹1,000 advance to schedule your consultation session",
     },
     {
       icon: "👨‍💼",
       title: "Connect & Discuss",
-      description: "Meet with qualified advocate to discuss your legal concerns"
+      description:
+        "Meet with qualified advocate to discuss your legal concerns",
     },
     {
       icon: "💡",
       title: "Expert Advice",
-      description: "Receive professional legal advice and strategic guidance"
+      description: "Receive professional legal advice and strategic guidance",
     },
     {
       icon: "✅",
       title: "Action Plan",
-      description: "Get clear action plan and next steps for your legal matters"
-    }
+      description:
+        "Get clear action plan and next steps for your legal matters",
+    },
   ];
 
   return (
@@ -56,18 +61,25 @@ export function ConsultationLanding() {
         <div className="max-w-4xl mx-auto">
           <h1 className="text-4xl md:text-5xl font-bold mb-6 text-foreground">
             Legal Consultation Services
+            {city ? (
+              <>
+                {" "}
+                in <span className="text-primary">{city}</span>
+              </>
+            ) : null}
           </h1>
           <p className="text-xl text-muted-foreground mb-8 max-w-2xl mx-auto">
-            Expert legal consultation for Indian businesses. Get professional advice on 
-            business formation, contracts, compliance, and legal strategy.
+            Expert legal consultation for Indian businesses. Get professional
+            advice on business formation, contracts, compliance, and legal
+            strategy.
           </p>
           <div className="text-3xl font-bold text-primary mb-8">
             Starting from ₹1,000
           </div>
-          <Button 
-            size="lg" 
+          <Button
+            size="lg"
             className="bg-primary hover:bg-primary/90 text-primary-foreground px-8 py-3"
-            onClick={() => openForm('consultation')}
+            onClick={() => openForm("consultation")}
           >
             Book Consultation
           </Button>
@@ -84,10 +96,13 @@ export function ConsultationLanding() {
             Comprehensive legal consultation solutions for your business needs
           </p>
         </div>
-        
+
         <div className="grid md:grid-cols-3 gap-8">
           {features.map((feature, index) => (
-            <Card key={index} className="text-center hover:shadow-lg transition-all duration-300">
+            <Card
+              key={index}
+              className="text-center hover:shadow-lg transition-all duration-300"
+            >
               <CardHeader>
                 <div className="w-16 h-16 bg-secondary rounded-lg flex items-center justify-center mx-auto mb-4">
                   <span className="text-2xl">{feature.icon}</span>
@@ -108,7 +123,7 @@ export function ConsultationLanding() {
         subtitle="Professional legal consultation service designed for simplicity and effectiveness"
         steps={processSteps}
       />
-<br />
+      <br />
       {/* Pricing & Value Proposition */}
       <section className="py-16 bg-card border rounded-lg">
         <div className="text-center max-w-4xl mx-auto px-4">
@@ -121,7 +136,9 @@ export function ConsultationLanding() {
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
             <div className="flex items-center">
               <div className="w-2 h-2 bg-primary rounded-full mr-3"></div>
-              <span className="text-muted-foreground">Expert legal professionals</span>
+              <span className="text-muted-foreground">
+                Expert legal professionals
+              </span>
             </div>
             <div className="flex items-center">
               <div className="w-2 h-2 bg-primary rounded-full mr-3"></div>
@@ -154,26 +171,27 @@ export function ConsultationLanding() {
             Ready for Legal Consultation?
           </h2>
           <p className="text-lg text-muted-foreground mb-8">
-            Get expert legal advice for your business today. Our professionals will help you 
-            navigate complex legal matters with confidence.
+            Get expert legal advice for your business today. Our professionals
+            will help you navigate complex legal matters with confidence.
           </p>
           <div className="space-x-4">
-            <Button 
-              size="lg" 
+            <Button
+              size="lg"
               className="bg-primary hover:bg-primary/90 text-primary-foreground px-8 py-3"
-              onClick={() => openForm('consultation')}
+              onClick={() => openForm("consultation")}
             >
               Book Consultation
             </Button>
-            <Button 
-              variant="outline" 
-              size="lg" 
+            <Button
+              variant="outline"
+              size="lg"
               className="border-primary text-primary hover:bg-secondary px-8 py-3"
               onClick={() => {
                 // Expand service details or show FAQ
-                const serviceDetails = document.getElementById('service-details');
+                const serviceDetails =
+                  document.getElementById("service-details");
                 if (serviceDetails) {
-                  serviceDetails.scrollIntoView({ behavior: 'smooth' });
+                  serviceDetails.scrollIntoView({ behavior: "smooth" });
                 }
               }}
             >
@@ -184,4 +202,4 @@ export function ConsultationLanding() {
       </section>
     </div>
   );
-} 
+}

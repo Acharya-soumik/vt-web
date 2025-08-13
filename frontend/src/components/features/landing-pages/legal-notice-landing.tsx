@@ -1,4 +1,4 @@
-"use client"
+"use client";
 
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -7,65 +7,64 @@ import { useFormContext } from "@/contexts/form-context";
 import { SimpleProcess } from "../homepage/simple-process";
 import Image from "next/image";
 
-export function LegalNoticeLanding() {
+export function LegalNoticeLanding({
+  topicTitle,
+  city,
+}: { topicTitle?: string; city?: string } = {}) {
   const { openForm } = useFormContext();
-  
-  const handleCallbackRequest = () => {
-    openForm('legal-notice');
-  };
 
+  const handleCallbackRequest = () => {
+    openForm("legal-notice");
+  };
 
   const services = [
     {
       title: "Matrimonial Disputes",
-      description: "Professional legal support for matrimonial and family law matters",
+      description:
+        "Professional legal support for matrimonial and family law matters",
       image: "/legal-notice/matrimonial-disputes.png",
-      features: [
-        "Privacy Guaranteed",
-        "Pick a male or Female lawyer"
-      ]
+      features: ["Privacy Guaranteed", "Pick a male or Female lawyer"],
     },
     {
       title: "Money Recovery",
-      description: "Effective legal solutions for recovering outstanding payments and debts",
+      description:
+        "Effective legal solutions for recovering outstanding payments and debts",
       image: "/legal-notice/marketing-software-feature-1.webp",
-      features: [
-        "Threaten Legal Action",
-        "Follow up on unpaid bills"
-      ]
+      features: ["Threaten Legal Action", "Follow up on unpaid bills"],
     },
     {
       title: "Consumer Disputes",
-      description: "Expert legal assistance for consumer rights and dispute resolution",
+      description:
+        "Expert legal assistance for consumer rights and dispute resolution",
       image: "/legal-notice/consumer-disputes.png",
-      features: [
-        "Seek Refund",
-        "Seek Compensation"
-      ]
-    }
+      features: ["Seek Refund", "Seek Compensation"],
+    },
   ];
 
   const processSteps = [
     {
       icon: "₹",
       title: "Pay Advance",
-      description: "Pay ₹400 advance to get connected with a legal professional"
+      description:
+        "Pay ₹400 advance to get connected with a legal professional",
     },
     {
       icon: "👨‍💼",
       title: "Connect & Consult",
-      description: "Chat or call with qualified advocate to discuss your case"
+      description: "Chat or call with qualified advocate to discuss your case",
     },
     {
       icon: "📝",
       title: "Notice Drafting",
-      description: "Advocate drafts professional legal notice after document review"
+      description:
+        "Advocate drafts professional legal notice after document review",
     },
     {
       icon: "✅",
       title: "Approve & Send",
-      description: "Review, approve and get signed notice posted with acknowledgment"
-    }
+      description:
+        "Review, approve and get signed notice posted with acknowledgment",
+    },
   ];
 
   return (
@@ -74,26 +73,72 @@ export function LegalNoticeLanding() {
       <section className="relative text-center py-16 md:py-20 overflow-hidden">
         {/* Animated Gradient Background */}
         <div className="absolute inset-0 bg-gradient-to-br from-primary/5 via-secondary/10 to-primary/5 animate-pulse"></div>
-        <div className="absolute inset-0 bg-gradient-to-tr from-transparent via-primary/3 to-transparent animate-pulse" style={{ animationDelay: '1s', animationDuration: '3s' }}></div>
-        <div className="absolute inset-0 bg-gradient-to-bl from-secondary/5 via-transparent to-primary/3 animate-pulse" style={{ animationDelay: '2s', animationDuration: '4s' }}></div>
-        
+        <div
+          className="absolute inset-0 bg-gradient-to-tr from-transparent via-primary/3 to-transparent animate-pulse"
+          style={{ animationDelay: "1s", animationDuration: "3s" }}
+        ></div>
+        <div
+          className="absolute inset-0 bg-gradient-to-bl from-secondary/5 via-transparent to-primary/3 animate-pulse"
+          style={{ animationDelay: "2s", animationDuration: "4s" }}
+        ></div>
+
         {/* Floating Elements */}
-        <div className="absolute top-20 left-10 w-32 h-32 bg-primary/10 rounded-full blur-xl animate-bounce" style={{ animationDelay: '0.5s', animationDuration: '6s' }}></div>
-        <div className="absolute bottom-20 right-10 w-24 h-24 bg-secondary/10 rounded-full blur-xl animate-bounce" style={{ animationDelay: '1.5s', animationDuration: '5s' }}></div>
-        <div className="absolute top-1/2 left-1/4 w-16 h-16 bg-primary/5 rounded-full blur-lg animate-pulse" style={{ animationDelay: '2.5s', animationDuration: '7s' }}></div>
-        
+        <div
+          className="absolute top-20 left-10 w-32 h-32 bg-primary/10 rounded-full blur-xl animate-bounce"
+          style={{ animationDelay: "0.5s", animationDuration: "6s" }}
+        ></div>
+        <div
+          className="absolute bottom-20 right-10 w-24 h-24 bg-secondary/10 rounded-full blur-xl animate-bounce"
+          style={{ animationDelay: "1.5s", animationDuration: "5s" }}
+        ></div>
+        <div
+          className="absolute top-1/2 left-1/4 w-16 h-16 bg-primary/5 rounded-full blur-lg animate-pulse"
+          style={{ animationDelay: "2.5s", animationDuration: "7s" }}
+        ></div>
+
         <div className="relative z-10 max-w-4xl mx-auto">
           {/* Main Headline with Word Rotation */}
           <h1 className="text-4xl md:text-5xl font-bold mb-6 text-foreground">
-            File a Legal Notice for <WordRotate className="text-primary" words={["Divorce", "Money Recovery", "Property Disputes", "Contract Breaches", "Employment Issues", "Business Disputes"]} />
+            {topicTitle ? (
+              <>
+                Send a Legal Notice for{" "}
+                <span className="text-primary">{topicTitle}</span>
+                {city ? (
+                  <>
+                    {" "}
+                    in <span className="text-primary">{city}</span>
+                  </>
+                ) : null}
+              </>
+            ) : (
+              <>
+                Send a Legal Notice for{" "}
+                <WordRotate
+                  className="text-primary"
+                  words={[
+                    "Divorce",
+                    "Money Recovery",
+                    "Property Disputes",
+                    "Contract Breaches",
+                    "Employment Issues",
+                    "Business Disputes",
+                  ]}
+                />
+                {city ? (
+                  <>
+                    {" "}
+                    in <span className="text-primary">{city}</span>
+                  </>
+                ) : null}
+              </>
+            )}
           </h1>
-          
+
           {/* Tagline */}
           <p className="text-md md:text-xl font-semibold text-muted-foreground mb-6">
             Send Legally Valid Notices in 24 Hours
           </p>
-          
-          
+
           {/* Image with Integrated CTA */}
           <div className="relative mb-8 max-w-md mx-auto">
             <div className="relative w-full h-80 rounded-2xl overflow-hidden shadow-2xl">
@@ -106,15 +151,15 @@ export function LegalNoticeLanding() {
                 className="object-contain p-4"
                 priority
               />
-              
+
               {/* Floating Call-to-Action Card */}
               <div className="absolute bottom-4 left-4 right-4 bg-white/95 backdrop-blur-sm rounded-xl p-4 shadow-lg border border-primary/20">
                 <div className="text-center">
                   <h3 className="text-lg font-bold text-primary mb-2">
                     Need Help with Legal Notice?
                   </h3>
-                  <Button 
-                    size="sm" 
+                  <Button
+                    size="sm"
                     className="bg-primary hover:bg-primary/90 text-primary-foreground w-full"
                     onClick={handleCallbackRequest}
                   >
@@ -123,12 +168,15 @@ export function LegalNoticeLanding() {
                 </div>
               </div>
             </div>
-            
+
             {/* Decorative Elements */}
             <div className="absolute -top-4 -right-4 w-8 h-8 bg-primary/20 rounded-full animate-pulse"></div>
-            <div className="absolute -bottom-4 -left-4 w-6 h-6 bg-secondary/20 rounded-full animate-pulse" style={{ animationDelay: '1s' }}></div>
+            <div
+              className="absolute -bottom-4 -left-4 w-6 h-6 bg-secondary/20 rounded-full animate-pulse"
+              style={{ animationDelay: "1s" }}
+            ></div>
           </div>
-          
+
           {/* CTA Buttons */}
         </div>
       </section>
@@ -143,10 +191,13 @@ export function LegalNoticeLanding() {
             Thousands of Indians face on a regular basis
           </p>
         </div>
-        
+
         <div className="grid md:grid-cols-3 gap-8">
           {services.map((service, index) => (
-            <Card key={index} className="text-center hover:shadow-lg transition-all duration-300">
+            <Card
+              key={index}
+              className="text-center hover:shadow-lg transition-all duration-300"
+            >
               <CardHeader>
                 <div className="w-32 h-32 mx-auto mb-4 relative">
                   <Image
@@ -161,7 +212,10 @@ export function LegalNoticeLanding() {
               <CardContent>
                 <ul className="space-y-2 text-sm text-muted-foreground">
                   {service.features.map((feature, featureIndex) => (
-                    <li key={featureIndex} className="flex items-center justify-center">
+                    <li
+                      key={featureIndex}
+                      className="flex items-center justify-center"
+                    >
                       <span className="w-2 h-2 bg-primary rounded-full mr-2"></span>
                       {feature}
                     </li>
@@ -182,16 +236,15 @@ export function LegalNoticeLanding() {
           className="border-0 shadow shadow-primary border-b-2 border-primary"
         />
         <div className="mx-auto text-center">
-
-          <Button 
-            size="lg" 
+          <Button
+            size="lg"
             className="bg-primary hover:bg-primary/90 text-primary-foreground px-8 py-4 text-lg mt-2"
             onClick={handleCallbackRequest}
           >
             Raise a Request
           </Button>
-          </div>
-        
+        </div>
+
         {/* Primary CTA after process explanation */}
         {/* <div className="text-center mt-12">
           <h3 className="text-2xl md:text-3xl font-bold mb-4 text-foreground">
@@ -209,29 +262,37 @@ export function LegalNoticeLanding() {
           </Button>
         </div> */}
       </section>
-<br />
+      <br />
       {/* Pricing & Value Proposition */}
       <section className="py-16 bg-card border rounded-lg">
         <div className="text-center max-w-4xl mx-auto px-4">
           <h2 className="text-3xl md:text-4xl font-bold mb-8 text-foreground">
-           Why Choose Us?
+            Why Choose Us?
           </h2>
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
             <div className="flex items-center">
               <div className="w-2 h-2 bg-primary rounded-full mr-3"></div>
-              <span className="text-muted-foreground">Expert legal professionals</span>
+              <span className="text-muted-foreground">
+                Expert legal professionals
+              </span>
             </div>
             <div className="flex items-center">
               <div className="w-2 h-2 bg-primary rounded-full mr-3"></div>
-              <span className="text-muted-foreground">Legally compliant notices</span>
+              <span className="text-muted-foreground">
+                Legally compliant notices
+              </span>
             </div>
             <div className="flex items-center">
               <div className="w-2 h-2 bg-primary rounded-full mr-3"></div>
-              <span className="text-muted-foreground">Fast turnaround time</span>
+              <span className="text-muted-foreground">
+                Fast turnaround time
+              </span>
             </div>
             <div className="flex items-center">
               <div className="w-2 h-2 bg-primary rounded-full mr-3"></div>
-              <span className="text-muted-foreground">Customized to your case</span>
+              <span className="text-muted-foreground">
+                Customized to your case
+              </span>
             </div>
             <div className="flex items-center">
               <div className="w-2 h-2 bg-primary rounded-full mr-3"></div>
@@ -244,8 +305,6 @@ export function LegalNoticeLanding() {
           </div>
         </div>
       </section>
-
-
     </div>
   );
-} 
+}

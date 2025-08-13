@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import { ClientLayout } from "@/components/shared/client-layout";
+import { Suspense } from "react";
 import Script from "next/script";
 import { GA_MEASUREMENT_ID } from "@/lib/analytics-config";
 import { defaultMetadata } from "@/lib/seo";
@@ -26,7 +27,10 @@ export default function RootLayout({
   return (
     <html lang="en">
       <head>
-        <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
+        <meta
+          name="viewport"
+          content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover"
+        />
       </head>
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
@@ -49,9 +53,9 @@ export default function RootLayout({
             </Script>
           </>
         )}
-        <ClientLayout>
-          {children}
-        </ClientLayout>
+        <Suspense fallback={null}>
+          <ClientLayout>{children}</ClientLayout>
+        </Suspense>
       </body>
     </html>
   );
