@@ -45,6 +45,7 @@ export const FormProvider: React.FC<FormProviderProps> = ({
   initialService,
 }) => {
   const PAYMENT_STORAGE_KEY = "vt-payment-pending";
+  const PAYMENT_TTL_MS = 12 * 60 * 60 * 1000; // 12 hours
 
   type StoredPayment = {
     leadId: string;
@@ -289,6 +290,21 @@ export const FormProvider: React.FC<FormProviderProps> = ({
 
       const stored: StoredPayment | null = JSON.parse(raw);
       if (!stored || !stored.leadId || !stored.service || !stored.name) return;
+
+      // Respect TTL for stored pending payment (12 hours)
+      if (stored.createdAt) {
+        const createdAtTime = new Date(stored.createdAt).getTime();
+        const nowTime = Date.now();
+        if (
+          Number.isFinite(createdAtTime) &&
+          nowTime - createdAtTime > PAYMENT_TTL_MS
+        ) {
+          try {
+            localStorage.removeItem(PAYMENT_STORAGE_KEY);
+          } catch {}
+          return;
+        }
+      }
 
       // Restore minimal form data required to retry payment
       setFormData((prev) => ({

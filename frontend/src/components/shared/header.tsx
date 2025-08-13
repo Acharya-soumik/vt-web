@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
-import { Menu, ChevronDown } from "lucide-react";
+import { Menu, ChevronDown, X } from "lucide-react";
 import Link from "next/link";
 import {
   DropdownMenu,
@@ -17,8 +17,12 @@ import { AlertCircle } from "lucide-react";
 
 export function Header() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [showPaymentBanner, setShowPaymentBanner] = useState(false);
   const { openForm, paymentStatus, processPayment, isProcessingPayment } =
     useFormContext();
+
+  const BANNER_DISMISS_KEY = "vt-payment-banner-dismiss";
+  const DISMISS_TTL_MS = 12 * 60 * 60 * 1000; // 12 hours
 
   const handleMobileMenuClose = () => {
     setIsMobileMenuOpen(false);
@@ -27,6 +31,95 @@ export function Header() {
   const handleOpenForm = () => {
     openForm();
     handleMobileMenuClose();
+  };
+
+  // Decide whether to show payment banner, honoring a two-dismiss, 12-hour TTL session
+  React.useEffect(() => {
+    if (!(paymentStatus === "pending" || paymentStatus === "failed")) {
+      setShowPaymentBanner(false);
+      return;
+    }
+
+    try {
+      const raw =
+        typeof window !== "undefined"
+          ? localStorage.getItem(BANNER_DISMISS_KEY)
+          : null;
+      if (!raw) {
+        setShowPaymentBanner(true);
+        return;
+      }
+      const stored: { count?: number; firstAt?: string } = JSON.parse(raw);
+      const count = Number(stored?.count || 0);
+      const firstAt = stored?.firstAt
+        ? new Date(stored.firstAt).getTime()
+        : NaN;
+      const now = Date.now();
+      const expired =
+        !Number.isFinite(firstAt) || now - firstAt > DISMISS_TTL_MS;
+      if (expired) {
+        try {
+          localStorage.removeItem(BANNER_DISMISS_KEY);
+        } catch {}
+        setShowPaymentBanner(true);
+        return;
+      }
+      if (count >= 2) {
+        setShowPaymentBanner(false);
+      } else {
+        setShowPaymentBanner(true);
+      }
+    } catch {
+      setShowPaymentBanner(true);
+    }
+  }, [paymentStatus]);
+
+  const handleBannerClose: React.MouseEventHandler<HTMLButtonElement> = (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    try {
+      const raw =
+        typeof window !== "undefined"
+          ? localStorage.getItem(BANNER_DISMISS_KEY)
+          : null;
+      const nowIso = new Date().toISOString();
+      if (!raw) {
+        localStorage.setItem(
+          BANNER_DISMISS_KEY,
+          JSON.stringify({ count: 1, firstAt: nowIso })
+        );
+      } else {
+        const stored: { count?: number; firstAt?: string } = JSON.parse(raw);
+        const firstAtTime = stored?.firstAt
+          ? new Date(stored.firstAt).getTime()
+          : NaN;
+        const expired =
+          !Number.isFinite(firstAtTime) ||
+          Date.now() - firstAtTime > DISMISS_TTL_MS;
+        if (expired) {
+          localStorage.setItem(
+            BANNER_DISMISS_KEY,
+            JSON.stringify({ count: 1, firstAt: nowIso })
+          );
+        } else {
+          const nextCount = Math.min(2, Number(stored?.count || 0) + 1);
+          localStorage.setItem(
+            BANNER_DISMISS_KEY,
+            JSON.stringify({
+              count: nextCount,
+              firstAt: stored?.firstAt || nowIso,
+            })
+          );
+        }
+      }
+    } catch {}
+    setShowPaymentBanner(false);
+  };
+
+  const handleBannerActivate = () => {
+    if (!isProcessingPayment) {
+      processPayment();
+    }
   };
 
   return (
@@ -204,13 +297,23 @@ export function Header() {
         </div>
 
         {/* Attention-grabbing payment reminder banner (full width below top bar) */}
-        {(paymentStatus === "pending" || paymentStatus === "failed") && (
+        {showPaymentBanner && (
           <div className="mt-2">
-            <button
-              onClick={() => processPayment()}
-              disabled={isProcessingPayment}
+            <div
+              role="button"
+              tabIndex={0}
+              onClick={handleBannerActivate}
+              onKeyDown={(e) => {
+                if (e.key === "Enter" || e.key === " ") handleBannerActivate();
+              }}
               aria-label="Payment pending, tap to complete"
-              className="w-full flex items-center justify-center gap-2 rounded-md px-4 py-2 text-white shadow-sm ring-1 ring-inset ring-black/10 bg-gradient-to-r from-amber-500 via-amber-600 to-amber-500 hover:from-amber-600 hover:to-amber-600 disabled:opacity-80 disabled:cursor-not-allowed animate-pulse"
+              aria-disabled={isProcessingPayment}
+              className={
+                "relative w-full flex items-center justify-center gap-2 rounded-md px-4 py-2 text-white shadow-sm ring-1 ring-inset ring-black/10 bg-gradient-to-r from-amber-500 via-amber-600 to-amber-500 hover:from-amber-600 hover:to-amber-600 " +
+                (isProcessingPayment
+                  ? "opacity-80 cursor-not-allowed"
+                  : "cursor-pointer animate-pulse")
+              }
             >
               <AlertCircle className="w-4 h-4" />
               <span className="text-sm font-semibold tracking-wide">
@@ -220,7 +323,14 @@ export function Header() {
                   ? "Payment failed. Tap to retry"
                   : "Payment pending. Tap to complete now"}
               </span>
-            </button>
+              <button
+                onClick={handleBannerClose}
+                aria-label="Dismiss payment reminder"
+                className="absolute right-2 top-1/2 -translate-y-1/2 h-7 w-7 flex items-center justify-center rounded hover:bg-black/10 focus:outline-none"
+              >
+                <X className="h-4 w-4" />
+              </button>
+            </div>
           </div>
         )}
       </div>
