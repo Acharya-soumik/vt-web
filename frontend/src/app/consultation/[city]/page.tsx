@@ -8,7 +8,7 @@ import Link from "next/link";
 import { getLocalitiesByCity } from "@/data/localities";
 import { TrustSignalsSection } from "@/components/features/homepage/trust-signals";
 import { FAQSection } from "@/components/shared/faq-section";
-import { consultationFAQs } from "@/data/faqs";
+import { getConsultationCityFaqs } from "@/data/faqs";
 import TestimonialsSection from "@/components/shared/testimonials-section";
 
 export function generateStaticParams() {
@@ -133,7 +133,7 @@ export default async function ConsultationCityPage({
 
       <TrustSignalsSection />
       <FAQSection
-        faqs={consultationFAQs}
+        faqs={getConsultationCityFaqs(cityName)}
         title={`Consultation in ${cityName} — FAQs`}
         subtitle="Common questions about booking and preparation"
       />

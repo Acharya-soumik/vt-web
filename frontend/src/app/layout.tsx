@@ -4,7 +4,7 @@ import "./globals.css";
 import { ClientLayout } from "@/components/shared/client-layout";
 import { Suspense } from "react";
 import Script from "next/script";
-import { GA_MEASUREMENT_ID } from "@/lib/analytics-config";
+import { GA_MEASUREMENT_ID, GOOGLE_ADS_ID } from "@/lib/analytics-config";
 import { defaultMetadata } from "@/lib/seo";
 
 const geistSans = Geist({
@@ -35,10 +35,12 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-        {GA_MEASUREMENT_ID && (
+        {(GA_MEASUREMENT_ID || GOOGLE_ADS_ID) && (
           <>
             <Script
-              src={`https://www.googletagmanager.com/gtag/js?id=${GA_MEASUREMENT_ID}`}
+              src={`https://www.googletagmanager.com/gtag/js?id=${
+                GA_MEASUREMENT_ID || GOOGLE_ADS_ID
+              }`}
               strategy="afterInteractive"
             />
             <Script id="gtag-init" strategy="afterInteractive">
@@ -46,9 +48,12 @@ export default function RootLayout({
                 window.dataLayer = window.dataLayer || [];
                 function gtag(){dataLayer.push(arguments);}
                 gtag('js', new Date());
-                gtag('config', '${GA_MEASUREMENT_ID}', {
-                  page_path: window.location.pathname,
-                });
+                ${
+                  GA_MEASUREMENT_ID
+                    ? `gtag('config', '${GA_MEASUREMENT_ID}', { page_path: window.location.pathname });`
+                    : ""
+                }
+                ${GOOGLE_ADS_ID ? `gtag('config', '${GOOGLE_ADS_ID}');` : ""}
               `}
             </Script>
           </>

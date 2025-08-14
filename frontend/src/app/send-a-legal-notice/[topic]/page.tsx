@@ -7,7 +7,7 @@ import Link from "next/link";
 import TestimonialsSection from "@/components/shared/testimonials-section";
 import { TrustSignalsSection } from "@/components/features/homepage/trust-signals";
 import { FAQSection } from "@/components/shared/faq-section";
-import { legalNoticeFAQs } from "@/data/faqs";
+import { legalNoticeFAQs, getLegalNoticeTopicFaqs } from "@/data/faqs";
 
 export function generateStaticParams() {
   return legalNoticeTopics.map((t) => ({ topic: t.id }));
@@ -113,7 +113,7 @@ export default async function LegalNoticeTopicPage({
 
       <TrustSignalsSection />
       <FAQSection
-        faqs={legalNoticeFAQs}
+        faqs={getLegalNoticeTopicFaqs(topicId)}
         title={`${topic?.title} — FAQs`}
         subtitle="Answers to common questions about drafting and sending a legal notice"
       />

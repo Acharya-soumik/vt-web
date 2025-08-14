@@ -174,3 +174,122 @@ export const legalNoticeFAQs: FAQItem[] = [
       "While we can't guarantee specific outcomes, our legal notices are professionally drafted and have a high success rate in resolving disputes amicably. We use proven legal strategies to maximize effectiveness.",
   },
 ];
+
+// Topic-specific Legal Notice FAQs
+const legalNoticeTopicFAQMap: Record<string, FAQItem[]> = {
+  // Cheque bounce / NI Act
+  "dishonoured-cheque": [
+    {
+      question: "What is the timeline under Sec 138 NI Act?",
+      answer:
+        "You must send the demand notice within 30 days of receiving the bank return memo. The drawer gets 15 days to pay. If unpaid, a complaint can be filed within 1 month thereafter.",
+    },
+    {
+      question: "What documents are needed for a cheque bounce notice?",
+      answer:
+        "Bank return memo, cheque copy, details of the transaction/invoice/loan, and correct address of the drawer are needed to prepare and serve the notice.",
+    },
+    {
+      question: "Do you track delivery of the notice?",
+      answer:
+        "Yes. We dispatch via speed post/courier and keep acknowledgment as proof of service, which is important for any further proceedings.",
+    },
+  ],
+  // Divorce / family matters
+  divorce: [
+    {
+      question: "Why send a legal notice before divorce?",
+      answer:
+        "A notice formally communicates your position, grounds and expectations (maintenance, custody, etc.). It can enable resolution or prepare the record before filing.",
+    },
+    {
+      question: "What should I share for a divorce notice?",
+      answer:
+        "Marriage details, brief facts, incidents (if any), current residence, and your objectives (custody/maintenance/settlement). We maintain strict confidentiality.",
+    },
+    {
+      question: "Can the notice propose mediation or mutual consent?",
+      answer:
+        "Yes. We can include a proposal for mediation or mutual settlement if you prefer an amicable route.",
+    },
+  ],
+  // Tenant eviction / rent issues
+  "tenant-eviction": [
+    {
+      question: "What notice period applies for eviction?",
+      answer:
+        "Notice periods depend on state Rent Acts and the agreement. Typically 15–30 days. We advise based on your agreement and local laws.",
+    },
+    {
+      question: "What do I need to share?",
+      answer:
+        "Rent agreement, KYC, payment/arrears details and any correspondence showing breach or nuisance are helpful to draft the notice correctly.",
+    },
+    {
+      question: "What if the tenant still doesn’t vacate?",
+      answer:
+        "We guide you on filing an eviction suit and claiming arrears/damages as applicable.",
+    },
+  ],
+  // Contract breach / specific performance
+  "breach-of-contract": [
+    {
+      question: "What should a breach notice contain?",
+      answer:
+        "Facts, relevant clauses breached, demand for cure within a time period, and consequences on failure (arbitration/suit). We tailor it to your contract.",
+    },
+    {
+      question:
+        "Is arbitration mandatory if the contract has an arbitration clause?",
+      answer:
+        "If the contract mandates arbitration, the notice will typically invoke arbitration before filing a suit.",
+    },
+    {
+      question: "How fast can you prepare the notice?",
+      answer:
+        "Simple matters can be drafted within 24–48 hours. Complex commercial contracts may take 2–3 days for a thorough review.",
+    },
+  ],
+};
+
+export function getLegalNoticeTopicFaqs(
+  topicId: string,
+  city?: string
+): FAQItem[] {
+  const base = legalNoticeTopicFAQMap[topicId] || legalNoticeFAQs;
+  if (!city) return base;
+  // Append a city-specific serviceability FAQ
+  return [
+    ...base,
+    {
+      question: `Can you dispatch notices in ${city}?`,
+      answer: `Yes. We prepare and dispatch notices pan-India, including ${city}. You will receive tracking and delivery acknowledgment for your records.`,
+    },
+  ];
+}
+
+// City-specific Consultation FAQs
+export function getConsultationCityFaqs(city: string): FAQItem[] {
+  return [
+    {
+      question: `How soon can I consult a lawyer in ${city}?`,
+      answer: `Most consultations in ${city} can be scheduled within 24 hours. Urgent same-day slots are often available depending on lawyer availability.`,
+    },
+    {
+      question: `Do you support regional languages in ${city}?`,
+      answer: `Yes. We support English, Hindi and common regional languages in ${city} subject to availability. Please mention your preference while booking.`,
+    },
+    {
+      question: `What should I prepare before the call?`,
+      answer: `Keep a short summary of your issue and relevant documents (agreements, notices, IDs). This helps the lawyer provide actionable guidance quickly.`,
+    },
+    {
+      question: `Is the consultation private and secure?`,
+      answer: `Yes. Sessions are private and not shared with any third party. You may request a written summary after the call.`,
+    },
+    {
+      question: `Can I book follow‑up sessions?`,
+      answer: `Absolutely. You can book follow‑ups with the same lawyer or request another expert for a second opinion.`,
+    },
+  ];
+}

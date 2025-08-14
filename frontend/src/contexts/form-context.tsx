@@ -127,6 +127,15 @@ export const FormProvider: React.FC<FormProviderProps> = ({
 
   const { logEvent } = useAnalytics();
 
+  const updateUrlQueryParam = useCallback((key: string, value: string) => {
+    try {
+      if (typeof window === "undefined") return;
+      const url = new URL(window.location.href);
+      url.searchParams.set(key, value);
+      window.history.replaceState({}, "", url.toString());
+    } catch {}
+  }, []);
+
   const submitForm = useCallback(async () => {
     if (
       !formData.name ||
@@ -165,6 +174,8 @@ export const FormProvider: React.FC<FormProviderProps> = ({
           submissionSuccess: true,
           paymentChoice: completeFormData.paymentChoice,
         });
+        // Update URL for ad conversion tracking
+        updateUrlQueryParam("type", "ticket-created");
         // Analytics: Lead form submitted
         logEvent("lead_form_submitted", {
           service: completeFormData.service,
@@ -238,6 +249,8 @@ export const FormProvider: React.FC<FormProviderProps> = ({
             paymentId: response.razorpay_payment_id,
           });
           setPaymentStatus("success");
+          // Update URL for ad conversion tracking
+          updateUrlQueryParam("type", "payment-success");
           // Clear persisted pending state on success
           try {
             localStorage.removeItem(PAYMENT_STORAGE_KEY);

@@ -10,7 +10,7 @@ import { getLocalitiesByCity } from "@/data/localities";
 import TestimonialsSection from "@/components/shared/testimonials-section";
 import { TrustSignalsSection } from "@/components/features/homepage/trust-signals";
 import { FAQSection } from "@/components/shared/faq-section";
-import { legalNoticeFAQs } from "@/data/faqs";
+import { legalNoticeFAQs, getLegalNoticeTopicFaqs } from "@/data/faqs";
 
 export function generateStaticParams() {
   const topics = legalNoticeTopics.map((t) => t.id);
@@ -149,7 +149,7 @@ export default async function LegalNoticeTopicCityPage({
 
       <TrustSignalsSection />
       <FAQSection
-        faqs={legalNoticeFAQs}
+        faqs={getLegalNoticeTopicFaqs(topicId, cityName)}
         title={`${topic?.title} in ${cityName} — FAQs`}
         subtitle="Common questions about drafting, dispatch and timelines"
       />
