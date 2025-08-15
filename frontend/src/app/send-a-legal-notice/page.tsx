@@ -25,6 +25,12 @@ export default function LegalNoticePage() {
         <Breadcrumb items={breadcrumbItems} />
       </div>
       <LegalNoticeLanding />
+      <TrustSignalsSection />
+      <FAQSection
+        faqs={legalNoticeFAQs}
+        title="Legal Notice FAQs"
+        subtitle="Common questions about our legal notice services"
+      />
       <section className="container mx-auto px-4 pb-12">
         <h2 className="text-xl font-semibold mb-4">Popular Topics</h2>
         <div className="flex flex-wrap gap-3">
@@ -39,12 +45,6 @@ export default function LegalNoticePage() {
           ))}
         </div>
       </section>
-      <TrustSignalsSection />
-      <FAQSection
-        faqs={legalNoticeFAQs}
-        title="Legal Notice FAQs"
-        subtitle="Common questions about our legal notice services"
-      />
     </main>
   );
 }

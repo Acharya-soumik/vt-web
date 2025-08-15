@@ -2,6 +2,8 @@
 
 import { useFormContext } from "@/contexts/form-context";
 import Link from "next/link";
+import { ExpertCarousel } from "@/components/ui/expert-carousel";
+import { legalExperts } from "@/data/experts";
 import { comprehensiveLegalNoticeTopicFAQMap } from "@/data/comprehensive-faqs";
 import { topicDescriptions } from "@/data/topic-descriptions";
 
@@ -119,6 +121,13 @@ export function LegalNoticeTopicLandingUniform({
           </div>
         </div>
       </section>
+
+      {/* Expert Carousel Section */}
+      <ExpertCarousel 
+        experts={legalExperts}
+        title="Consult top experts across legal areas"
+        subtitle="Connect with experienced legal professionals who can help you with your specific legal needs"
+      />
 
       {/* Standard Content Sections */}
       <section className="grid md:grid-cols-3 gap-6 mt-12">
