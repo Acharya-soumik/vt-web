@@ -6,26 +6,23 @@ A modern legal services platform built with Next.js 15, TypeScript, and Tailwind
 
 ### Prerequisites
 
-- Node.js 18+
+- Node.js 18+ 
 - npm or yarn
 
 ### Installation
 
 1. **Clone the repository**
-
    ```bash
    git clone <repository-url>
    cd bmad/frontend
    ```
 
 2. **Install dependencies**
-
    ```bash
    npm install
    ```
 
 3. **Start the development server**
-
    ```bash
    npm run dev
    ```
@@ -119,15 +116,14 @@ This project is part of the Vakil Tech platform.
 3. Test your changes thoroughly
 4. Update documentation as needed
 
-## Analytics Setup (Google Analytics 4 + Google Ads)
+## Analytics Setup (Google Analytics 4)
 
 To enable analytics, add the following to your .env.local file:
 
-NEXT_PUBLIC_ANALYTICS_ID=your-ga4-measurement-id # e.g., G-XXXXXXXXXX
-NEXT_PUBLIC_GOOGLE_ADS_ID=your-google-ads-id # e.g., AW-17388756150
+NEXT_PUBLIC_ANALYTICS_ID=your-ga4-measurement-id
 ANALYTICS_PROVIDER=google-analytics-4
 
-Replace `your-ga4-measurement-id` with your GA4 Measurement ID and `your-google-ads-id` with your Google Ads conversion ID (e.g., AW-XXXXXXXXXX). Either can be used independently; if both are present, both are initialized.
+Replace `your-ga4-measurement-id` with your Google Analytics 4 Measurement ID (e.g., G-XXXXXXXXXX).
 
 ## Analytics Debugging & Testing Utilities
 
@@ -136,7 +132,7 @@ Replace `your-ga4-measurement-id` with your GA4 Measurement ID and `your-google-
 - You can trigger a test event from any component using the `testEvent` function from the `useAnalytics` hook:
 
 ```js
-import { useAnalytics } from "@/hooks/use-analytics";
+import { useAnalytics } from '@/hooks/use-analytics';
 const { testEvent, debug } = useAnalytics();
 if (debug) testEvent();
 ```
