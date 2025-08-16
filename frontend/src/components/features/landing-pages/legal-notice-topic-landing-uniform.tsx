@@ -21,10 +21,10 @@ export function LegalNoticeTopicLandingUniform({
   topicKey,
 }: LegalNoticeTopicLandingProps) {
   const { openForm } = useFormContext();
-  
+
   // Get topic description - 100+ words
   const topicDescription = topicKey ? topicDescriptions[topicKey] : null;
-  
+
   return (
     <div className="container mx-auto px-4 pb-8">
       {/* Standard Hero Section */}
@@ -34,7 +34,7 @@ export function LegalNoticeTopicLandingUniform({
         <div className="absolute inset-0 flex items-center justify-center">
           <div className="w-[800px] h-[800px] bg-gradient-to-r from-primary/20 to-transparent rounded-full blur-3xl opacity-20" />
         </div>
-        
+
         <div className="relative max-w-6xl mx-auto px-4">
           <div className="grid md:grid-cols-2 gap-12 items-center">
             {/* Content */}
@@ -46,15 +46,14 @@ export function LegalNoticeTopicLandingUniform({
                 <h1 className="text-4xl md:text-6xl font-bold text-foreground leading-tight">
                   {topicTitle}
                   {city && (
-                    <span className="block text-primary mt-2">
-                      in {city}
-                    </span>
+                    <span className="block text-primary mt-2">in {city}</span>
                   )}
                 </h1>
                 <p className="text-xl text-muted-foreground leading-relaxed">
-                  {description || "Professional legal notice drafting and delivery service with expert guidance."}
+                  {description ||
+                    "Professional legal notice drafting and delivery service with expert guidance."}
                 </p>
-                
+
                 {/* Standard Benefits */}
                 <div className="grid grid-cols-2 gap-3">
                   <div className="text-sm text-foreground font-medium">
@@ -71,7 +70,7 @@ export function LegalNoticeTopicLandingUniform({
                   </div>
                 </div>
               </div>
-              
+
               {/* CTA Buttons */}
               <div className="flex flex-col sm:flex-row gap-4">
                 <button
@@ -87,7 +86,7 @@ export function LegalNoticeTopicLandingUniform({
                   Get Free Consultation
                 </Link>
               </div>
-              
+
               {/* Trust indicators */}
               <div className="flex items-center gap-6 text-sm text-muted-foreground">
                 <div className="flex items-center gap-2">
@@ -104,7 +103,7 @@ export function LegalNoticeTopicLandingUniform({
                 </div>
               </div>
             </div>
-            
+
             {/* Hero Image */}
             <div className="relative">
               <div className="relative w-full h-80 md:h-96 rounded-2xl overflow-hidden bg-gradient-to-br from-primary/20 to-primary/5 p-8 flex items-center justify-center">
@@ -123,7 +122,7 @@ export function LegalNoticeTopicLandingUniform({
       </section>
 
       {/* Expert Carousel Section */}
-      <ExpertCarousel 
+      <ExpertCarousel
         experts={legalExperts}
         title="Consult top experts across legal areas"
         subtitle="Connect with experienced legal professionals who can help you with your specific legal needs"
@@ -141,15 +140,23 @@ export function LegalNoticeTopicLandingUniform({
             <div className="grid gap-3">
               <div className="flex items-start gap-3 p-3 bg-background/60 rounded-lg">
                 <span className="text-green-500 mt-0.5">✓</span>
-                <span className="text-foreground">Individuals or businesses facing legal disputes</span>
+                <span className="text-foreground">
+                  Individuals or businesses facing legal disputes
+                </span>
               </div>
               <div className="flex items-start gap-3 p-3 bg-background/60 rounded-lg">
                 <span className="text-green-500 mt-0.5">✓</span>
-                <span className="text-foreground">Those seeking formal legal communication before court proceedings</span>
+                <span className="text-foreground">
+                  Those seeking formal legal communication before court
+                  proceedings
+                </span>
               </div>
               <div className="flex items-start gap-3 p-3 bg-background/60 rounded-lg">
                 <span className="text-green-500 mt-0.5">✓</span>
-                <span className="text-foreground">Anyone wanting to establish legal documentation for their claim</span>
+                <span className="text-foreground">
+                  Anyone wanting to establish legal documentation for their
+                  claim
+                </span>
               </div>
             </div>
           </div>
@@ -162,15 +169,22 @@ export function LegalNoticeTopicLandingUniform({
             <div className="grid gap-3">
               <div className="flex items-start gap-3 p-3 bg-background/60 rounded-lg">
                 <span className="text-amber-500 mt-0.5">📋</span>
-                <span className="text-foreground">Relevant agreements, contracts, or transaction records</span>
+                <span className="text-foreground">
+                  Relevant agreements, contracts, or transaction records
+                </span>
               </div>
               <div className="flex items-start gap-3 p-3 bg-background/60 rounded-lg">
                 <span className="text-amber-500 mt-0.5">📋</span>
-                <span className="text-foreground">Identity and address proof of all parties involved</span>
+                <span className="text-foreground">
+                  Identity and address proof of all parties involved
+                </span>
               </div>
               <div className="flex items-start gap-3 p-3 bg-background/60 rounded-lg">
                 <span className="text-amber-500 mt-0.5">📋</span>
-                <span className="text-foreground">Supporting evidence like receipts, communications, or witness statements</span>
+                <span className="text-foreground">
+                  Supporting evidence like receipts, communications, or witness
+                  statements
+                </span>
               </div>
             </div>
           </div>
@@ -178,20 +192,26 @@ export function LegalNoticeTopicLandingUniform({
           <div className="bg-gradient-to-r from-green-50 to-green-100 dark:from-green-950/20 dark:to-green-900/20 rounded-xl p-6">
             <h2 className="text-2xl font-bold text-foreground mb-4 flex items-center gap-3">
               <span className="text-green-600">🎯</span>
-              What you'll receive
+              What you&apos;ll receive
             </h2>
             <div className="grid gap-3">
               <div className="flex items-start gap-3 p-3 bg-background/60 rounded-lg">
                 <span className="text-green-500 mt-0.5">🚀</span>
-                <span className="text-foreground">Professionally drafted legal notice by qualified advocates</span>
+                <span className="text-foreground">
+                  Professionally drafted legal notice by qualified advocates
+                </span>
               </div>
               <div className="flex items-start gap-3 p-3 bg-background/60 rounded-lg">
                 <span className="text-green-500 mt-0.5">🚀</span>
-                <span className="text-foreground">Registered delivery with acknowledgment receipt</span>
+                <span className="text-foreground">
+                  Registered delivery with acknowledgment receipt
+                </span>
               </div>
               <div className="flex items-start gap-3 p-3 bg-background/60 rounded-lg">
                 <span className="text-green-500 mt-0.5">🚀</span>
-                <span className="text-foreground">Legal guidance for next steps and follow-up actions</span>
+                <span className="text-foreground">
+                  Legal guidance for next steps and follow-up actions
+                </span>
               </div>
             </div>
           </div>
@@ -206,23 +226,23 @@ export function LegalNoticeTopicLandingUniform({
                 {
                   icon: "📋",
                   title: "Document Review",
-                  text: "We analyze your case and review all relevant documents"
+                  text: "We analyze your case and review all relevant documents",
                 },
                 {
                   icon: "⚖️",
                   title: "Legal Drafting",
-                  text: "Expert lawyers draft a compelling notice citing relevant laws"
+                  text: "Expert lawyers draft a compelling notice citing relevant laws",
                 },
                 {
                   icon: "📮",
                   title: "Professional Dispatch",
-                  text: "Notice served via registered post with delivery confirmation"
+                  text: "Notice served via registered post with delivery confirmation",
                 },
                 {
                   icon: "📞",
                   title: "Follow-up Support",
-                  text: "Guidance on next legal steps and response handling"
-                }
+                  text: "Guidance on next legal steps and response handling",
+                },
               ].map((step, index) => (
                 <div
                   key={step.title}
@@ -235,9 +255,11 @@ export function LegalNoticeTopicLandingUniform({
                     <div className="flex-1">
                       <div className="flex items-center gap-2 mb-2">
                         <span className="bg-primary/20 text-primary px-2 py-1 rounded-full text-xs font-bold">
-                          {String(index + 1).padStart(2, '0')}
+                          {String(index + 1).padStart(2, "0")}
                         </span>
-                        <h3 className="font-bold text-foreground">{step.title}</h3>
+                        <h3 className="font-bold text-foreground">
+                          {step.title}
+                        </h3>
                       </div>
                       <p className="text-muted-foreground leading-relaxed">
                         {step.text}
@@ -259,15 +281,19 @@ export function LegalNoticeTopicLandingUniform({
                 { label: "Document Review", value: "Same day" },
                 { label: "Notice Drafting", value: "24-48 hours" },
                 { label: "Dispatch & Delivery", value: "2-3 days" },
-                { label: "Response Period", value: "15-30 days" }
+                { label: "Response Period", value: "15-30 days" },
               ].map((timeline, index) => (
                 <div key={timeline.label} className="relative">
                   <div className="bg-gradient-to-br from-primary/10 to-primary/5 border border-primary/20 rounded-xl p-6 text-center hover:shadow-lg transition-all duration-300">
                     <div className="w-12 h-12 bg-primary/20 rounded-full flex items-center justify-center mx-auto mb-3 text-primary font-bold">
                       {index + 1}
                     </div>
-                    <div className="text-sm text-muted-foreground mb-1">{timeline.label}</div>
-                    <div className="font-bold text-lg text-primary">{timeline.value}</div>
+                    <div className="text-sm text-muted-foreground mb-1">
+                      {timeline.label}
+                    </div>
+                    <div className="font-bold text-lg text-primary">
+                      {timeline.value}
+                    </div>
                   </div>
                   {index < 3 && (
                     <div className="hidden md:block absolute top-1/2 -right-2 w-4 h-0.5 bg-primary/30" />
@@ -285,8 +311,10 @@ export function LegalNoticeTopicLandingUniform({
               <div className="inline-flex items-center bg-primary/10 text-primary px-3 py-1 rounded-full text-sm font-medium">
                 Most Popular
               </div>
-              <h3 className="text-xl font-bold text-foreground">Get Started Today</h3>
-              
+              <h3 className="text-xl font-bold text-foreground">
+                Get Started Today
+              </h3>
+
               <div className="space-y-3">
                 <div className="flex items-center justify-between p-3 bg-background/50 rounded-lg">
                   <span className="text-sm font-medium">Advance Payment</span>
@@ -296,7 +324,7 @@ export function LegalNoticeTopicLandingUniform({
                   Balance due only after draft approval
                 </p>
               </div>
-              
+
               <div className="space-y-3">
                 <button
                   onClick={() => openForm("legal-notice")}
@@ -311,7 +339,7 @@ export function LegalNoticeTopicLandingUniform({
                   Get Free Consultation
                 </Link>
               </div>
-              
+
               {/* Trust badges */}
               <div className="pt-4 border-t border-border/50 space-y-2">
                 <div className="flex items-center justify-center gap-2 text-xs text-muted-foreground">

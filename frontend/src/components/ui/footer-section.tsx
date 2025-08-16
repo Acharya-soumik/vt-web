@@ -128,7 +128,7 @@ function Footerdemo() {
                       size="icon"
                       className="rounded-full"
                       onClick={() =>
-                        (window.location.href = "mailto:contact@vakiltech.com")
+                        (window.location.href = "mailto:contact@vakiltech.in")
                       }
                     >
                       <Mail className="h-4 w-4" />

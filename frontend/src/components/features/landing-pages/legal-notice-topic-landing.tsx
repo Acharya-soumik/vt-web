@@ -11,43 +11,58 @@ interface LegalNoticeTopicLandingProps {
   topicKey?: string;
 }
 
+// Type guard to narrow enhanced TopicContent
+function isTopicContent(
+  x: unknown
+): x is import("@/data/topic-content").TopicContent {
+  return (
+    !!x &&
+    typeof x === "object" &&
+    "heroTitle" in (x as Record<string, unknown>) &&
+    "leadContent" in (x as Record<string, unknown>)
+  );
+}
+
 function selectContent(topicTitle: string, topicKey?: string) {
   const t = topicTitle.toLowerCase();
   const key = topicKey?.toLowerCase() || t;
-  
+
   // Demand Notice for Recovery of Money
-  if (key.includes("demand-notice-recovery-of-money") || 
-      key.includes("recovery-of-money") ||
-      t.includes("demand notice for recovery of money")) {
+  if (
+    key.includes("demand-notice-recovery-of-money") ||
+    key.includes("recovery-of-money") ||
+    t.includes("demand notice for recovery of money")
+  ) {
     return {
       heroImage: "/legal-notice/consumer-disputes.png",
       hero: {
         title: "Recover Your Money Legally",
-        subtitle: "Professional legal notice to demand payment of outstanding dues with statutory backing",
+        subtitle:
+          "Professional legal notice to demand payment of outstanding dues with statutory backing",
         benefits: [
           "✓ Drafted by experienced advocates",
           "✓ Compliant with Indian legal standards",
           "✓ Trackable delivery with proof",
-          "✓ 95% success rate in recovery"
-        ]
+          "✓ 95% success rate in recovery",
+        ],
       },
       who: [
         "Someone owes you money and is not responding to your calls or messages",
         "You have lent money personally or through your business",
         "You want to recover dues without going to court immediately",
-        "You need formal documentation before filing a lawsuit"
+        "You need formal documentation before filing a lawsuit",
       ],
       documents: [
         "Loan agreement, promissory note, or acknowledgment receipt",
         "Bank transfer records, cheque copies, or payment proof",
         "WhatsApp chats, emails, or SMS showing acknowledgment of debt",
-        "Debtor's complete name, address, and contact details"
+        "Debtor's complete name, address, and contact details",
       ],
       deliverables: [
         "Professionally drafted legal demand notice citing relevant laws",
         "Registered post/courier delivery with acknowledgment receipt",
         "Legal strategy for next steps if payment is not received",
-        "Template for follow-up communications and escalation"
+        "Template for follow-up communications and escalation",
       ],
       process: [
         {
@@ -84,19 +99,20 @@ function selectContent(topicTitle: string, topicKey?: string) {
       ],
     };
   }
-  
+
   if (t.includes("dishonour") || t.includes("cheque") || t.includes("bounce")) {
     return {
       heroImage: "/legal-notice/consumer-disputes.png",
       hero: {
         title: "Cheque Bounce Legal Notice",
-        subtitle: "Swift action under Section 138 NI Act for dishonoured cheques",
+        subtitle:
+          "Swift action under Section 138 NI Act for dishonoured cheques",
         benefits: [
           "✓ Section 138 NI Act compliant",
           "✓ Statutory 15-day notice period",
           "✓ Criminal case ready documentation",
-          "✓ Expert legal guidance"
-        ]
+          "✓ Expert legal guidance",
+        ],
       },
       who: [
         "Your cheque was returned unpaid (insufficient funds/stop payment)",
@@ -304,13 +320,14 @@ function selectContent(topicTitle: string, topicKey?: string) {
     heroImage: "/legal-notice/request-a-callback.png",
     hero: {
       title: "Professional Legal Notice Service",
-      subtitle: "Expert legal notice drafting and delivery for all legal matters",
+      subtitle:
+        "Expert legal notice drafting and delivery for all legal matters",
       benefits: [
         "✓ Expert legal drafting",
         "✓ Proper legal service",
         "✓ Strategic guidance",
-        "✓ Comprehensive support"
-      ]
+        "✓ Comprehensive support",
+      ],
     },
     who: [
       "You want to formally demand action or payment",
@@ -351,10 +368,18 @@ export function LegalNoticeTopicLanding({
     .toLowerCase()
     .startsWith("legal notice");
   const headingTitle = startsWithLegalNotice ? normalized : `${normalized}`;
-  
+
   // Try to get enhanced content first, then fall back to legacy content
   const enhancedContent = topicKey ? getTopicContent(topicKey) : null;
-  const c = enhancedContent || selectContent(topicKey || topicTitle, topicKey);
+  const c = enhancedContent ?? selectContent(topicKey || topicTitle, topicKey);
+  const isEnhanced = isTopicContent(c);
+  const benefitsList: string[] | undefined = isEnhanced
+    ? c.benefits
+    : c.hero?.benefits;
+  const heroImageUrl: string | undefined = isEnhanced ? undefined : c.heroImage;
+  const leadContentText: string | undefined = isEnhanced
+    ? c.leadContent
+    : undefined;
   return (
     <div className="container mx-auto px-4 pb-8">
       {/* Enhanced Hero Section */}
@@ -364,7 +389,7 @@ export function LegalNoticeTopicLanding({
         <div className="absolute inset-0 flex items-center justify-center">
           <div className="w-[800px] h-[800px] bg-gradient-to-r from-primary/20 to-transparent rounded-full blur-3xl opacity-20" />
         </div>
-        
+
         <div className="relative max-w-6xl mx-auto px-4">
           <div className="grid md:grid-cols-2 gap-12 items-center">
             {/* Content */}
@@ -374,29 +399,35 @@ export function LegalNoticeTopicLanding({
                   Professional Legal Service
                 </div>
                 <h1 className="text-4xl md:text-6xl font-bold text-foreground leading-tight">
-                  {c.heroTitle || c.hero?.title || `Send ${headingTitle}`}
+                  {(isEnhanced ? c.heroTitle : c.hero?.title) ||
+                    `Send ${headingTitle}`}
                   {city && (
-                    <span className="block text-primary mt-2">
-                      in {city}
-                    </span>
+                    <span className="block text-primary mt-2">in {city}</span>
                   )}
                 </h1>
                 <p className="text-xl text-muted-foreground leading-relaxed">
-                  {c.heroSubtitle || c.hero?.subtitle || description || "Professional legal notice drafting and delivery service with expert guidance."}
+                  {(isEnhanced ? c.heroSubtitle : c.hero?.subtitle) ||
+                    description ||
+                    "Professional legal notice drafting and delivery service with expert guidance."}
                 </p>
-                
+
                 {/* Benefits */}
-                {(c.benefits || c.hero?.benefits) && (
+                {benefitsList && (
                   <div className="grid grid-cols-2 gap-3">
-                    {(c.benefits || c.hero?.benefits || []).map((benefit: string, index: number) => (
-                      <div key={index} className="text-sm text-foreground font-medium">
-                        {benefit}
-                      </div>
-                    ))}
+                    {(benefitsList || []).map(
+                      (benefit: string, index: number) => (
+                        <div
+                          key={index}
+                          className="text-sm text-foreground font-medium"
+                        >
+                          {benefit}
+                        </div>
+                      )
+                    )}
                   </div>
                 )}
               </div>
-              
+
               {/* CTA Buttons */}
               <div className="flex flex-col sm:flex-row gap-4">
                 <button
@@ -412,7 +443,7 @@ export function LegalNoticeTopicLanding({
                   Get Free Consultation
                 </Link>
               </div>
-              
+
               {/* Trust indicators */}
               <div className="flex items-center gap-6 text-sm text-muted-foreground">
                 <div className="flex items-center gap-2">
@@ -429,12 +460,12 @@ export function LegalNoticeTopicLanding({
                 </div>
               </div>
             </div>
-            
+
             {/* Hero Image */}
             <div className="relative">
               <div className="relative w-full h-80 md:h-96 rounded-2xl overflow-hidden bg-gradient-to-br from-primary/20 to-primary/5 p-8 flex items-center justify-center">
                 <img
-                  src={c.heroImage}
+                  src={heroImageUrl}
                   alt={`${headingTitle} illustration`}
                   className="w-full h-full object-contain drop-shadow-2xl"
                 />
@@ -448,7 +479,7 @@ export function LegalNoticeTopicLanding({
       </section>
 
       {/* Lead Generation Content Section */}
-      {c.leadContent && (
+      {leadContentText && (
         <section className="bg-gradient-to-r from-secondary/50 to-secondary/30 py-12 my-8">
           <div className="max-w-4xl mx-auto px-4">
             <div className="text-center space-y-6">
@@ -456,11 +487,14 @@ export function LegalNoticeTopicLanding({
                 Why Choose Legal Notice for {headingTitle}?
               </h2>
               <div className="text-lg text-muted-foreground leading-relaxed text-left">
-                {c.leadContent.split('. ').map((sentence: string, index: number) => (
-                  <p key={index} className="mb-4">
-                    {sentence}{sentence.endsWith('.') ? '' : '.'}
-                  </p>
-                ))}
+                {leadContentText
+                  .split(". ")
+                  .map((sentence: string, index: number) => (
+                    <p key={index} className="mb-4">
+                      {sentence}
+                      {sentence.endsWith(".") ? "" : "."}
+                    </p>
+                  ))}
               </div>
               <div className="flex justify-center">
                 <button
@@ -481,7 +515,7 @@ export function LegalNoticeTopicLanding({
           <div className="w-full h-52 rounded-xl overflow-hidden bg-muted/30 flex items-center justify-center">
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img
-              src={c.heroImage}
+              src={heroImageUrl}
               alt="topic"
               className="h-full object-contain"
             />
@@ -495,7 +529,10 @@ export function LegalNoticeTopicLanding({
               </h2>
               <div className="grid gap-3">
                 {c.who.map((w: string, index: number) => (
-                  <div key={index} className="flex items-start gap-3 p-3 bg-background/60 rounded-lg">
+                  <div
+                    key={index}
+                    className="flex items-start gap-3 p-3 bg-background/60 rounded-lg"
+                  >
                     <span className="text-green-500 mt-0.5">✓</span>
                     <span className="text-foreground">{w}</span>
                   </div>
@@ -506,11 +543,14 @@ export function LegalNoticeTopicLanding({
             <div className="bg-gradient-to-r from-amber-50 to-amber-100 dark:from-amber-950/20 dark:to-amber-900/20 rounded-xl p-6">
               <h2 className="text-2xl font-bold text-foreground mb-4 flex items-center gap-3">
                 <span className="text-amber-600">📄</span>
-                Documents you'll need
+                Documents you&apos;ll need
               </h2>
               <div className="grid gap-3">
                 {c.documents.map((d: string, index: number) => (
-                  <div key={index} className="flex items-start gap-3 p-3 bg-background/60 rounded-lg">
+                  <div
+                    key={index}
+                    className="flex items-start gap-3 p-3 bg-background/60 rounded-lg"
+                  >
                     <span className="text-amber-500 mt-0.5">📋</span>
                     <span className="text-foreground">{d}</span>
                   </div>
@@ -521,11 +561,14 @@ export function LegalNoticeTopicLanding({
             <div className="bg-gradient-to-r from-green-50 to-green-100 dark:from-green-950/20 dark:to-green-900/20 rounded-xl p-6">
               <h2 className="text-2xl font-bold text-foreground mb-4 flex items-center gap-3">
                 <span className="text-green-600">🎯</span>
-                What you'll receive
+                What you&apos;ll receive
               </h2>
               <div className="grid gap-3">
                 {c.deliverables.map((d: string, index: number) => (
-                  <div key={index} className="flex items-start gap-3 p-3 bg-background/60 rounded-lg">
+                  <div
+                    key={index}
+                    className="flex items-start gap-3 p-3 bg-background/60 rounded-lg"
+                  >
                     <span className="text-green-500 mt-0.5">🚀</span>
                     <span className="text-foreground">{d}</span>
                   </div>
@@ -541,10 +584,13 @@ export function LegalNoticeTopicLanding({
             <p className="text-lg text-muted-foreground text-center max-w-2xl mx-auto">
               Simple, transparent process to get your money back legally
             </p>
-            
+
             <div className="grid md:grid-cols-2 gap-6">
               {c.process.map(
-                (p: { icon: string; title: string; text: string }, index: number) => (
+                (
+                  p: { icon: string; title: string; text: string },
+                  index: number
+                ) => (
                   <div
                     key={p.title}
                     className="relative bg-gradient-to-br from-card to-primary/5 border border-primary/10 rounded-2xl p-6 hover:shadow-lg transition-all duration-300 group"
@@ -556,9 +602,11 @@ export function LegalNoticeTopicLanding({
                       <div className="flex-1">
                         <div className="flex items-center gap-2 mb-2">
                           <span className="bg-primary/20 text-primary px-2 py-1 rounded-full text-xs font-bold">
-                            {String(index + 1).padStart(2, '0')}
+                            {String(index + 1).padStart(2, "0")}
                           </span>
-                          <h3 className="font-bold text-foreground">{p.title}</h3>
+                          <h3 className="font-bold text-foreground">
+                            {p.title}
+                          </h3>
                         </div>
                         <p className="text-muted-foreground leading-relaxed">
                           {p.text}
@@ -575,22 +623,28 @@ export function LegalNoticeTopicLanding({
             <h2 className="text-3xl font-bold text-foreground text-center">
               Timeline & Expected Outcomes
             </h2>
-            
+
             <div className="grid md:grid-cols-4 gap-4">
-              {c.timeline.map((t: { label: string; value: string }, index: number) => (
-                <div key={t.label} className="relative">
-                  <div className="bg-gradient-to-br from-primary/10 to-primary/5 border border-primary/20 rounded-xl p-6 text-center hover:shadow-lg transition-all duration-300">
-                    <div className="w-12 h-12 bg-primary/20 rounded-full flex items-center justify-center mx-auto mb-3 text-primary font-bold">
-                      {index + 1}
+              {c.timeline.map(
+                (t: { label: string; value: string }, index: number) => (
+                  <div key={t.label} className="relative">
+                    <div className="bg-gradient-to-br from-primary/10 to-primary/5 border border-primary/20 rounded-xl p-6 text-center hover:shadow-lg transition-all duration-300">
+                      <div className="w-12 h-12 bg-primary/20 rounded-full flex items-center justify-center mx-auto mb-3 text-primary font-bold">
+                        {index + 1}
+                      </div>
+                      <div className="text-sm text-muted-foreground mb-1">
+                        {t.label}
+                      </div>
+                      <div className="font-bold text-lg text-primary">
+                        {t.value}
+                      </div>
                     </div>
-                    <div className="text-sm text-muted-foreground mb-1">{t.label}</div>
-                    <div className="font-bold text-lg text-primary">{t.value}</div>
+                    {index < c.timeline.length - 1 && (
+                      <div className="hidden md:block absolute top-1/2 -right-2 w-4 h-0.5 bg-primary/30" />
+                    )}
                   </div>
-                  {index < c.timeline.length - 1 && (
-                    <div className="hidden md:block absolute top-1/2 -right-2 w-4 h-0.5 bg-primary/30" />
-                  )}
-                </div>
-              ))}
+                )
+              )}
             </div>
           </div>
 
@@ -609,8 +663,10 @@ export function LegalNoticeTopicLanding({
               <div className="inline-flex items-center bg-primary/10 text-primary px-3 py-1 rounded-full text-sm font-medium">
                 Most Popular
               </div>
-              <h3 className="text-xl font-bold text-foreground">Get Started Today</h3>
-              
+              <h3 className="text-xl font-bold text-foreground">
+                Get Started Today
+              </h3>
+
               <div className="space-y-3">
                 <div className="flex items-center justify-between p-3 bg-background/50 rounded-lg">
                   <span className="text-sm font-medium">Advance Payment</span>
@@ -620,7 +676,7 @@ export function LegalNoticeTopicLanding({
                   Balance due only after draft approval
                 </p>
               </div>
-              
+
               <div className="space-y-3">
                 <button
                   onClick={() => openForm("legal-notice")}
@@ -635,7 +691,7 @@ export function LegalNoticeTopicLanding({
                   Get Free Consultation
                 </Link>
               </div>
-              
+
               {/* Trust badges */}
               <div className="pt-4 border-t border-border/50 space-y-2">
                 <div className="flex items-center justify-center gap-2 text-xs text-muted-foreground">
