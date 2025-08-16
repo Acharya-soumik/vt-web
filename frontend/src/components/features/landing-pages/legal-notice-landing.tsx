@@ -3,8 +3,10 @@
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { WordRotate } from "@/components/ui/word-rotate";
+import { ExpertCarousel } from "@/components/ui/expert-carousel";
 import { useFormContext } from "@/contexts/form-context";
 import { SimpleProcess } from "../homepage/simple-process";
+import { legalExperts } from "@/data/experts";
 import Image from "next/image";
 
 export function LegalNoticeLanding({
@@ -180,6 +182,13 @@ export function LegalNoticeLanding({
           {/* CTA Buttons */}
         </div>
       </section>
+
+      {/* Expert Carousel Section */}
+      <ExpertCarousel 
+        experts={legalExperts}
+        title="Consult top experts across legal areas"
+        subtitle="Connect with experienced legal professionals who can help you with your specific legal needs"
+      />
 
       {/* Most in Need Section */}
       <section className="py-16">

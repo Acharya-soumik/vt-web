@@ -2,8 +2,10 @@
 
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { ExpertCarousel } from "@/components/ui/expert-carousel";
 import { useFormContext } from "@/contexts/form-context";
 import { SimpleProcess } from "../homepage/simple-process";
+import { consultationExperts } from "@/data/experts";
 
 export function ConsultationLanding({ city }: { city?: string } = {}) {
   const { openForm } = useFormContext();
@@ -85,6 +87,13 @@ export function ConsultationLanding({ city }: { city?: string } = {}) {
           </Button>
         </div>
       </section>
+
+      {/* Expert Carousel Section */}
+      <ExpertCarousel 
+        experts={consultationExperts}
+        title="Consult top business law experts"
+        subtitle="Get expert advice from experienced business and corporate law professionals"
+      />
 
       {/* Service Details */}
       <section className="py-16">
