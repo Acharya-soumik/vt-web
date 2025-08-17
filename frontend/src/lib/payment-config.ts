@@ -1,8 +1,14 @@
 export interface PaymentConfig {
-  service: 'legal-notice' | 'consultation' | 'document-drafting' | 'corporate-retainer';
+  service:
+    | "legal-notice"
+    | "consultation"
+    | "document-drafting"
+    | "corporate-retainer"
+    | "legal-drafts-bundle";
   amount: number;
-  currency: 'INR';
+  currency: "INR";
   description: string;
+  bundleType?: "hindi-english" | "marathi-only" | "hindi-english-marathi";
 }
 
 export interface RazorpayPaymentRequest {
@@ -26,41 +32,69 @@ export interface PaymentVerificationResponse {
 
 // Payment configuration for each service
 export const PAYMENT_CONFIG: Record<string, PaymentConfig> = {
-  'legal-notice': {
-    service: 'legal-notice',
+  "legal-notice": {
+    service: "legal-notice",
     amount: 49900, // ₹499 in paise (Razorpay expects amount in paise)
-    currency: 'INR',
-    description: 'Legal Notice Service - Advance Payment'
+    currency: "INR",
+    description: "Legal Notice Service - Advance Payment",
   },
-  'consultation': {
-    service: 'consultation',
+  consultation: {
+    service: "consultation",
     amount: 29900, // ₹299 in paise
-    currency: 'INR',
-    description: 'Legal Consultation Service - Advance Payment'
+    currency: "INR",
+    description: "Legal Consultation Service - Advance Payment",
   },
-  'document-drafting': {
-    service: 'document-drafting',
+  "document-drafting": {
+    service: "document-drafting",
     amount: 29900, // ₹299 in paise
-    currency: 'INR',
-    description: 'Document Drafting Service - Advance Payment'
+    currency: "INR",
+    description: "Document Drafting Service - Advance Payment",
   },
-  'corporate-retainer': {
-    service: 'corporate-retainer',
+  "corporate-retainer": {
+    service: "corporate-retainer",
     amount: 0, // ₹0 in paise
-    currency: 'INR',
-    description: 'Corporate Retainer Service - Advance Payment'
-  }
+    currency: "INR",
+    description: "Corporate Retainer Service - Advance Payment",
+  },
+  "legal-drafts-bundle-hindi-english": {
+    service: "legal-drafts-bundle",
+    amount: 35700, // ₹357 in paise
+    currency: "INR",
+    description: "3500+ Legal Drafts Bundle - Hindi + English",
+    bundleType: "hindi-english",
+  },
+  "legal-drafts-bundle-marathi-only": {
+    service: "legal-drafts-bundle",
+    amount: 31500, // ₹315 in paise
+    currency: "INR",
+    description: "3500+ Legal Drafts Bundle - Marathi Only",
+    bundleType: "marathi-only",
+  },
+  "legal-drafts-bundle-hindi-english-marathi": {
+    service: "legal-drafts-bundle",
+    amount: 49900, // ₹499 in paise
+    currency: "INR",
+    description: "3500+ Legal Drafts Bundle - Hindi + English + Marathi",
+    bundleType: "hindi-english-marathi",
+  },
 };
 
 // Helper function to get payment config for a service
-export function getPaymentConfig(service: string): PaymentConfig | null {
+export function getPaymentConfig(
+  service: string,
+  bundleType?: string
+): PaymentConfig | null {
+  if (service === "legal-drafts-bundle" && bundleType) {
+    const key = `legal-drafts-bundle-${bundleType}`;
+    return PAYMENT_CONFIG[key] || null;
+  }
   return PAYMENT_CONFIG[service] || null;
 }
 
 // Helper function to format amount for display (paise to rupees)
 export function formatAmount(amountInPaise: number): string {
   const amountInRupees = amountInPaise / 100;
-  return `₹${amountInRupees.toLocaleString('en-IN')}`;
+  return `₹${amountInRupees.toLocaleString("en-IN")}`;
 }
 
 // Helper function to generate unique receipt ID
@@ -74,9 +108,10 @@ export function generateReceiptId(): string {
 export function createPaymentRequest(
   service: string,
   leadId: string,
-  customerName: string
+  customerName: string,
+  bundleType?: string
 ): RazorpayPaymentRequest | null {
-  const config = getPaymentConfig(service);
+  const config = getPaymentConfig(service, bundleType);
   if (!config) return null;
 
   return {
@@ -85,8 +120,8 @@ export function createPaymentRequest(
     receipt: generateReceiptId(),
     notes: {
       leadId,
-      service,
-      customerName
-    }
+      service: bundleType ? `${service}-${bundleType}` : service,
+      customerName,
+    },
   };
-} 
+}

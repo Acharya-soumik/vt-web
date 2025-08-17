@@ -68,35 +68,120 @@ export const FormProvider: React.FC<FormProviderProps> = ({
     "pending" | "success" | "failed" | null
   >(null);
 
+  // Analytics tracking
+  const {
+    logFormStart,
+    logFormStepCompleted,
+    logFormStepAbandoned,
+    logFormSubmitted,
+    logFormAbandoned,
+    logPaymentStarted,
+    logPaymentCompleted,
+    logPaymentFailed,
+
+    logLeadGenerated,
+    logConsultationBooked,
+    logLegalNoticeOrdered,
+    getUTMParams,
+    getPageType,
+  } = useAnalytics();
+
+  // Track step timing
+  const [stepStartTime, setStepStartTime] = useState<number>(Date.now());
+
   const updateFormData = useCallback((data: Partial<LeadFormData>) => {
     setFormData((prev) => ({ ...prev, ...data }));
   }, []);
 
   const nextStep = useCallback(() => {
+    const currentTime = Date.now();
+    const timeSpent = Math.round((currentTime - stepStartTime) / 1000);
+
+    // Track step completion
+    const stepNames = {
+      1: "Personal Details",
+      2: "Service Selection",
+      3: "Review & Submit",
+      4: "What's Next",
+    };
+
+    logFormStepCompleted(
+      currentStep,
+      stepNames[currentStep as keyof typeof stepNames] || `Step ${currentStep}`,
+      formData.service,
+      timeSpent
+    );
+
     setCurrentStep((prev) => Math.min(prev + 1, 4));
-  }, []);
+    setStepStartTime(Date.now());
+  }, [currentStep, formData.service, stepStartTime, logFormStepCompleted]);
 
   const prevStep = useCallback(() => {
-    setCurrentStep((prev) => Math.max(prev - 1, 1));
-  }, []);
+    // Track step abandonment (going back)
+    const stepNames = {
+      1: "Personal Details",
+      2: "Service Selection",
+      3: "Review & Submit",
+      4: "What's Next",
+    };
 
-  const goToStep = useCallback((step: number) => {
-    setCurrentStep(() => Math.max(1, Math.min(step, 4)));
-  }, []);
+    logFormStepAbandoned(
+      currentStep,
+      stepNames[currentStep as keyof typeof stepNames] || `Step ${currentStep}`,
+      formData.service,
+      "user_navigated_back"
+    );
+
+    setCurrentStep((prev) => Math.max(prev - 1, 1));
+    setStepStartTime(Date.now());
+  }, [currentStep, formData.service, stepStartTime, logFormStepAbandoned]);
+
+  const goToStep = useCallback(
+    (step: number) => {
+      // Track step abandonment if jumping to a different step
+      if (step !== currentStep) {
+        const stepNames = {
+          1: "Personal Details",
+          2: "Service Selection",
+          3: "Review & Submit",
+          4: "What's Next",
+        };
+
+        logFormStepAbandoned(
+          currentStep,
+          stepNames[currentStep as keyof typeof stepNames] ||
+            `Step ${currentStep}`,
+          formData.service,
+          "user_jumped_to_step"
+        );
+      }
+
+      setCurrentStep(() => Math.max(1, Math.min(step, 4)));
+      setStepStartTime(Date.now());
+    },
+    [currentStep, formData.service, stepStartTime, logFormStepAbandoned]
+  );
 
   const resetForm = useCallback(() => {
+    // Track form abandonment
+    if (isFormOpen && currentStep > 1) {
+      logFormAbandoned(currentStep, formData.service, "form_reset");
+    }
+
     setCurrentStep(1);
     setFormData({});
     setIsFormOpen(false);
     setPaymentStatus(null);
-  }, []);
+    setStepStartTime(Date.now());
+  }, [isFormOpen, currentStep, formData.service, logFormAbandoned]);
 
   const openForm = useCallback(
-    (serviceType?: string) => {
+    (serviceType?: string, bundleType?: string) => {
       if (serviceType) {
         setFormData((prev) => ({
           ...prev,
           service: serviceType as LeadFormData["service"],
+          bundleType: bundleType as LeadFormData["bundleType"],
         }));
         // If service is already selected, skip to step 3 (review)
         if (formData.service === serviceType) {
@@ -109,8 +194,15 @@ export const FormProvider: React.FC<FormProviderProps> = ({
       }
       setIsFormOpen(true);
       setPaymentStatus(null); // Reset payment status when opening form
+      setStepStartTime(Date.now());
+
+      // Track form start
+      const pageType = getPageType(
+        typeof window !== "undefined" ? window.location.pathname : ""
+      );
+      logFormStart(serviceType, pageType);
     },
-    [formData.service]
+    [formData.service, logFormStart, getUTMParams, getPageType]
   );
 
   const closeForm = useCallback(() => {
@@ -121,11 +213,15 @@ export const FormProvider: React.FC<FormProviderProps> = ({
         "form-modal-after-payment"
       );
     }
+
+    // Track form abandonment if closing without completion
+    if (currentStep < 4 || (currentStep === 4 && paymentStatus !== "success")) {
+      logFormAbandoned(currentStep, formData.service, "user_closed_form");
+    }
+
     // Only close the modal; do not reset form state so payment can proceed and we can reopen
     setIsFormOpen(false);
-  }, []);
-
-  const { logEvent } = useAnalytics();
+  }, [currentStep, paymentStatus, formData.service, logFormAbandoned]);
 
   const updateUrlQueryParam = useCallback((key: string, value: string) => {
     try {
@@ -176,12 +272,40 @@ export const FormProvider: React.FC<FormProviderProps> = ({
         });
         // Update URL for ad conversion tracking
         updateUrlQueryParam("type", "ticket-created");
+
         // Analytics: Lead form submitted
-        logEvent("lead_form_submitted", {
-          service: completeFormData.service,
-          payment_choice: completeFormData.paymentChoice,
-          form_step_count: completeFormData.step,
-        });
+        logFormSubmitted(
+          completeFormData.service || "unknown",
+          completeFormData.paymentChoice || "unknown",
+          completeFormData.step || currentStep
+        );
+
+        // Track lead generation
+        const utmParams = getUTMParams();
+        const pageType = getPageType(
+          typeof window !== "undefined" ? window.location.pathname : ""
+        );
+        logLeadGenerated(
+          completeFormData.service || "unknown",
+          pageType,
+          utmParams
+        );
+
+        // Track specific service conversions
+        if (completeFormData.service === "consultation") {
+          logConsultationBooked(
+            completeFormData.service,
+            completeFormData.location || undefined,
+            pageType
+          );
+        } else if (completeFormData.service === "legal-notice") {
+          logLegalNoticeOrdered(
+            "legal-notice",
+            completeFormData.location || undefined,
+            pageType
+          );
+        }
+
         // Move to next step
         nextStep();
       } else {
@@ -195,7 +319,18 @@ export const FormProvider: React.FC<FormProviderProps> = ({
     } finally {
       setIsSubmitting(false);
     }
-  }, [formData, updateFormData, nextStep, currentStep, logEvent]);
+  }, [
+    formData,
+    updateFormData,
+    nextStep,
+    currentStep,
+    logFormSubmitted,
+    logLeadGenerated,
+    logConsultationBooked,
+    logLegalNoticeOrdered,
+    getUTMParams,
+    getPageType,
+  ]);
 
   const processPayment = useCallback(async () => {
     if (!formData.leadId || !formData.service || !formData.name) {
@@ -212,7 +347,8 @@ export const FormProvider: React.FC<FormProviderProps> = ({
       const paymentRequest = createPaymentRequest(
         formData.service,
         formData.leadId,
-        formData.name
+        formData.name,
+        formData.bundleType
       );
 
       if (!paymentRequest) {
@@ -220,6 +356,9 @@ export const FormProvider: React.FC<FormProviderProps> = ({
         setPaymentStatus("failed");
         return;
       }
+
+      // Track payment started
+      logPaymentStarted(formData.service!, paymentRequest.amount, "razorpay");
 
       // Persist pending state before opening Razorpay so it survives refresh/navigation
       try {
@@ -255,13 +394,15 @@ export const FormProvider: React.FC<FormProviderProps> = ({
           try {
             localStorage.removeItem(PAYMENT_STORAGE_KEY);
           } catch {}
-          // Analytics: Advance paid
-          logEvent("advance_paid", {
-            service: formData.service,
-            payment_amount: paymentRequest.amount,
-            payment_method: "razorpay",
-            lead_id: formData.leadId,
-          });
+
+          // Analytics: Payment completed
+          logPaymentCompleted(
+            formData.service || "unknown",
+            paymentRequest.amount,
+            "razorpay",
+            response.razorpay_payment_id
+          );
+
           // Reopen modal on step 4 (success screen)
           setIsFormOpen(true);
           setCurrentStep(4);
@@ -269,6 +410,15 @@ export const FormProvider: React.FC<FormProviderProps> = ({
         (error) => {
           setPaymentError(error);
           setPaymentStatus("failed");
+
+          // Track payment failed
+          logPaymentFailed(
+            formData.service || "unknown",
+            paymentRequest.amount,
+            "razorpay",
+            error
+          );
+
           // Mark persisted state as failed (still allows retry)
           try {
             const raw = localStorage.getItem(PAYMENT_STORAGE_KEY);
@@ -286,11 +436,27 @@ export const FormProvider: React.FC<FormProviderProps> = ({
     } catch (err) {
       setPaymentError("Payment initialization failed. Please try again.");
       setPaymentStatus("failed");
+
+      // Track payment error
+      logPaymentFailed(
+        formData.service || "unknown",
+        0,
+        "razorpay",
+        "initialization_failed"
+      );
+
       console.error("Payment error:", err);
     } finally {
       setIsProcessingPayment(false);
     }
-  }, [formData, updateFormData, nextStep, logEvent]);
+  }, [
+    formData,
+    updateFormData,
+    nextStep,
+    logPaymentStarted,
+    logPaymentCompleted,
+    logPaymentFailed,
+  ]);
 
   // Hydrate payment pending state from localStorage on mount
   useEffect(() => {

@@ -14,7 +14,7 @@ export function TrustSignalsSection() {
         {/* Statistics */}
         <div className="text-center mb-12">
           <h2 className="text-3xl md:text-4xl font-bold mb-4 text-foreground">
-            Trusted by Indians
+            What our clients say about us
           </h2>
           <p className="text-lg text-muted-foreground max-w-2xl mx-auto mb-8">
             Join hundreds of Indian who trust vakiltech for all their legal

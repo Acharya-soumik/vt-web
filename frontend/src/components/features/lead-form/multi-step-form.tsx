@@ -1,27 +1,22 @@
-"use client"
+"use client";
 
-import { motion, AnimatePresence } from 'framer-motion';
-import { PersonalDetailsStep } from './steps/personal-details-step';
-import { ServiceSelectionStep } from './steps/service-selection-step';
-import { ReviewPaymentStep } from './steps/review-payment-step';
-import { WhatsNextStep } from './steps/whats-next-step';
-import { stepVariants } from '@/lib/animations';
-import { useFormContext } from '@/contexts/form-context';
-import { useEffect } from 'react';
-import { useAnalytics } from '@/hooks/use-analytics';
+import { motion, AnimatePresence } from "framer-motion";
+import { PersonalDetailsStep } from "./steps/personal-details-step";
+import { ServiceSelectionStep } from "./steps/service-selection-step";
+import { ReviewPaymentStep } from "./steps/review-payment-step";
+import { WhatsNextStep } from "./steps/whats-next-step";
+import { stepVariants } from "@/lib/animations";
+import { useFormContext } from "@/contexts/form-context";
+import { useEffect } from "react";
+import { useAnalytics } from "@/hooks/use-analytics";
 
 interface MultiStepFormProps {
   setIsStepValid?: (valid: boolean) => void;
 }
 
 export const MultiStepForm = ({ setIsStepValid }: MultiStepFormProps) => {
-  const {
-    currentStep,
-    formData,
-    updateFormData,
-    nextStep,
-    goToStep,
-  } = useFormContext();
+  const { currentStep, formData, updateFormData, nextStep, goToStep } =
+    useFormContext();
 
   const { logEvent } = useAnalytics();
 
@@ -36,7 +31,7 @@ export const MultiStepForm = ({ setIsStepValid }: MultiStepFormProps) => {
 
   const handleStepComplete = (stepData: Record<string, unknown>) => {
     updateFormData(stepData);
-    logEvent('form_step_completed', {
+    logEvent("form_step_completed", {
       step_number: currentStep,
       service: formData.service || stepData.service || undefined,
     });
@@ -115,4 +110,4 @@ export const MultiStepForm = ({ setIsStepValid }: MultiStepFormProps) => {
       </div>
     </div>
   );
-}; 
+};

@@ -1,4 +1,4 @@
-"use client"
+"use client";
 
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -7,46 +7,56 @@ import { SimpleProcess } from "../homepage/simple-process";
 
 export function CorporateRetainerLanding() {
   const { openForm } = useFormContext();
-  
+
   const features = [
     {
       title: "Ongoing Legal Support",
-      description: "Continuous legal consultation and support for your business operations",
-      icon: "🔄"
+      description:
+        "Continuous legal consultation and support for your business operations",
+      icon: "🔄",
     },
     {
-      title: "Contract Management", 
-      description: "Comprehensive contract review, drafting, and management services",
-      icon: "📋"
+      title: "Contract Management",
+      description:
+        "Comprehensive contract review, drafting, and management services",
+      icon: "📋",
     },
     {
       title: "Compliance Monitoring",
-      description: "Regular compliance checks and regulatory guidance for your business",
-      icon: "⚖️"
-    }
+      description:
+        "Regular compliance checks and regulatory guidance for your business",
+      icon: "⚖️",
+    },
   ];
 
   const processSteps = [
     {
       icon: "💰",
       title: "Choose Plan",
-      description: "Select retainer plan starting from ₹9,999/month"
+      description: "Select retainer plan starting from ₹9,999/month",
+      svgPath: "/4-step-process/pay_advance.svg",
     },
     {
       icon: "👥",
       title: "Onboard & Setup",
-      description: "Get assigned dedicated legal team and setup initial consultation"
+      description:
+        "Get assigned dedicated legal team and setup initial consultation",
+      svgPath: "/4-step-process/connect_consult.svg",
     },
     {
       icon: "🔄",
       title: "Ongoing Support",
-      description: "Receive continuous legal support, consultations and document review"
+      description:
+        "Receive continuous legal support, consultations and document review",
+      svgPath: "/4-step-process/draft.svg",
     },
     {
       icon: "✅",
       title: "Regular Updates",
-      description: "Get monthly reports and proactive legal advice for your business"
-    }
+      description:
+        "Get monthly reports and proactive legal advice for your business",
+      svgPath: "/4-step-process/approve_send.svg",
+    },
   ];
 
   return (
@@ -58,16 +68,17 @@ export function CorporateRetainerLanding() {
             Corporate Legal Retainer
           </h1>
           <p className="text-xl text-muted-foreground mb-8 max-w-2xl mx-auto">
-            Dedicated legal support for your business. Get ongoing legal consultation, 
-            contract management, and compliance monitoring with our retainer services.
+            Dedicated legal support for your business. Get ongoing legal
+            consultation, contract management, and compliance monitoring with
+            our retainer services.
           </p>
           <div className="text-3xl font-bold text-primary mb-8">
             Starting from ₹9,999/month
           </div>
-          <Button 
-            size="lg" 
+          <Button
+            size="lg"
             className="bg-primary hover:bg-primary/90 text-primary-foreground px-8 py-3"
-            onClick={() => openForm('corporate-retainer')}
+            onClick={() => openForm("corporate-retainer")}
           >
             Get Retainer
           </Button>
@@ -84,10 +95,13 @@ export function CorporateRetainerLanding() {
             Comprehensive ongoing legal support solutions for your business
           </p>
         </div>
-        
+
         <div className="grid md:grid-cols-3 gap-8">
           {features.map((feature, index) => (
-            <Card key={index} className="text-center hover:shadow-lg transition-all duration-300">
+            <Card
+              key={index}
+              className="text-center hover:shadow-lg transition-all duration-300"
+            >
               <CardHeader>
                 <div className="w-16 h-16 bg-secondary rounded-lg flex items-center justify-center mx-auto mb-4">
                   <span className="text-2xl">{feature.icon}</span>
@@ -108,7 +122,7 @@ export function CorporateRetainerLanding() {
         subtitle="Professional corporate retainer service designed for ongoing legal support"
         steps={processSteps}
       />
-  <br />
+      <br />
       {/* Pricing & Value Proposition */}
       <section className="py-16 bg-card border rounded-lg">
         <div className="text-center max-w-4xl mx-auto px-4">
@@ -121,11 +135,15 @@ export function CorporateRetainerLanding() {
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
             <div className="flex items-center">
               <div className="w-2 h-2 bg-primary rounded-full mr-3"></div>
-              <span className="text-muted-foreground">Dedicated legal team</span>
+              <span className="text-muted-foreground">
+                Dedicated legal team
+              </span>
             </div>
             <div className="flex items-center">
               <div className="w-2 h-2 bg-primary rounded-full mr-3"></div>
-              <span className="text-muted-foreground">Unlimited consultations</span>
+              <span className="text-muted-foreground">
+                Unlimited consultations
+              </span>
             </div>
             <div className="flex items-center">
               <div className="w-2 h-2 bg-primary rounded-full mr-3"></div>
@@ -133,7 +151,9 @@ export function CorporateRetainerLanding() {
             </div>
             <div className="flex items-center">
               <div className="w-2 h-2 bg-primary rounded-full mr-3"></div>
-              <span className="text-muted-foreground">Compliance monitoring</span>
+              <span className="text-muted-foreground">
+                Compliance monitoring
+              </span>
             </div>
             <div className="flex items-center">
               <div className="w-2 h-2 bg-primary rounded-full mr-3"></div>
@@ -154,26 +174,28 @@ export function CorporateRetainerLanding() {
             Ready for Dedicated Legal Support?
           </h2>
           <p className="text-lg text-muted-foreground mb-8">
-            Get started with our corporate retainer service today. Our dedicated legal team 
-            will provide ongoing support for all your business legal needs.
+            Get started with our corporate retainer service today. Our dedicated
+            legal team will provide ongoing support for all your business legal
+            needs.
           </p>
           <div className="space-x-4">
-            <Button 
-              size="lg" 
+            <Button
+              size="lg"
               className="bg-primary hover:bg-primary/90 text-primary-foreground px-8 py-3"
-              onClick={() => openForm('corporate-retainer')}
+              onClick={() => openForm("corporate-retainer")}
             >
               Get Retainer
             </Button>
-            <Button 
-              variant="outline" 
-              size="lg" 
+            <Button
+              variant="outline"
+              size="lg"
               className="border-primary text-primary hover:bg-secondary px-8 py-3"
               onClick={() => {
                 // Expand service details or show FAQ
-                const serviceDetails = document.getElementById('service-details');
+                const serviceDetails =
+                  document.getElementById("service-details");
                 if (serviceDetails) {
-                  serviceDetails.scrollIntoView({ behavior: 'smooth' });
+                  serviceDetails.scrollIntoView({ behavior: "smooth" });
                 }
               }}
             >
@@ -184,4 +206,4 @@ export function CorporateRetainerLanding() {
       </section>
     </div>
   );
-} 
+}

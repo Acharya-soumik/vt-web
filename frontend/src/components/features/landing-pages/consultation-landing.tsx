@@ -36,23 +36,27 @@ export function ConsultationLanding({ city }: { city?: string } = {}) {
       icon: "💰",
       title: "Book Consultation",
       description: "Pay ₹1,000 advance to schedule your consultation session",
+      svgPath: "/4-step-process/pay_advance.svg",
     },
     {
       icon: "👨‍💼",
       title: "Connect & Discuss",
       description:
         "Meet with qualified advocate to discuss your legal concerns",
+      svgPath: "/4-step-process/connect_consult.svg",
     },
     {
       icon: "💡",
       title: "Expert Advice",
       description: "Receive professional legal advice and strategic guidance",
+      svgPath: "/4-step-process/draft.svg",
     },
     {
       icon: "✅",
       title: "Action Plan",
       description:
         "Get clear action plan and next steps for your legal matters",
+      svgPath: "/4-step-process/approve_send.svg",
     },
   ];
 
@@ -89,7 +93,7 @@ export function ConsultationLanding({ city }: { city?: string } = {}) {
       </section>
 
       {/* Expert Carousel Section */}
-      <ExpertCarousel 
+      <ExpertCarousel
         experts={consultationExperts}
         title="Consult top business law experts"
         subtitle="Get expert advice from experienced business and corporate law professionals"

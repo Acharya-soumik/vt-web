@@ -4,12 +4,10 @@ import ConsultationCityLanding from "@/components/features/landing-pages/consult
 import { generateServiceMetadata } from "@/lib/seo";
 import { indianCities } from "@/data/indian-cities";
 import { slugify } from "@/lib/slug";
-import Link from "next/link";
 import { getLocalitiesByCity } from "@/data/localities";
 import { TrustSignalsSection } from "@/components/features/homepage/trust-signals";
 import { FAQSection } from "@/components/shared/faq-section";
 import { getConsultationCityFaqs } from "@/data/faqs";
-import TestimonialsSection from "@/components/shared/testimonials-section";
 
 export function generateStaticParams() {
   return indianCities

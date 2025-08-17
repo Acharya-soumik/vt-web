@@ -49,23 +49,27 @@ export function LegalNoticeLanding({
       title: "Pay Advance",
       description:
         "Pay ₹400 advance to get connected with a legal professional",
+      svgPath: "/4-step-process/pay_advance.svg",
     },
     {
       icon: "👨‍💼",
       title: "Connect & Consult",
       description: "Chat or call with qualified advocate to discuss your case",
+      svgPath: "/4-step-process/connect_consult.svg",
     },
     {
       icon: "📝",
       title: "Notice Drafting",
       description:
         "Advocate drafts professional legal notice after document review",
+      svgPath: "/4-step-process/draft.svg",
     },
     {
       icon: "✅",
       title: "Approve & Send",
       description:
         "Review, approve and get signed notice posted with acknowledgment",
+      svgPath: "/4-step-process/approve_send.svg",
     },
   ];
 
@@ -155,7 +159,7 @@ export function LegalNoticeLanding({
               />
 
               {/* Floating Call-to-Action Card */}
-              <div className="absolute bottom-4 left-4 right-4 bg-white/95 backdrop-blur-sm rounded-xl p-4 shadow-lg border border-primary/20">
+              <div className="absolute bottom-4 left-4 right-4 /95 backdrop-blur-sm rounded-xl p-4 shadow-lg border border-primary/20">
                 <div className="text-center">
                   <h3 className="text-lg font-bold text-primary mb-2">
                     Need Help with Legal Notice?
@@ -184,7 +188,7 @@ export function LegalNoticeLanding({
       </section>
 
       {/* Expert Carousel Section */}
-      <ExpertCarousel 
+      <ExpertCarousel
         experts={legalExperts}
         title="Consult top experts across legal areas"
         subtitle="Connect with experienced legal professionals who can help you with your specific legal needs"

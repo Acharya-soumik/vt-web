@@ -1,18 +1,38 @@
-"use client"
+"use client";
 
-import { useForm } from 'react-hook-form';
-import { zodResolver } from '@hookform/resolvers/zod';
-import { motion } from 'framer-motion';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
-import { SimpleCombobox } from '@/components/ui/simple-combobox';
-import { Checkbox } from '@/components/ui/checkbox';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { personalDetailsSchema, PersonalDetailsFormData, validatePhoneWithCountry } from '@/lib/validators/lead-form';
-import { formElementVariants, staggerContainer } from '@/lib/animations';
-import { indianCities, IndianCity, countryCodes, CountryCode, defaultCountryCode } from '@/data/indian-cities';
-import { getPhoneNumberExample, getPhoneNumberPlaceholder } from '@/lib/validators/phone-validation';
-import { useState, useEffect } from 'react';
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { motion } from "framer-motion";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { SimpleCombobox } from "@/components/ui/simple-combobox";
+import { Checkbox } from "@/components/ui/checkbox";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import {
+  personalDetailsSchema,
+  PersonalDetailsFormData,
+  validatePhoneWithCountry,
+} from "@/lib/validators/lead-form";
+import { formElementVariants, staggerContainer } from "@/lib/animations";
+import {
+  indianCities,
+  IndianCity,
+  countryCodes,
+  CountryCode,
+  defaultCountryCode,
+} from "@/data/indian-cities";
+import {
+  getPhoneNumberExample,
+  getPhoneNumberPlaceholder,
+} from "@/lib/validators/phone-validation";
+import { useState, useEffect } from "react";
+import { useAnalytics } from "@/hooks/use-analytics";
 
 interface PersonalDetailsStepProps {
   initialData?: Partial<PersonalDetailsFormData>;
@@ -21,15 +41,31 @@ interface PersonalDetailsStepProps {
   setIsStepValid?: (valid: boolean) => void;
 }
 
-export const PersonalDetailsStep = ({ initialData, onNext, onDataUpdate, setIsStepValid }: PersonalDetailsStepProps) => {
-  const [selectedCity, setSelectedCity] = useState<string>(initialData?.location || '');
+export const PersonalDetailsStep = ({
+  initialData,
+  onNext,
+  onDataUpdate,
+  setIsStepValid,
+}: PersonalDetailsStepProps) => {
+  const [selectedCity, setSelectedCity] = useState<string>(
+    initialData?.location || ""
+  );
   const [filteredCities, setFilteredCities] = useState<IndianCity[]>([]);
-  const [cityOptions, setCityOptions] = useState<{ value: string; label: string }[]>([]);
-  const [selectedCountryCode, setSelectedCountryCode] = useState<CountryCode>(defaultCountryCode);
-  const [phoneNumber, setPhoneNumber] = useState<string>('');
-  const [phoneValidationError, setPhoneValidationError] = useState<string>('');
-  const [phoneExample, setPhoneExample] = useState<string>(getPhoneNumberExample(defaultCountryCode));
-  const [phonePlaceholder, setPhonePlaceholder] = useState<string>(getPhoneNumberPlaceholder(defaultCountryCode));
+  const [cityOptions, setCityOptions] = useState<
+    { value: string; label: string }[]
+  >([]);
+  const [selectedCountryCode, setSelectedCountryCode] =
+    useState<CountryCode>(defaultCountryCode);
+  const [phoneNumber, setPhoneNumber] = useState<string>("");
+  const [phoneValidationError, setPhoneValidationError] = useState<string>("");
+  const [phoneExample, setPhoneExample] = useState<string>(
+    getPhoneNumberExample(defaultCountryCode)
+  );
+  const [phonePlaceholder, setPhonePlaceholder] = useState<string>(
+    getPhoneNumberPlaceholder(defaultCountryCode)
+  );
+
+  const { logFormFieldInteraction, logFormValidationError } = useAnalytics();
 
   const {
     register,
@@ -39,7 +75,7 @@ export const PersonalDetailsStep = ({ initialData, onNext, onDataUpdate, setIsSt
   } = useForm<PersonalDetailsFormData>({
     resolver: zodResolver(personalDetailsSchema),
     defaultValues: { whatsappConsent: true, ...initialData },
-    mode: 'onChange',
+    mode: "onChange",
   });
 
   useEffect(() => {
@@ -48,9 +84,9 @@ export const PersonalDetailsStep = ({ initialData, onNext, onDataUpdate, setIsSt
 
   // Update city options when filtered cities change
   useEffect(() => {
-    const options = filteredCities.map(city => ({
+    const options = filteredCities.map((city) => ({
       value: city.displayName,
-      label: city.displayName
+      label: city.displayName,
     }));
     setCityOptions(options);
   }, [filteredCities]);
@@ -65,10 +101,12 @@ export const PersonalDetailsStep = ({ initialData, onNext, onDataUpdate, setIsSt
     if (initialData?.whatsappNumber) {
       const fullNumber = initialData.whatsappNumber;
       // Extract country code and phone number
-      const country = countryCodes.find(c => fullNumber.startsWith(c.dialCode));
+      const country = countryCodes.find((c) =>
+        fullNumber.startsWith(c.dialCode)
+      );
       if (country) {
         setSelectedCountryCode(country);
-        const phoneOnly = fullNumber.replace(country.dialCode, '');
+        const phoneOnly = fullNumber.replace(country.dialCode, "");
         setPhoneNumber(phoneOnly);
         setPhoneExample(getPhoneNumberExample(country));
         setPhonePlaceholder(getPhoneNumberPlaceholder(country));
@@ -79,9 +117,12 @@ export const PersonalDetailsStep = ({ initialData, onNext, onDataUpdate, setIsSt
   // Handle city selection
   const handleCitySelect = (cityDisplayName: string) => {
     setSelectedCity(cityDisplayName);
-    setValue('location', cityDisplayName, { shouldValidate: true });
+    setValue("location", cityDisplayName, { shouldValidate: true });
     // Update parent data when city is selected
     onDataUpdate?.({ location: cityDisplayName });
+
+    // Track field interaction
+    logFormFieldInteraction("location", "blur", 1);
   };
 
   const onSubmit = (data: PersonalDetailsFormData) => {
@@ -96,57 +137,89 @@ export const PersonalDetailsStep = ({ initialData, onNext, onDataUpdate, setIsSt
 
   const handlePhoneNumberChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     let value = e.target.value;
-    
+
     // Remove country code if user enters it manually
-    countryCodes.forEach(country => {
+    countryCodes.forEach((country) => {
       if (value.startsWith(country.dialCode)) {
-        value = value.replace(country.dialCode, '');
+        value = value.replace(country.dialCode, "");
       }
     });
-    
+
     // Remove any non-digit characters except for the country code
-    value = value.replace(/\D/g, '');
-    
+    value = value.replace(/\D/g, "");
+
     setPhoneNumber(value);
-    
+
     // Validate phone number
     const validation = validatePhoneWithCountry(value, selectedCountryCode);
-    setPhoneValidationError(validation.error || '');
-    
+    setPhoneValidationError(validation.error || "");
+
     if (validation.isValid && validation.formattedNumber) {
-      setValue('whatsappNumber', validation.formattedNumber, { shouldValidate: true });
+      setValue("whatsappNumber", validation.formattedNumber, {
+        shouldValidate: true,
+      });
       onDataUpdate?.({ whatsappNumber: validation.formattedNumber });
     } else {
-      setValue('whatsappNumber', selectedCountryCode.dialCode + value, { shouldValidate: true });
+      setValue("whatsappNumber", selectedCountryCode.dialCode + value, {
+        shouldValidate: true,
+      });
       onDataUpdate?.({ whatsappNumber: selectedCountryCode.dialCode + value });
     }
   };
 
   const handleCountryCodeChange = (value: string) => {
-    const [countryCode, dialCode] = value.split('-');
-    const country = countryCodes.find(c => c.code === countryCode && c.dialCode === dialCode);
+    const [countryCode, dialCode] = value.split("-");
+    const country = countryCodes.find(
+      (c) => c.code === countryCode && c.dialCode === dialCode
+    );
     if (country) {
       setSelectedCountryCode(country);
-      
+
       // Update phone example and placeholder for new country
       setPhoneExample(getPhoneNumberExample(country));
       setPhonePlaceholder(getPhoneNumberPlaceholder(country));
-      
+
       // Re-validate phone number with new country code
       if (phoneNumber) {
         const validation = validatePhoneWithCountry(phoneNumber, country);
-        setPhoneValidationError(validation.error || '');
-        
+        setPhoneValidationError(validation.error || "");
+
         if (validation.isValid && validation.formattedNumber) {
-          setValue('whatsappNumber', validation.formattedNumber, { shouldValidate: true });
+          setValue("whatsappNumber", validation.formattedNumber, {
+            shouldValidate: true,
+          });
           onDataUpdate?.({ whatsappNumber: validation.formattedNumber });
         } else {
-          setValue('whatsappNumber', country.dialCode + phoneNumber, { shouldValidate: true });
+          setValue("whatsappNumber", country.dialCode + phoneNumber, {
+            shouldValidate: true,
+          });
           onDataUpdate?.({ whatsappNumber: country.dialCode + phoneNumber });
         }
       }
     }
   };
+
+  // Track validation errors
+  useEffect(() => {
+    if (errors.name) {
+      logFormValidationError("name", "required", 1);
+    }
+    if (errors.location) {
+      logFormValidationError("location", "required", 1);
+    }
+    if (errors.whatsappNumber) {
+      logFormValidationError("whatsappNumber", "invalid_format", 1);
+    }
+    if (phoneValidationError) {
+      logFormValidationError("whatsappNumber", "validation_error", 1);
+    }
+  }, [
+    errors.name,
+    errors.location,
+    errors.whatsappNumber,
+    phoneValidationError,
+    logFormValidationError,
+  ]);
 
   return (
     <motion.div
@@ -162,12 +235,14 @@ export const PersonalDetailsStep = ({ initialData, onNext, onDataUpdate, setIsSt
             id="name"
             type="text"
             placeholder="Enter your full name"
-            {...register('name')}
+            {...register("name")}
             onChange={(e) => {
-              register('name').onChange(e);
+              register("name").onChange(e);
               handleNameChange(e);
             }}
-            aria-describedby={errors.name ? 'name-error' : undefined}
+            onFocus={() => logFormFieldInteraction("name", "focus", 1)}
+            onBlur={() => logFormFieldInteraction("name", "blur", 1)}
+            aria-describedby={errors.name ? "name-error" : undefined}
           />
           {errors.name && (
             <motion.p
@@ -191,7 +266,7 @@ export const PersonalDetailsStep = ({ initialData, onNext, onDataUpdate, setIsSt
             placeholder="Search and select your city"
             searchPlaceholder="Search cities..."
             emptyMessage="No cities found. Try a different search term."
-            className={errors.location ? 'border-destructive' : ''}
+            className={errors.location ? "border-destructive" : ""}
           />
           {errors.location && (
             <motion.p
@@ -205,14 +280,18 @@ export const PersonalDetailsStep = ({ initialData, onNext, onDataUpdate, setIsSt
             </motion.p>
           )}
           <p className="text-xs text-muted-foreground mt-1">
-            Start typing to search for your city. The state will be automatically detected.
+            Start typing to search for your city. The state will be
+            automatically detected.
           </p>
         </motion.div>
 
         <motion.div variants={formElementVariants} className="space-y-2">
           <Label htmlFor="whatsappNumber">WhatsApp Number *</Label>
           <div className="flex gap-2">
-            <Select value={`${selectedCountryCode.code}-${selectedCountryCode.dialCode}`} onValueChange={handleCountryCodeChange}>
+            <Select
+              value={`${selectedCountryCode.code}-${selectedCountryCode.dialCode}`}
+              onValueChange={handleCountryCodeChange}
+            >
               <SelectTrigger className="w-[120px] text-base">
                 <SelectValue>
                   <span className="flex items-center gap-1">
@@ -223,11 +302,16 @@ export const PersonalDetailsStep = ({ initialData, onNext, onDataUpdate, setIsSt
               </SelectTrigger>
               <SelectContent>
                 {countryCodes.map((country) => (
-                  <SelectItem key={country.code} value={`${country.code}-${country.dialCode}`}>
+                  <SelectItem
+                    key={country.code}
+                    value={`${country.code}-${country.dialCode}`}
+                  >
                     <span className="flex items-center gap-2">
                       <span>{country.flag}</span>
                       <span>{country.name}</span>
-                      <span className="text-muted-foreground">{country.dialCode}</span>
+                      <span className="text-muted-foreground">
+                        {country.dialCode}
+                      </span>
                     </span>
                   </SelectItem>
                 ))}
@@ -237,10 +321,26 @@ export const PersonalDetailsStep = ({ initialData, onNext, onDataUpdate, setIsSt
               id="whatsappNumber"
               type="tel"
               placeholder={phonePlaceholder}
-              className={`flex-1 ${phoneValidationError || errors.whatsappNumber ? 'border-destructive' : phoneNumber && !phoneValidationError ? 'border-green-500' : ''}`}
+              className={`flex-1 ${
+                phoneValidationError || errors.whatsappNumber
+                  ? "border-destructive"
+                  : phoneNumber && !phoneValidationError
+                  ? "border-green-500"
+                  : ""
+              }`}
               value={phoneNumber}
               onChange={handlePhoneNumberChange}
-              aria-describedby={phoneValidationError || errors.whatsappNumber ? 'whatsapp-error' : undefined}
+              onFocus={() =>
+                logFormFieldInteraction("whatsappNumber", "focus", 1)
+              }
+              onBlur={() =>
+                logFormFieldInteraction("whatsappNumber", "blur", 1)
+              }
+              aria-describedby={
+                phoneValidationError || errors.whatsappNumber
+                  ? "whatsapp-error"
+                  : undefined
+              }
             />
           </div>
           {(phoneValidationError || errors.whatsappNumber) && (
@@ -275,10 +375,13 @@ export const PersonalDetailsStep = ({ initialData, onNext, onDataUpdate, setIsSt
               <Checkbox
                 id="whatsappConsent"
                 defaultChecked={true}
-                {...register('whatsappConsent')}
+                {...register("whatsappConsent")}
                 onCheckedChange={(checked) => {
-                  setValue('whatsappConsent', checked as boolean, { shouldValidate: true });
+                  setValue("whatsappConsent", checked as boolean, {
+                    shouldValidate: true,
+                  });
                   onDataUpdate?.({ whatsappConsent: checked as boolean });
+                  logFormFieldInteraction("whatsappConsent", "blur", 1);
                 }}
               />
             </div>
@@ -290,7 +393,9 @@ export const PersonalDetailsStep = ({ initialData, onNext, onDataUpdate, setIsSt
                 I consent to receiving communication via WhatsApp *
               </Label>
               <p className="text-xs text-muted-foreground leading-relaxed">
-                By checking this box, you agree to receive updates, legal advice, and payment details through WhatsApp at the number provided above.
+                By checking this box, you agree to receive updates, legal
+                advice, and payment details through WhatsApp at the number
+                provided above.
               </p>
             </div>
           </div>
@@ -308,8 +413,8 @@ export const PersonalDetailsStep = ({ initialData, onNext, onDataUpdate, setIsSt
         </motion.div>
 
         {/* Hidden submit button for form validation */}
-        <button type="submit" style={{ display: 'none' }} />
+        <button type="submit" style={{ display: "none" }} />
       </form>
     </motion.div>
   );
-}; 
+};
