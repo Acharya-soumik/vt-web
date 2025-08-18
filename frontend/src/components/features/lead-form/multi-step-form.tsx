@@ -8,7 +8,6 @@ import { WhatsNextStep } from "./steps/whats-next-step";
 import { stepVariants } from "@/lib/animations";
 import { useFormContext } from "@/contexts/form-context";
 import { useEffect } from "react";
-import { useAnalytics } from "@/hooks/use-analytics";
 
 interface MultiStepFormProps {
   setIsStepValid?: (valid: boolean) => void;
@@ -17,8 +16,6 @@ interface MultiStepFormProps {
 export const MultiStepForm = ({ setIsStepValid }: MultiStepFormProps) => {
   const { currentStep, formData, updateFormData, nextStep, goToStep } =
     useFormContext();
-
-  const { logEvent } = useAnalytics();
 
   // Set step validity for steps that don't have form validation
   useEffect(() => {
@@ -31,10 +28,6 @@ export const MultiStepForm = ({ setIsStepValid }: MultiStepFormProps) => {
 
   const handleStepComplete = (stepData: Record<string, unknown>) => {
     updateFormData(stepData);
-    logEvent("form_step_completed", {
-      step_number: currentStep,
-      service: formData.service || stepData.service || undefined,
-    });
     if (currentStep === 1) {
       // If service is already selected, skip to review
       if (formData.service) {

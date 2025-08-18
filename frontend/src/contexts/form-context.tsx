@@ -71,6 +71,7 @@ export const FormProvider: React.FC<FormProviderProps> = ({
   // Analytics tracking
   const {
     logFormStart,
+    logFormStepViewed,
     logFormStepCompleted,
     logFormStepAbandoned,
     logFormSubmitted,
@@ -115,6 +116,22 @@ export const FormProvider: React.FC<FormProviderProps> = ({
     setCurrentStep((prev) => Math.min(prev + 1, 4));
     setStepStartTime(Date.now());
   }, [currentStep, formData.service, stepStartTime, logFormStepCompleted]);
+
+  // Track step viewed on step change/open
+  useEffect(() => {
+    if (!isFormOpen) return;
+    const stepNames = {
+      1: "Personal Details",
+      2: "Service Selection",
+      3: "Review & Submit",
+      4: "What's Next",
+    } as const;
+    logFormStepViewed(
+      currentStep,
+      stepNames[currentStep as keyof typeof stepNames] || `Step ${currentStep}`,
+      formData.service
+    );
+  }, [currentStep, isFormOpen, formData.service, logFormStepViewed]);
 
   const prevStep = useCallback(() => {
     // Track step abandonment (going back)

@@ -27,7 +27,7 @@ export function ServicesOverviewSection() {
         "Compliance Review",
         "Dispute Resolution",
       ],
-      pricing: "Starting from ₹1,999",
+      pricing: "Starting from ₹299",
       cta: "Book Consultation",
       url: "/consultation",
     },

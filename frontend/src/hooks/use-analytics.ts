@@ -7,8 +7,10 @@ import {
   trackEnhancedPageView,
   trackFormStart,
   trackFormStepCompleted,
+  trackFormStepViewed,
   trackFormStepAbandoned,
   trackFormFieldInteraction,
+  trackFormFieldInput,
   trackFormValidationError,
   trackFormSubmitted,
   trackFormAbandoned,
@@ -61,6 +63,13 @@ export function useAnalytics() {
     trackFormStart(serviceType, source);
   }, []);
 
+  const logFormStepViewed = useCallback(
+    (stepNumber: number, stepName: string, serviceType?: string) => {
+      trackFormStepViewed(stepNumber, stepName, serviceType);
+    },
+    []
+  );
+
   const logFormStepCompleted = useCallback(
     (
       stepNumber: number,
@@ -88,6 +97,17 @@ export function useAnalytics() {
   const logFormFieldInteraction = useCallback(
     (fieldName: string, action: "focus" | "blur", stepNumber?: number) => {
       trackFormFieldInteraction(fieldName, action, stepNumber);
+    },
+    []
+  );
+
+  const logFormFieldInput = useCallback(
+    (
+      fieldName: string,
+      inputAction: "input_started" | "input_changed",
+      stepNumber?: number
+    ) => {
+      trackFormFieldInput(fieldName, inputAction, stepNumber);
     },
     []
   );
@@ -282,9 +302,11 @@ export function useAnalytics() {
     validateAnalyticsSetup,
     logEnhancedPageView,
     logFormStart,
+    logFormStepViewed,
     logFormStepCompleted,
     logFormStepAbandoned,
     logFormFieldInteraction,
+    logFormFieldInput,
     logFormValidationError,
     logFormSubmitted,
     logFormAbandoned,

@@ -61,15 +61,6 @@ const services = [
     icon: Building2,
     features: ["Ongoing support", "Priority access", "Comprehensive coverage"],
   },
-  {
-    value: "legal-drafts-bundle",
-    label: "3500+ Legal Drafts Bundle",
-    description: "Instant download of 3500+ professional legal templates",
-    price: "₹499",
-    icon: FileText,
-    features: ["3500+ templates", "Instant download", "Lifetime access"],
-    hasBundleSelection: true,
-  },
 ];
 
 export const ServiceSelectionStep = ({

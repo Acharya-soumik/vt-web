@@ -35,10 +35,12 @@ export const EVENT_NAMES = {
 
   // Form Interactions
   FORM_START: "form_start",
+  FORM_STEP_VIEWED: "form_step_viewed",
   FORM_STEP_COMPLETED: "form_step_completed",
   FORM_STEP_ABANDONED: "form_step_abandoned",
   FORM_FIELD_FOCUS: "form_field_focus",
   FORM_FIELD_BLUR: "form_field_blur",
+  FORM_FIELD_INPUT: "form_field_input",
   FORM_VALIDATION_ERROR: "form_validation_error",
   FORM_SUBMITTED: "form_submitted",
   FORM_ABANDONED: "form_abandoned",
@@ -141,6 +143,26 @@ export function trackFormStart(serviceType?: string, source?: string) {
   trackEvent(EVENT_NAMES.FORM_START, {
     service_type: serviceType,
     source: source,
+    page_type: source,
+    page_url: typeof window !== "undefined" ? window.location.href : undefined,
+    referrer:
+      typeof document !== "undefined"
+        ? document.referrer || undefined
+        : undefined,
+    timestamp: Date.now(),
+  });
+}
+
+export function trackFormStepViewed(
+  stepNumber: number,
+  stepName: string,
+  serviceType?: string
+) {
+  trackEvent(EVENT_NAMES.FORM_STEP_VIEWED, {
+    step_number: stepNumber,
+    step: String(stepNumber),
+    step_name: stepName,
+    service_type: serviceType,
     timestamp: Date.now(),
   });
 }
@@ -153,6 +175,7 @@ export function trackFormStepCompleted(
 ) {
   trackEvent(EVENT_NAMES.FORM_STEP_COMPLETED, {
     step_number: stepNumber,
+    step: String(stepNumber),
     step_name: stepName,
     service_type: serviceType,
     time_spent_seconds: timeSpent,
@@ -168,6 +191,7 @@ export function trackFormStepAbandoned(
 ) {
   trackEvent(EVENT_NAMES.FORM_STEP_ABANDONED, {
     step_number: stepNumber,
+    step: String(stepNumber),
     step_name: stepName,
     service_type: serviceType,
     abandonment_reason: reason,
@@ -187,6 +211,21 @@ export function trackFormFieldInteraction(
   trackEvent(eventName, {
     field_name: fieldName,
     step_number: stepNumber,
+    step: stepNumber != null ? String(stepNumber) : undefined,
+    timestamp: Date.now(),
+  });
+}
+
+export function trackFormFieldInput(
+  fieldName: string,
+  inputAction: "input_started" | "input_changed",
+  stepNumber?: number
+) {
+  trackEvent(EVENT_NAMES.FORM_FIELD_INPUT, {
+    field_name: fieldName,
+    input_action: inputAction,
+    step_number: stepNumber,
+    step: stepNumber != null ? String(stepNumber) : undefined,
     timestamp: Date.now(),
   });
 }
@@ -200,6 +239,7 @@ export function trackFormValidationError(
     field_name: fieldName,
     error_type: errorType,
     step_number: stepNumber,
+    step: stepNumber != null ? String(stepNumber) : undefined,
     timestamp: Date.now(),
   });
 }
@@ -213,6 +253,7 @@ export function trackFormSubmitted(
     service_type: serviceType,
     payment_choice: paymentChoice,
     form_step_count: formStepCount,
+    step: String(formStepCount),
     timestamp: Date.now(),
   });
 }
@@ -224,6 +265,7 @@ export function trackFormAbandoned(
 ) {
   trackEvent(EVENT_NAMES.FORM_ABANDONED, {
     step_number: stepNumber,
+    step: String(stepNumber),
     service_type: serviceType,
     abandonment_reason: reason,
     timestamp: Date.now(),

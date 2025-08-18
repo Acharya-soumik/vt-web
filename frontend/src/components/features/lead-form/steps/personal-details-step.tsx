@@ -65,7 +65,8 @@ export const PersonalDetailsStep = ({
     getPhoneNumberPlaceholder(defaultCountryCode)
   );
 
-  const { logFormFieldInteraction, logFormValidationError } = useAnalytics();
+  const { logFormFieldInteraction, logFormFieldInput, logFormValidationError } =
+    useAnalytics();
 
   const {
     register,
@@ -130,11 +131,19 @@ export const PersonalDetailsStep = ({
   };
 
   // Handle individual field changes
+  const [hasStartedNameInput, setHasStartedNameInput] = useState(false);
   const handleNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
+    if (!hasStartedNameInput && value.length === 1) {
+      logFormFieldInput("name", "input_started", 1);
+      setHasStartedNameInput(true);
+    } else if (hasStartedNameInput) {
+      logFormFieldInput("name", "input_changed", 1);
+    }
     onDataUpdate?.({ name: value });
   };
 
+  const [hasStartedPhoneInput, setHasStartedPhoneInput] = useState(false);
   const handlePhoneNumberChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     let value = e.target.value;
 
@@ -147,6 +156,14 @@ export const PersonalDetailsStep = ({
 
     // Remove any non-digit characters except for the country code
     value = value.replace(/\D/g, "");
+
+    // Track input start/change
+    if (!hasStartedPhoneInput && value.length === 1) {
+      logFormFieldInput("whatsappNumber", "input_started", 1);
+      setHasStartedPhoneInput(true);
+    } else if (hasStartedPhoneInput) {
+      logFormFieldInput("whatsappNumber", "input_changed", 1);
+    }
 
     setPhoneNumber(value);
 

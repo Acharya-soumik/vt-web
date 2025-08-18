@@ -56,27 +56,6 @@ export const PAYMENT_CONFIG: Record<string, PaymentConfig> = {
     currency: "INR",
     description: "Corporate Retainer Service - Advance Payment",
   },
-  "legal-drafts-bundle-hindi-english": {
-    service: "legal-drafts-bundle",
-    amount: 35700, // ₹357 in paise
-    currency: "INR",
-    description: "3500+ Legal Drafts Bundle - Hindi + English",
-    bundleType: "hindi-english",
-  },
-  "legal-drafts-bundle-marathi-only": {
-    service: "legal-drafts-bundle",
-    amount: 31500, // ₹315 in paise
-    currency: "INR",
-    description: "3500+ Legal Drafts Bundle - Marathi Only",
-    bundleType: "marathi-only",
-  },
-  "legal-drafts-bundle-hindi-english-marathi": {
-    service: "legal-drafts-bundle",
-    amount: 49900, // ₹499 in paise
-    currency: "INR",
-    description: "3500+ Legal Drafts Bundle - Hindi + English + Marathi",
-    bundleType: "hindi-english-marathi",
-  },
 };
 
 // Helper function to get payment config for a service
