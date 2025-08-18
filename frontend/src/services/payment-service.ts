@@ -78,7 +78,8 @@ export class PaymentService {
       razorpay_order_id: string;
       razorpay_signature: string;
     }) => void,
-    onError: (error: string) => void
+    onError: (error: string) => void,
+    onDismiss?: () => void
   ): Promise<void> {
     try {
       // Load Razorpay script
@@ -180,7 +181,10 @@ export class PaymentService {
               formModal.classList.remove("form-modal-during-payment");
               formModal.classList.add("form-modal-after-payment");
             }
-            // no-op
+            // Notify caller so analytics can record abandonment
+            try {
+              onDismiss?.();
+            } catch {}
           },
         },
       };

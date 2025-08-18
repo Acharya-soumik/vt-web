@@ -22,7 +22,12 @@ export function Header() {
   const { openForm, paymentStatus, processPayment, isProcessingPayment } =
     useFormContext();
 
-  const { logNavigationClick, logCTAClick, logServiceViewed } = useAnalytics();
+  const {
+    logNavigationClick,
+    logCTAClick,
+    logServiceViewed,
+    logPaymentBannerDismissed,
+  } = useAnalytics();
 
   const BANNER_DISMISS_KEY = "vt-payment-banner-dismiss";
   const DISMISS_TTL_MS = 12 * 60 * 60 * 1000; // 12 hours
@@ -105,6 +110,11 @@ export function Header() {
   const handleBannerClose: MouseEventHandler<HTMLButtonElement> = (e) => {
     e.preventDefault();
     e.stopPropagation();
+    try {
+      logPaymentBannerDismissed(
+        paymentStatus === "failed" ? "failed_state" : "pending_state"
+      );
+    } catch {}
     try {
       const raw =
         typeof window !== "undefined"

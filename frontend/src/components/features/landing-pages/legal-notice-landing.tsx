@@ -78,13 +78,13 @@ export function LegalNoticeLanding({
       {/* Hero Section */}
       <section className="relative text-center py-16 md:py-20 overflow-hidden">
         {/* Animated Gradient Background */}
-        <div className="absolute inset-0 bg-gradient-to-br from-primary/5 via-secondary/10 to-primary/5 animate-pulse"></div>
+        <div className="absolute inset-0"></div>
         <div
-          className="absolute inset-0 bg-gradient-to-tr from-transparent via-primary/3 to-transparent animate-pulse"
+          className="absolute inset-0 animate-pulse"
           style={{ animationDelay: "1s", animationDuration: "3s" }}
         ></div>
         <div
-          className="absolute inset-0 bg-gradient-to-bl from-secondary/5 via-transparent to-primary/3 animate-pulse"
+          className="absolute inset-0"
           style={{ animationDelay: "2s", animationDuration: "4s" }}
         ></div>
 

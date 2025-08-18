@@ -79,6 +79,7 @@ export const FormProvider: React.FC<FormProviderProps> = ({
     logPaymentStarted,
     logPaymentCompleted,
     logPaymentFailed,
+    logPaymentAbandoned,
 
     logLeadGenerated,
     logConsultationBooked,
@@ -448,6 +449,17 @@ export const FormProvider: React.FC<FormProviderProps> = ({
             }
           } catch {}
           // Show pending indicator with retry by keeping form closed; header will surface retry
+        },
+        () => {
+          // Razorpay modal dismissed by user
+          try {
+            logPaymentAbandoned(
+              formData.service || "unknown",
+              paymentRequest.amount,
+              "razorpay",
+              "razorpay_modal_dismissed"
+            );
+          } catch {}
         }
       );
     } catch (err) {
@@ -473,6 +485,7 @@ export const FormProvider: React.FC<FormProviderProps> = ({
     logPaymentStarted,
     logPaymentCompleted,
     logPaymentFailed,
+    logPaymentAbandoned,
   ]);
 
   // Hydrate payment pending state from localStorage on mount

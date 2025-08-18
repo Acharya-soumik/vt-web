@@ -65,6 +65,7 @@ export const EVENT_NAMES = {
 
   // Navigation
   NAVIGATION_CLICK: "navigation_click",
+  PAYMENT_BANNER_DISMISSED: "payment_banner_dismissed",
   BREADCRUMB_CLICK: "breadcrumb_click",
   CTA_CLICK: "cta_click",
 
@@ -409,6 +410,13 @@ export function trackNavigationClick(
     element_type: elementType,
     element_text: elementText,
     destination_url: destinationUrl,
+    timestamp: Date.now(),
+  });
+}
+
+export function trackPaymentBannerDismissed(reason?: string) {
+  trackEvent(EVENT_NAMES.PAYMENT_BANNER_DISMISSED, {
+    reason,
     timestamp: Date.now(),
   });
 }

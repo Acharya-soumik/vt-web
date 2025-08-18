@@ -24,6 +24,7 @@ import {
   trackConsultationBooked,
   trackLegalNoticeOrdered,
   trackNavigationClick,
+  trackPaymentBannerDismissed,
   trackCTAClick,
   trackContentViewed,
   trackFAQExpanded,
@@ -226,6 +227,10 @@ export function useAnalytics() {
     []
   );
 
+  const logPaymentBannerDismissed = useCallback((reason?: string) => {
+    trackPaymentBannerDismissed(reason);
+  }, []);
+
   const logCTAClick = useCallback(
     (
       ctaType: string,
@@ -320,6 +325,7 @@ export function useAnalytics() {
     logConsultationBooked,
     logLegalNoticeOrdered,
     logNavigationClick,
+    logPaymentBannerDismissed,
     logCTAClick,
     logContentViewed,
     logFAQExpanded,

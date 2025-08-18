@@ -35,7 +35,7 @@ export function HeroSection() {
             words={[
               "send a legal notice!",
               "get lawyer consultation!",
-              "get corporate legal services!",
+              "business legal services!",
             ]}
           />
           {/* <span className="text-primary">Right Here!</span> */}
