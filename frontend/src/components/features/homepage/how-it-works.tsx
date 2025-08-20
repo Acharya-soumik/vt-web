@@ -3,13 +3,6 @@ import { SimpleProcess } from "./simple-process";
 export function HowItWorksSection() {
   const steps = [
     {
-      icon: "₹",
-      title: "Pay Advance",
-      description:
-        "Pay ₹400 advance to get connected with a legal professional",
-      svgPath: "/4-step-process/pay_advance.svg",
-    },
-    {
       icon: "👨‍💼",
       title: "Connect & Consult",
       description: "Chat or call with qualified advocate to discuss your case",
@@ -17,9 +10,9 @@ export function HowItWorksSection() {
     },
     {
       icon: "📝",
-      title: "Notice Drafting",
+      title: "Get Expert Service",
       description:
-        "Advocate drafts professional legal notice after document review",
+        "Sit back and relax while our legal team does the heavy lifting",
       svgPath: "/4-step-process/draft.svg",
     },
     {
@@ -35,8 +28,8 @@ export function HowItWorksSection() {
     <section className="bg-muted/30 py-16 md:py-20">
       <div className="container mx-auto px-4">
         <SimpleProcess
-          title="Simple 4-Step Process"
-          subtitle="Getting legal help has never been easier. Our transparent process ensures you know exactly what to expect."
+          title="Simple 3-Step Process"
+          subtitle="Relax while our legal team does the heavy lifting. Our transparent process ensures you know exactly what to expect."
           steps={steps}
         />
 

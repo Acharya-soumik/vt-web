@@ -268,7 +268,7 @@ export function generateLegalMetadata(
 
 // Helper function to generate metadata for other pages
 export function generatePageMetadata(
-  page: "about" | "contact" | "pricing",
+  page: "about" | "contact" | "pricing" | "careers",
   customTitle?: string,
   customDescription?: string
 ): Metadata {
@@ -290,6 +290,12 @@ export function generatePageMetadata(
       description:
         "Transparent pricing for Vakil Tech legal services. View our service packages and rates.",
       keywords: ["pricing", "legal services cost", "service rates"],
+    },
+    careers: {
+      title: "Careers - Join Our Expert Legal Team",
+      description:
+        "Join Vakil Tech's elite legal team. We're hiring expert lawyers to deliver exceptional legal services across India. Apply now to advance your career.",
+      keywords: ["legal careers", "lawyer jobs", "legal employment", "expert lawyers", "legal team", "bar council", "legal practice"],
     },
   };
 

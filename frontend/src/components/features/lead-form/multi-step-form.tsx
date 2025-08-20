@@ -2,8 +2,7 @@
 
 import { motion, AnimatePresence } from "framer-motion";
 import { PersonalDetailsStep } from "./steps/personal-details-step";
-import { ServiceSelectionStep } from "./steps/service-selection-step";
-import { ReviewPaymentStep } from "./steps/review-payment-step";
+import { PaymentStep } from "./steps/payment-step";
 import { WhatsNextStep } from "./steps/whats-next-step";
 import { stepVariants } from "@/lib/animations";
 import { useFormContext } from "@/contexts/form-context";
@@ -14,30 +13,20 @@ interface MultiStepFormProps {
 }
 
 export const MultiStepForm = ({ setIsStepValid }: MultiStepFormProps) => {
-  const { currentStep, formData, updateFormData, nextStep, goToStep } =
-    useFormContext();
+  const { currentStep, formData, updateFormData, nextStep } = useFormContext();
 
   // Set step validity for steps that don't have form validation
   useEffect(() => {
     if (setIsStepValid) {
-      if (currentStep === 3 || currentStep === 4) {
-        setIsStepValid(true);
-      }
+      // Only step 1 (personal details) should be validated via child
+      // For non-validated steps, default to true so buttons are enabled
+      setIsStepValid(currentStep !== 1 ? true : false);
     }
   }, [currentStep, setIsStepValid]);
 
   const handleStepComplete = (stepData: Record<string, unknown>) => {
     updateFormData(stepData);
-    if (currentStep === 1) {
-      // If service is already selected, skip to review
-      if (formData.service) {
-        goToStep(3);
-      } else {
-        nextStep();
-      }
-    } else {
-      nextStep();
-    }
+    nextStep();
   };
 
   const handleFormDataUpdate = (stepData: Record<string, unknown>) => {
@@ -56,22 +45,8 @@ export const MultiStepForm = ({ setIsStepValid }: MultiStepFormProps) => {
           />
         );
       case 2:
-        return (
-          <ServiceSelectionStep
-            initialData={formData}
-            onNext={handleStepComplete}
-            onDataUpdate={handleFormDataUpdate}
-            setIsStepValid={setIsStepValid}
-          />
-        );
+        return <PaymentStep formData={formData} />;
       case 3:
-        return (
-          <ReviewPaymentStep
-            formData={formData}
-            onEditPersonalDetails={() => goToStep(1)}
-          />
-        );
-      case 4:
         return (
           <WhatsNextStep
             formData={formData}

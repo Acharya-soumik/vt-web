@@ -46,29 +46,23 @@ export function LegalNoticeLanding({
   const processSteps = [
     {
       icon: "₹",
-      title: "Pay Advance",
+      title: "Pay & Connect",
       description:
-        "Pay ₹400 advance to get connected with a legal professional",
+        "Pay ₹400 advance and we instantly connect you with a qualified legal professional",
       svgPath: "/4-step-process/pay_advance.svg",
     },
     {
-      icon: "👨‍💼",
-      title: "Connect & Consult",
-      description: "Chat or call with qualified advocate to discuss your case",
-      svgPath: "/4-step-process/connect_consult.svg",
-    },
-    {
       icon: "📝",
-      title: "Notice Drafting",
+      title: "Relax While We Draft",
       description:
-        "Advocate drafts professional legal notice after document review",
+        "Sit back while our advocate handles consultation, document review, and drafts your professional legal notice",
       svgPath: "/4-step-process/draft.svg",
     },
     {
       icon: "✅",
-      title: "Approve & Send",
+      title: "Review & Send",
       description:
-        "Review, approve and get signed notice posted with acknowledgment",
+        "We handle final review, get your approval, and send the signed notice with acknowledgment",
       svgPath: "/4-step-process/approve_send.svg",
     },
   ];
@@ -228,11 +222,11 @@ export function LegalNoticeLanding({
         </div>
       </section>
 
-      {/* 4-Step Process */}
+      {/* 3-Step Process */}
       <section id="legal-process" className="py-16">
         <SimpleProcess
-          title="Simple 4-Step Process"
-          subtitle="Professional legal notice service designed for simplicity and effectiveness"
+          title="Simple 3-Step Process"
+          subtitle="Sit back and relax while we handle your legal notice from start to finish"
           steps={processSteps}
           className="border-0 shadow shadow-primary border-b-2 border-primary"
         />

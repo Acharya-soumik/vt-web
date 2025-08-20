@@ -58,9 +58,6 @@ export const PersonalDetailsStep = ({
     useState<CountryCode>(defaultCountryCode);
   const [phoneNumber, setPhoneNumber] = useState<string>("");
   const [phoneValidationError, setPhoneValidationError] = useState<string>("");
-  const [phoneExample, setPhoneExample] = useState<string>(
-    getPhoneNumberExample(defaultCountryCode)
-  );
   const [phonePlaceholder, setPhonePlaceholder] = useState<string>(
     getPhoneNumberPlaceholder(defaultCountryCode)
   );
@@ -109,7 +106,6 @@ export const PersonalDetailsStep = ({
         setSelectedCountryCode(country);
         const phoneOnly = fullNumber.replace(country.dialCode, "");
         setPhoneNumber(phoneOnly);
-        setPhoneExample(getPhoneNumberExample(country));
         setPhonePlaceholder(getPhoneNumberPlaceholder(country));
       }
     }
@@ -192,8 +188,7 @@ export const PersonalDetailsStep = ({
     if (country) {
       setSelectedCountryCode(country);
 
-      // Update phone example and placeholder for new country
-      setPhoneExample(getPhoneNumberExample(country));
+      // Update placeholder for new country
       setPhonePlaceholder(getPhoneNumberPlaceholder(country));
 
       // Re-validate phone number with new country code
@@ -243,27 +238,36 @@ export const PersonalDetailsStep = ({
       variants={staggerContainer}
       initial="hidden"
       animate="visible"
-      className="space-y-4 sm:space-y-6"
+      className="space-y-6 px-4 py-2 max-w-md mx-auto"
     >
-      <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
+      {/* Form Introduction */}
+      <motion.div
+        variants={formElementVariants}
+        className="text-center space-y-2"
+      >
+        <p className="text-gray-600 text-base">
+          Fill in your details below to get started with your legal consultation
+        </p>
+      </motion.div>
+
+      <form onSubmit={handleSubmit(onSubmit)} className="space-y-5">
         <motion.div variants={formElementVariants} className="space-y-2">
-          <Label htmlFor="name">Full Name *</Label>
+          <Label htmlFor="name" className="text-base font-medium">Full Name *</Label>
           <Input
             id="name"
             type="text"
-            placeholder="Enter your full name"
+            placeholder="Your full name"
             {...register("name")}
             onChange={(e) => {
               register("name").onChange(e);
               handleNameChange(e);
             }}
-            onFocus={() => logFormFieldInteraction("name", "focus", 1)}
-            onBlur={() => logFormFieldInteraction("name", "blur", 1)}
-            aria-describedby={errors.name ? "name-error" : undefined}
+            onFocus={() => logFormFieldInteraction("name", "focus", 2)}
+            onBlur={() => logFormFieldInteraction("name", "blur", 2)}
+            className="h-12 text-base"
           />
           {errors.name && (
             <motion.p
-              id="name-error"
               className="text-sm text-destructive"
               variants={formElementVariants}
               initial="hidden"
@@ -275,19 +279,18 @@ export const PersonalDetailsStep = ({
         </motion.div>
 
         <motion.div variants={formElementVariants} className="space-y-2">
-          <Label htmlFor="location">Location *</Label>
+          <Label htmlFor="location" className="text-base font-medium">City *</Label>
           <SimpleCombobox
             options={cityOptions}
             value={selectedCity}
             onValueChange={handleCitySelect}
-            placeholder="Search and select your city"
+            placeholder="Search your city"
             searchPlaceholder="Search cities..."
-            emptyMessage="No cities found. Try a different search term."
-            className={errors.location ? "border-destructive" : ""}
+            emptyMessage="No cities found"
+            className={`h-12 text-base ${errors.location ? "border-destructive" : ""}`}
           />
           {errors.location && (
             <motion.p
-              id="location-error"
               className="text-sm text-destructive"
               variants={formElementVariants}
               initial="hidden"
@@ -296,24 +299,19 @@ export const PersonalDetailsStep = ({
               {errors.location.message}
             </motion.p>
           )}
-          <p className="text-xs text-muted-foreground mt-1">
-            Start typing to search for your city. The state will be
-            automatically detected.
-          </p>
         </motion.div>
 
         <motion.div variants={formElementVariants} className="space-y-2">
-          <Label htmlFor="whatsappNumber">WhatsApp Number *</Label>
+          <Label htmlFor="whatsappNumber" className="text-base font-medium">WhatsApp Number *</Label>
           <div className="flex gap-2">
             <Select
               value={`${selectedCountryCode.code}-${selectedCountryCode.dialCode}`}
               onValueChange={handleCountryCodeChange}
             >
-              <SelectTrigger className="w-[120px] text-base">
+              <SelectTrigger className="w-[100px] h-12 text-base">
                 <SelectValue>
                   <span className="flex items-center gap-1">
                     <span>{selectedCountryCode.flag}</span>
-                    <span>{selectedCountryCode.dialCode}</span>
                   </span>
                 </SelectValue>
               </SelectTrigger>
@@ -325,10 +323,7 @@ export const PersonalDetailsStep = ({
                   >
                     <span className="flex items-center gap-2">
                       <span>{country.flag}</span>
-                      <span>{country.name}</span>
-                      <span className="text-muted-foreground">
-                        {country.dialCode}
-                      </span>
+                      <span className="text-sm">{country.dialCode}</span>
                     </span>
                   </SelectItem>
                 ))}
@@ -338,7 +333,7 @@ export const PersonalDetailsStep = ({
               id="whatsappNumber"
               type="tel"
               placeholder={phonePlaceholder}
-              className={`flex-1 ${
+              className={`flex-1 h-12 text-base ${
                 phoneValidationError || errors.whatsappNumber
                   ? "border-destructive"
                   : phoneNumber && !phoneValidationError
@@ -348,21 +343,15 @@ export const PersonalDetailsStep = ({
               value={phoneNumber}
               onChange={handlePhoneNumberChange}
               onFocus={() =>
-                logFormFieldInteraction("whatsappNumber", "focus", 1)
+                logFormFieldInteraction("whatsappNumber", "focus", 2)
               }
               onBlur={() =>
-                logFormFieldInteraction("whatsappNumber", "blur", 1)
-              }
-              aria-describedby={
-                phoneValidationError || errors.whatsappNumber
-                  ? "whatsapp-error"
-                  : undefined
+                logFormFieldInteraction("whatsappNumber", "blur", 2)
               }
             />
           </div>
           {(phoneValidationError || errors.whatsappNumber) && (
             <motion.p
-              id="whatsapp-error"
               className="text-sm text-destructive"
               variants={formElementVariants}
               initial="hidden"
@@ -378,48 +367,36 @@ export const PersonalDetailsStep = ({
               initial="hidden"
               animate="visible"
             >
-              ✓ Valid phone number
+              ✓ Valid number
             </motion.p>
           )}
-          <p className="text-xs text-muted-foreground">
-            Example: {phoneExample}
-          </p>
         </motion.div>
 
-        <motion.div variants={formElementVariants} className="space-y-3">
+        <motion.div variants={formElementVariants} className="pt-2">
           <div className="flex items-start gap-3">
-            <div className="flex-shrink-0 mt-0.5">
-              <Checkbox
-                id="whatsappConsent"
-                defaultChecked={true}
-                {...register("whatsappConsent")}
-                onCheckedChange={(checked) => {
-                  setValue("whatsappConsent", checked as boolean, {
-                    shouldValidate: true,
-                  });
-                  onDataUpdate?.({ whatsappConsent: checked as boolean });
-                  logFormFieldInteraction("whatsappConsent", "blur", 1);
-                }}
-              />
-            </div>
-            <div className="flex-1 space-y-1">
-              <Label
-                htmlFor="whatsappConsent"
-                className="text-sm font-normal leading-relaxed cursor-pointer block"
-              >
-                I consent to receiving communication via WhatsApp *
-              </Label>
-              <p className="text-xs text-muted-foreground leading-relaxed">
-                By checking this box, you agree to receive updates, legal
-                advice, and payment details through WhatsApp at the number
-                provided above.
-              </p>
-            </div>
+            <Checkbox
+              id="whatsappConsent"
+              defaultChecked={true}
+              {...register("whatsappConsent")}
+              onCheckedChange={(checked) => {
+                setValue("whatsappConsent", checked as boolean, {
+                  shouldValidate: true,
+                });
+                onDataUpdate?.({ whatsappConsent: checked as boolean });
+                logFormFieldInteraction("whatsappConsent", "blur", 2);
+              }}
+              className="mt-1"
+            />
+            <Label
+              htmlFor="whatsappConsent"
+              className="text-sm leading-relaxed cursor-pointer"
+            >
+              I agree to receive updates via WhatsApp *
+            </Label>
           </div>
           {errors.whatsappConsent && (
             <motion.p
-              id="consent-error"
-              className="text-sm text-destructive"
+              className="text-sm text-destructive mt-2"
               variants={formElementVariants}
               initial="hidden"
               animate="visible"

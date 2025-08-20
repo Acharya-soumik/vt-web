@@ -43,7 +43,14 @@ export function SimpleProcess({
 
       <div className="grid grid-cols-2 gap-4 md:gap-8 max-w-4xl mx-auto px-4">
         {steps.map((step, index) => (
-          <div key={index} className="text-center">
+          <div
+            key={index}
+            className={`text-center ${
+              steps.length === 3 && index === 2
+                ? "col-span-2 md:col-span-2 md:max-w-md md:mx-auto"
+                : ""
+            }`}
+          >
             <motion.div
               className="w-20 h-20 mx-auto mb-4 flex items-center justify-center"
               initial={{ scale: 0, opacity: 0 }}

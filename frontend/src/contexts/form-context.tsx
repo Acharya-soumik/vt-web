@@ -101,10 +101,9 @@ export const FormProvider: React.FC<FormProviderProps> = ({
 
     // Track step completion
     const stepNames = {
-      1: "Personal Details",
-      2: "Service Selection",
-      3: "Review & Submit",
-      4: "What's Next",
+      1: "Personal Details", 
+      2: "Payment",
+      3: "What's Next",
     };
 
     logFormStepCompleted(
@@ -114,7 +113,7 @@ export const FormProvider: React.FC<FormProviderProps> = ({
       timeSpent
     );
 
-    setCurrentStep((prev) => Math.min(prev + 1, 4));
+    setCurrentStep((prev) => Math.min(prev + 1, 3));
     setStepStartTime(Date.now());
   }, [currentStep, formData.service, stepStartTime, logFormStepCompleted]);
 
@@ -123,9 +122,8 @@ export const FormProvider: React.FC<FormProviderProps> = ({
     if (!isFormOpen) return;
     const stepNames = {
       1: "Personal Details",
-      2: "Service Selection",
-      3: "Review & Submit",
-      4: "What's Next",
+      2: "Payment", 
+      3: "What's Next",
     } as const;
     logFormStepViewed(
       currentStep,
@@ -138,9 +136,8 @@ export const FormProvider: React.FC<FormProviderProps> = ({
     // Track step abandonment (going back)
     const stepNames = {
       1: "Personal Details",
-      2: "Service Selection",
-      3: "Review & Submit",
-      4: "What's Next",
+      2: "Payment",
+      3: "What's Next",
     };
 
     logFormStepAbandoned(
@@ -160,9 +157,8 @@ export const FormProvider: React.FC<FormProviderProps> = ({
       if (step !== currentStep) {
         const stepNames = {
           1: "Personal Details",
-          2: "Service Selection",
-          3: "Review & Submit",
-          4: "What's Next",
+          2: "Payment",
+          3: "What's Next",
         };
 
         logFormStepAbandoned(
@@ -174,7 +170,7 @@ export const FormProvider: React.FC<FormProviderProps> = ({
         );
       }
 
-      setCurrentStep(() => Math.max(1, Math.min(step, 4)));
+      setCurrentStep(() => Math.max(1, Math.min(step, 3)));
       setStepStartTime(Date.now());
     },
     [currentStep, formData.service, stepStartTime, logFormStepAbandoned]
@@ -182,7 +178,7 @@ export const FormProvider: React.FC<FormProviderProps> = ({
 
   const resetForm = useCallback(() => {
     // Track form abandonment
-    if (isFormOpen && currentStep > 1) {
+    if (isFormOpen && currentStep > 0) {
       logFormAbandoned(currentStep, formData.service, "form_reset");
     }
 
@@ -195,21 +191,17 @@ export const FormProvider: React.FC<FormProviderProps> = ({
 
   const openForm = useCallback(
     (serviceType?: string, bundleType?: string) => {
-      if (serviceType) {
-        setFormData((prev) => ({
-          ...prev,
-          service: serviceType as LeadFormData["service"],
-          bundleType: bundleType as LeadFormData["bundleType"],
-        }));
-        // If service is already selected, skip to step 3 (review)
-        if (formData.service === serviceType) {
-          setCurrentStep(3);
-        } else {
-          setCurrentStep(1);
-        }
-      } else {
-        setCurrentStep(1);
-      }
+      // Always require a service - default to consultation if none provided
+      const selectedService = serviceType || "consultation";
+      
+      setFormData((prev) => ({
+        ...prev,
+        service: selectedService as LeadFormData["service"],
+        bundleType: bundleType as LeadFormData["bundleType"],
+      }));
+      // Always go directly to step 1 (personal details) since we always have a service
+      setCurrentStep(1);
+      
       setIsFormOpen(true);
       setPaymentStatus(null); // Reset payment status when opening form
       setStepStartTime(Date.now());
@@ -218,9 +210,9 @@ export const FormProvider: React.FC<FormProviderProps> = ({
       const pageType = getPageType(
         typeof window !== "undefined" ? window.location.pathname : ""
       );
-      logFormStart(serviceType, pageType);
+      logFormStart(selectedService, pageType);
     },
-    [formData.service, logFormStart, getUTMParams, getPageType]
+    [logFormStart, getUTMParams, getPageType]
   );
 
   const closeForm = useCallback(() => {
@@ -233,7 +225,7 @@ export const FormProvider: React.FC<FormProviderProps> = ({
     }
 
     // Track form abandonment if closing without completion
-    if (currentStep < 4 || (currentStep === 4 && paymentStatus !== "success")) {
+    if (currentStep < 3 || (currentStep === 3 && paymentStatus !== "success")) {
       logFormAbandoned(currentStep, formData.service, "user_closed_form");
     }
 
@@ -421,9 +413,9 @@ export const FormProvider: React.FC<FormProviderProps> = ({
             response.razorpay_payment_id
           );
 
-          // Reopen modal on step 4 (success screen)
+          // Reopen modal on step 3 (success screen)
           setIsFormOpen(true);
-          setCurrentStep(4);
+          setCurrentStep(3);
         },
         (error) => {
           setPaymentError(error);

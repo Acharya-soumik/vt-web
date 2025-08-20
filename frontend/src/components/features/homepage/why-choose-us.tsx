@@ -109,7 +109,7 @@ export function WhyChooseUsSection() {
               className="bg-primary hover:bg-primary/90 text-primary-foreground"
               onClick={() => openForm("consultation")}
             >
-              Talk to a Lawyer
+              Book Consultation
             </Button>
             <Button
               size="lg"

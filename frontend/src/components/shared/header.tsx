@@ -19,6 +19,7 @@ import { useAnalytics } from "@/hooks/use-analytics";
 export function Header() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [showPaymentBanner, setShowPaymentBanner] = useState(false);
+  const [currentCTA, setCurrentCTA] = useState({ text: "Book Consultation", service: "consultation" });
   const { openForm, paymentStatus, processPayment, isProcessingPayment } =
     useFormContext();
 
@@ -36,13 +37,56 @@ export function Header() {
     setIsMobileMenuOpen(false);
   };
 
+  // Get page-specific CTA text and service
+  const getPageSpecificCTA = () => {
+    if (typeof window === "undefined") return { text: "Book Consultation", service: "consultation" };
+    
+    const pathname = window.location.pathname;
+    
+    // Legal notice pages - various URL patterns
+    if (pathname.includes("/send-a-legal-notice") || 
+        pathname.includes("/legal-notice") ||
+        pathname.includes("/cheque-bounce") ||
+        pathname.includes("/property-dispute") ||
+        pathname.includes("/tenant-eviction") ||
+        pathname.includes("/consumer-dispute")) {
+      return { text: "Send Legal Notice", service: "legal-notice" };
+    }
+    if (pathname.includes("/document-drafting")) {
+      return { text: "Draft Document", service: "document-drafting" };
+    }
+    if (pathname.includes("/corporate-retainer")) {
+      return { text: "Get Retainer", service: "corporate-retainer" };
+    }
+    if (pathname.includes("/consultation")) {
+      return { text: "Book Consultation", service: "consultation" };
+    }
+    
+    // Default for home page and other pages
+    return { text: "Book Consultation", service: "consultation" };
+  };
+
+  // Update CTA when pathname changes
+  useEffect(() => {
+    const updateCTA = () => {
+      setCurrentCTA(getPageSpecificCTA());
+    };
+    
+    updateCTA();
+    
+    // Check for pathname changes periodically (for client-side routing)
+    const interval = setInterval(updateCTA, 500);
+    
+    return () => clearInterval(interval);
+  }, []);
+
   const handleOpenForm = () => {
     logCTAClick(
       "header_cta",
-      "Get Started",
+      currentCTA.text,
       typeof window !== "undefined" ? window.location.pathname : undefined
     );
-    openForm();
+    openForm(currentCTA.service);
     handleMobileMenuClose();
   };
 
@@ -217,6 +261,15 @@ export function Header() {
             >
               Contact
             </Link>
+            <Link
+              href="/careers"
+              className="text-muted-foreground hover:text-primary transition-colors"
+              onClick={() =>
+                handleNavigationClick("nav_link", "Careers", "/careers")
+              }
+            >
+              Careers
+            </Link>
 
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
@@ -290,7 +343,7 @@ export function Header() {
             </DropdownMenu>
 
             <Button onClick={handleOpenForm} size="sm">
-              Get Started
+              {currentCTA.text}
             </Button>
           </nav>
 
@@ -377,6 +430,20 @@ export function Header() {
                   >
                     Contact
                   </Link>
+                  <Link
+                    href="/careers"
+                    className="text-left text-muted-foreground hover:text-primary transition-colors py-2 px-3 rounded-md hover:bg-accent"
+                    onClick={() => {
+                      handleMobileMenuClose();
+                      handleNavigationClick(
+                        "mobile_nav_link",
+                        "Careers",
+                        "/careers"
+                      );
+                    }}
+                  >
+                    Careers
+                  </Link>
 
                   <div className="space-y-1">
                     <div className="text-sm font-medium text-muted-foreground px-3 py-1">
@@ -442,7 +509,7 @@ export function Header() {
 
                   <div className="pt-2">
                     <Button onClick={handleOpenForm} className="w-full">
-                      Get Started
+                      {currentCTA.text}
                     </Button>
                   </div>
                 </nav>

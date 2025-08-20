@@ -25,7 +25,6 @@ import {
 export const LeadFormModal = () => {
   const {
     currentStep,
-    nextStep,
     prevStep,
     isFormOpen,
     closeForm,
@@ -72,12 +71,10 @@ export const LeadFormModal = () => {
   const getStepTitle = () => {
     switch (currentStep) {
       case 1:
-        return "Personal Details";
+        return "Your Details";
       case 2:
-        return "Service Selection";
+        return "Secure Payment";
       case 3:
-        return "Review & Submit";
-      case 4:
         if (paymentStatus === "success") {
           return "Payment Successful!";
         } else if (paymentStatus === "failed") {
@@ -93,12 +90,10 @@ export const LeadFormModal = () => {
   const getStepDescription = () => {
     switch (currentStep) {
       case 1:
-        return "Please provide your basic information to get started";
+        return "Provide your contact information";
       case 2:
-        return "Choose the legal service you need";
+        return "Complete your secure payment";
       case 3:
-        return "Review your information and submit your ticket";
-      case 4:
         if (paymentStatus === "success") {
           return "Your payment has been processed successfully!";
         } else if (paymentStatus === "failed") {
@@ -117,14 +112,14 @@ export const LeadFormModal = () => {
     return config ? formatAmount(config.amount) : "₹400";
   };
 
-  // Handle close attempt with confirmation for step 4
+  // Handle close attempt with confirmation for step 3
   const handleCloseAttempt = () => {
     // Don't allow closing if payment was successful
     if (paymentStatus === "success") {
       return;
     }
 
-    if (currentStep === 4 && !formData.paymentSuccess) {
+    if (currentStep === 3 && !formData.paymentSuccess) {
       setShowCloseConfirmation(true);
     } else {
       closeForm();
@@ -186,10 +181,10 @@ export const LeadFormModal = () => {
               <div className="px-4 sm:px-6 py-3 sm:py-4 border-t bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 flex-shrink-0">
                 <div className="flex justify-between items-center">
                   <div className="text-xs sm:text-sm text-muted-foreground">
-                    Step {currentStep} of 4
+                    Step {currentStep} of 3
                   </div>
                   <div className="flex gap-2 sm:gap-3">
-                    {currentStep > 1 && currentStep < 4 && (
+                    {currentStep > 1 && currentStep < 3 && (
                       <Button
                         variant="outline"
                         onClick={prevStep}
@@ -199,23 +194,35 @@ export const LeadFormModal = () => {
                         Back
                       </Button>
                     )}
-                    {currentStep === 3 ? (
+                    {currentStep === 1 ? (
                       <Button
                         onClick={submitForm}
-                        disabled={isSubmitting}
+                        disabled={!isStepValid || isSubmitting}
                         size="sm"
                         className="min-w-[100px] sm:min-w-[120px] sm:text-base"
                       >
                         {isSubmitting ? (
                           <>
                             <Loader2 className="w-4 h-4 mr-2 animate-spin" />
-                            Submitting...
+                            Raising Ticket...
                           </>
                         ) : (
-                          "Submit Ticket"
+                          "Raise Ticket"
                         )}
                       </Button>
-                    ) : currentStep === 4 &&
+                    ) : currentStep === 2 ? (
+                      <Button
+                        onClick={handlePayAdvance}
+                        disabled={isProcessingPayment}
+                        size="sm"
+                        className="min-w-[140px] sm:min-w-[160px] sm:text-base"
+                      >
+                        <CreditCard className="w-4 h-4 mr-2" />
+                        {isProcessingPayment
+                          ? "Processing..."
+                          : `Pay ${getPaymentAmount()}`}
+                      </Button>
+                    ) : currentStep === 3 &&
                       !formData.paymentSuccess &&
                       paymentStatus !== "success" ? (
                       <Button
@@ -235,22 +242,13 @@ export const LeadFormModal = () => {
                           ? "Retry Payment"
                           : `Pay ${getPaymentAmount()}`}
                       </Button>
-                    ) : currentStep === 4 && paymentStatus === "success" ? (
+                    ) : currentStep === 3 && paymentStatus === "success" ? (
                       <Button
                         onClick={closeForm}
                         size="sm"
                         className="min-w-[100px] sm:min-w-[120px] sm:text-base bg-green-600 hover:bg-green-700"
                       >
                         Close
-                      </Button>
-                    ) : currentStep < 3 ? (
-                      <Button
-                        onClick={nextStep}
-                        size="sm"
-                        className="min-w-[100px] sm:min-w-[120px] sm:text-base"
-                        disabled={!isStepValid}
-                      >
-                        Continue
                       </Button>
                     ) : null}
                   </div>

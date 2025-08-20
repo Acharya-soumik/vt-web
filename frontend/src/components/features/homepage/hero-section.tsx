@@ -10,7 +10,7 @@ export function HeroSection() {
   const { logCTAClick, logServiceViewed } = useAnalytics();
 
   const handleGetStarted = () => {
-    logCTAClick("hero_cta", "Talk to a Lawyer", "/", "consultation");
+    logCTAClick("hero_cta", "Book Consultation", "/", "consultation");
     logServiceViewed("consultation", "/");
     openForm("consultation");
   };
@@ -58,7 +58,7 @@ export function HeroSection() {
             className="bg-primary hover:bg-primary/90 text-primary-foreground"
             onClick={handleGetStarted}
           >
-            Talk to a Lawyer
+            Book Consultation
           </Button>
           <Button
             size="lg"
