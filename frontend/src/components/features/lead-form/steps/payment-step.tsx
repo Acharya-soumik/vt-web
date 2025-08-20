@@ -11,6 +11,7 @@ import Image from "next/image";
 import { useState } from "react";
 import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
 import { useFormContext } from "@/contexts/form-context";
+import { useAnalytics } from "@/hooks/use-analytics";
 
 interface PaymentStepProps {
   formData: Partial<LeadFormData>;
@@ -31,6 +32,7 @@ const getServiceName = (service: string) => {
 export const PaymentStep = ({ formData }: PaymentStepProps) => {
   const { submissionError, paymentError } = useFormContext();
   const [isRefundDialogOpen, setIsRefundDialogOpen] = useState(false);
+  const { logCTAClick } = useAnalytics();
 
   const service = formData.service || "";
   const name = formData.name || "";
@@ -86,7 +88,19 @@ export const PaymentStep = ({ formData }: PaymentStepProps) => {
                   onOpenChange={setIsRefundDialogOpen}
                 >
                   <DialogTrigger asChild>
-                    <button className="p-1 hover:bg-gray-100 rounded-full transition-colors">
+                    <button
+                      className="p-1 hover:bg-gray-100 rounded-full transition-colors"
+                      onClick={() =>
+                        logCTAClick(
+                          "refund_policy_info",
+                          "Refund Policy Info",
+                          typeof window !== "undefined"
+                            ? window.location.pathname
+                            : undefined,
+                          formData.service
+                        )
+                      }
+                    >
                       <Info className="w-4 h-4 text-blue-600 cursor-pointer" />
                     </button>
                   </DialogTrigger>

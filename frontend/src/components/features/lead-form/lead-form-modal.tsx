@@ -21,6 +21,7 @@ import {
   DialogHeader as ConfirmDialogHeader,
   DialogTitle as ConfirmDialogTitle,
 } from "@/components/ui/dialog";
+import { useAnalytics } from "@/hooks/use-analytics";
 
 export const LeadFormModal = () => {
   const {
@@ -36,6 +37,8 @@ export const LeadFormModal = () => {
     isProcessingPayment,
     paymentStatus,
   } = useFormContext();
+
+  const { logCTAClick, logEvent } = useAnalytics();
 
   const [isStepValid, setIsStepValid] = useState(false);
   const [showCloseConfirmation, setShowCloseConfirmation] = useState(false);
@@ -137,13 +140,54 @@ export const LeadFormModal = () => {
 
   // Handle pay advance
   const handlePayAdvance = () => {
+    try {
+      const config = getPaymentConfig(formData.service || "consultation");
+      // Track CTA click explicitly (separate from payment_started)
+      logCTAClick(
+        "pay",
+        `Pay ${config ? formatAmount(config.amount) : getPaymentAmount()}`,
+        typeof window !== "undefined" ? window.location.pathname : undefined,
+        formData.service || "consultation"
+      );
+      // Add step context for funneling in GA4
+      logEvent("cta_click", {
+        cta_type: "pay",
+        step_number: currentStep,
+        service_type: formData.service || "consultation",
+      });
+    } catch {}
     processPayment();
   };
 
   // Handle retry payment
   const handleRetryPayment = () => {
+    // Track retry CTA as well
+    try {
+      logEvent("cta_click", {
+        cta_type: "retry_payment",
+        step_number: currentStep,
+        service_type: formData.service || "consultation",
+      });
+    } catch {}
     // Reset payment status and try again
     processPayment();
+  };
+
+  const handleRaiseTicket = () => {
+    try {
+      logCTAClick(
+        "raise_ticket",
+        "Raise Ticket",
+        typeof window !== "undefined" ? window.location.pathname : undefined,
+        formData.service || "consultation"
+      );
+      logEvent("cta_click", {
+        cta_type: "raise_ticket",
+        step_number: currentStep,
+        service_type: formData.service || "consultation",
+      });
+    } catch {}
+    submitForm();
   };
 
   return (
@@ -196,7 +240,7 @@ export const LeadFormModal = () => {
                     )}
                     {currentStep === 1 ? (
                       <Button
-                        onClick={submitForm}
+                        onClick={handleRaiseTicket}
                         disabled={!isStepValid || isSubmitting}
                         size="sm"
                         className="min-w-[100px] sm:min-w-[120px] sm:text-base"
