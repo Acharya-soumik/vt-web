@@ -688,7 +688,7 @@ export function LegalNoticeTopicLanding({
                   href={`?type=legal-notice`}
                   className="block w-full text-center border border-primary/20 text-primary hover:bg-primary/5 rounded-lg py-3 font-medium transition-all duration-300"
                 >
-                  Get Free Consultation
+                  Get Consultation
                 </Link>
               </div>
 

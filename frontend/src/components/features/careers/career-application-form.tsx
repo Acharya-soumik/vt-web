@@ -80,10 +80,32 @@ export function CareerApplicationForm() {
       logFormSubmitted("career_application", "no_payment", 1);
 
       // Optional: handle resume upload separately to storage and get URL
-      const resumeUrl: string | null = null;
+      let resumeUrl: string | null = null;
       if (formData.resumeFile) {
-        // For now, skip upload implementation; backend supports optional resumeUrl
-        // Implement storage upload later if needed
+        const data = new FormData();
+        data.set("file", formData.resumeFile);
+
+        const uploadRes = await fetch("/api/uploads/resume", {
+          method: "POST",
+          body: data,
+        });
+
+        if (!uploadRes.ok) {
+          const err = await uploadRes
+            .json()
+            .catch(() => ({ error: "Resume upload failed" }));
+          throw new Error(err.error || "Resume upload failed");
+        }
+
+        const uploadJson = (await uploadRes.json()) as {
+          success: boolean;
+          url: string | null;
+          path: string;
+        };
+
+        // Prefer a signed URL; if unavailable, fall back to storing the storage path
+        // (still useful for backoffice retrieval/signing later)
+        resumeUrl = uploadJson.url ?? uploadJson.path;
       }
 
       const response = await fetch("/api/lawyer-leads", {
@@ -201,7 +223,7 @@ export function CareerApplicationForm() {
   }
 
   return (
-    <Card>
+    <Card id="apply" className="scroll-mt-28">
       <CardHeader>
         <CardTitle className="flex items-center text-2xl">
           <FileText className="h-6 w-6 mr-3 text-primary" />

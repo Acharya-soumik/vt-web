@@ -79,12 +79,6 @@ export function LegalNoticeTopicLandingUniform({
                 >
                   Start Legal Notice
                 </button>
-                <Link
-                  href={`?type=legal-notice`}
-                  className="border-2 border-primary text-primary hover:bg-primary hover:text-primary-foreground px-8 py-4 rounded-lg font-semibold text-lg transition-all duration-300 text-center"
-                >
-                  Get Free Consultation
-                </Link>
               </div>
 
               {/* Trust indicators */}
@@ -332,12 +326,6 @@ export function LegalNoticeTopicLandingUniform({
                 >
                   Start Legal Notice
                 </button>
-                <Link
-                  href={`?type=legal-notice`}
-                  className="block w-full text-center border border-primary/20 text-primary hover:bg-primary/5 rounded-lg py-3 font-medium transition-all duration-300"
-                >
-                  Get Free Consultation
-                </Link>
               </div>
 
               {/* Trust badges */}

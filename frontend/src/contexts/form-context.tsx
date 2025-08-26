@@ -319,9 +319,14 @@ export const FormProvider: React.FC<FormProviderProps> = ({
         // Move to next step
         nextStep();
       } else {
-        setSubmissionError(
-          result.message || "Failed to submit lead. Please try again."
-        );
+        // Handle different types of errors
+        if (result.error === "Duplicate lead" || result.error === "Duplicate unpaid lead") {
+          setSubmissionError(result.message || "A ticket already exists for this service.");
+        } else {
+          setSubmissionError(
+            result.message || "Failed to submit lead. Please try again."
+          );
+        }
       }
     } catch (err) {
       setSubmissionError("An unexpected error occurred. Please try again.");

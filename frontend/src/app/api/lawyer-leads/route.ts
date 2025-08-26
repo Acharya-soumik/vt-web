@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { z } from "zod";
-import { getSupabaseServer } from "@/lib/supabase-server";
+import { getSupabaseAdmin } from "@/lib/supabase-admin";
 
 const lawyerLeadSchema = z.object({
   fullName: z.string().min(2).max(255),
@@ -44,7 +44,7 @@ export async function POST(request: NextRequest) {
       status: "new" as const,
     };
 
-    const { data: inserted, error } = await getSupabaseServer()
+    const { data: inserted, error } = await getSupabaseAdmin()
       .from("lawyer_leads")
       .insert([insertPayload])
       .select("id")

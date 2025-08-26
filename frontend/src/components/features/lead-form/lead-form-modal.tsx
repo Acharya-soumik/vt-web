@@ -228,16 +228,18 @@ export const LeadFormModal = () => {
                     Step {currentStep} of 3
                   </div>
                   <div className="flex gap-2 sm:gap-3">
-                    {currentStep > 1 && currentStep < 3 && (
-                      <Button
-                        variant="outline"
-                        onClick={prevStep}
-                        size="sm"
-                        className="sm:text-base"
-                      >
-                        Back
-                      </Button>
-                    )}
+                    {currentStep > 1 &&
+                      currentStep < 3 &&
+                      currentStep !== 2 && (
+                        <Button
+                          variant="outline"
+                          onClick={prevStep}
+                          size="sm"
+                          className="sm:text-base"
+                        >
+                          Back
+                        </Button>
+                      )}
                     {currentStep === 1 ? (
                       <Button
                         onClick={handleRaiseTicket}

@@ -70,6 +70,115 @@ export async function POST(request: NextRequest): Promise<NextResponse<LeadSubmi
     // Generate custom ID
     const customId = generateCustomId(validatedData.name, validatedData.whatsappNumber);
     
+    // Check for duplicate leads (same name and phone number)
+    const supabase = getSupabaseServer();
+    
+    // First check if a lead with same name and phone number already exists
+    const { data: existingLeads, error: checkError } = await supabase
+      .from('leads')
+      .select('id, service, payment_status, custom_id')
+      .eq('name', validatedData.name)
+      .eq('whatsapp_number', validatedData.whatsappNumber);
+
+    if (checkError) {
+      console.error('Error checking for duplicates:', checkError);
+      return NextResponse.json(
+        {
+          success: false,
+          error: 'Database error',
+          message: 'Please try again or contact support if the problem persists.'
+        },
+        { status: 500 }
+      );
+    }
+
+    // If existing leads found, check service duplication rules
+    if (existingLeads && existingLeads.length > 0) {
+      const existingServicesForUser = existingLeads.map(lead => lead.service);
+      
+      // If same service already exists for this user
+      if (existingServicesForUser.includes(validatedData.service)) {
+        const existingLead = existingLeads.find(lead => lead.service === validatedData.service);
+        
+        // Check if the existing lead is paid or not
+        if (existingLead?.payment_status === 'paid') {
+          return NextResponse.json(
+            {
+              success: false,
+              error: 'Duplicate lead',
+              message: 'A ticket already exists for this service. We will reach out to you soon!'
+            },
+            { status: 409 }
+          );
+        } else {
+          // Existing lead is unpaid
+          return NextResponse.json(
+            {
+              success: false,
+              error: 'Duplicate unpaid lead',
+              message: 'A ticket already exists for this service. We will reach out to you soon. If you want priority support, please complete the payment.'
+            },
+            { status: 409 }
+          );
+        }
+      }
+      
+      // Different service - allow but generate unique custom_id by including service
+      const serviceBasedCustomId = `${customId}-${validatedData.service}`;
+      
+      // Transform form data to database format
+      const leadData = {
+        name: validatedData.name,
+        location: validatedData.location,
+        whatsapp_number: validatedData.whatsappNumber,
+        service: validatedData.service,
+        service_details: validatedData.serviceDetails,
+        payment_choice: validatedData.paymentChoice || 'submit-only', // Default if not set
+        whatsapp_consent: validatedData.whatsappConsent,
+        payment_status: 'pending' as const,
+        status: 'new' as const,
+        custom_id: serviceBasedCustomId,
+        user_id: null, // Explicitly set to null for anonymous submissions
+      };
+
+      // Validate the transformed data
+      const validatedLeadData = leadInsertSchema.parse(leadData);
+
+      // Debug: Log the data being inserted
+      console.log('Data being inserted (different service):', JSON.stringify(validatedLeadData, null, 2));
+      
+      // Insert into Supabase
+      const { data, error } = await supabase
+        .from('leads')
+        .insert([validatedLeadData])
+        .select('id, custom_id')
+        .single();
+
+      if (error) {
+        console.error('Supabase insertion error:', error);
+        return NextResponse.json(
+          {
+            success: false,
+            error: 'Failed to save lead to database',
+            message: 'Please try again or contact support if the problem persists.',
+            details: error.message
+          },
+          { status: 500 }
+        );
+      }
+
+      return NextResponse.json(
+        {
+          success: true,
+          leadId: data.id,
+          customId: data.custom_id,
+          message: 'Lead submitted successfully!'
+        },
+        { status: 201 }
+      );
+    }
+    
+    // No existing leads found - proceed with normal insertion
     // Transform form data to database format
     const leadData = {
       name: validatedData.name,
@@ -89,10 +198,10 @@ export async function POST(request: NextRequest): Promise<NextResponse<LeadSubmi
     const validatedLeadData = leadInsertSchema.parse(leadData);
 
     // Debug: Log the data being inserted
-    console.log('Data being inserted:', JSON.stringify(validatedLeadData, null, 2));
+    console.log('Data being inserted (new lead):', JSON.stringify(validatedLeadData, null, 2));
     
     // Insert into Supabase
-    const { data, error } = await getSupabaseServer()
+    const { data, error } = await supabase
       .from('leads')
       .insert([validatedLeadData])
       .select('id, custom_id')

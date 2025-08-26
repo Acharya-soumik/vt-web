@@ -75,6 +75,16 @@ export class LeadService {
 
       if (!response.ok) {
         const errorData = await response.json().catch(() => ({}));
+        
+        // Return the error data directly for duplicate lead cases
+        if (response.status === 409 && errorData.error) {
+          return {
+            success: false,
+            error: errorData.error,
+            message: errorData.message
+          };
+        }
+        
         throw new Error(
           errorData.message || `HTTP error! status: ${response.status}`
         );
@@ -128,8 +138,10 @@ export class LeadService {
 
       lastError = result;
 
-      // Don't retry on validation errors
-      if (result.error === "Validation failed") {
+      // Don't retry on validation errors or duplicate lead errors
+      if (result.error === "Validation failed" || 
+          result.error === "Duplicate lead" || 
+          result.error === "Duplicate unpaid lead") {
         break;
       }
 

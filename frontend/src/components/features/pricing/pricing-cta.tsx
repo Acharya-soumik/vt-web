@@ -1,4 +1,4 @@
-"use client"
+"use client";
 
 import { Button } from "@/components/ui/button";
 import { useFormContext } from "@/contexts/form-context";
@@ -12,19 +12,20 @@ export function PricingCTA() {
         Ready to Get Started?
       </h2>
       <p className="text-lg text-muted-foreground mb-8 max-w-2xl mx-auto">
-        Choose the service that fits your needs and get started with professional legal support today.
+        Choose the service that fits your needs and get started with
+        professional legal support today.
       </p>
       <div className="space-x-4">
-        <Button 
-          size="lg" 
+        <Button
+          size="lg"
           className="bg-primary hover:bg-primary/90 text-primary-foreground px-8 py-3"
-          onClick={() => openForm('consultation')}
+          onClick={() => openForm("consultation")}
         >
-          Get Free Consultation
+          Book Consultation
         </Button>
-        <Button 
-          variant="outline" 
-          size="lg" 
+        <Button
+          variant="outline"
+          size="lg"
           className="border-primary text-primary hover:bg-secondary px-8 py-3"
           onClick={() => window.history.back()}
         >
@@ -33,4 +34,4 @@ export function PricingCTA() {
       </div>
     </section>
   );
-} 
+}

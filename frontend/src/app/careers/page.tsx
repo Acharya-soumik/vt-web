@@ -1,6 +1,9 @@
 import type { Metadata } from "next";
 import Image from "next/image";
 import { Breadcrumb } from "@/components/ui/breadcrumb";
+import { Button } from "@/components/ui/button";
+import Link from "next/link";
+import { ArrowRight } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import {
   Users,
@@ -56,7 +59,7 @@ export default function CareersPage() {
   ];
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen bg-background scroll-smooth">
       <div className="container mx-auto px-4 py-16">
         {/* Breadcrumb Navigation */}
         <div className="mb-8">
@@ -75,6 +78,16 @@ export default function CareersPage() {
                 in delivering exceptional legal services and advancing your
                 career with India&apos;s leading legal tech platform.
               </p>
+              <div className="mt-6 flex flex-col sm:flex-row gap-3 lg:justify-start justify-center">
+                <Button size="lg" asChild className="w-full sm:w-auto">
+                  <Link href="#apply">
+                    <span className="flex items-center">
+                      Join Us
+                      <ArrowRight className="h-4 w-4 ml-2" />
+                    </span>
+                  </Link>
+                </Button>
+              </div>
             </div>
             <div className="flex-shrink-0">
               <Image

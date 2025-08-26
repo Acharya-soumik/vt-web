@@ -8,6 +8,7 @@ import { useFormContext } from "@/contexts/form-context";
 import { SimpleProcess } from "../homepage/simple-process";
 import { legalExperts } from "@/data/experts";
 import Image from "next/image";
+import { LegalNoticePayCard } from "./legal-notice-pay-card";
 
 export function LegalNoticeLanding({
   topicTitle,
@@ -175,6 +176,9 @@ export function LegalNoticeLanding({
         title="Consult top experts across legal areas"
         subtitle="Connect with experienced legal professionals who can help you with your specific legal needs"
       />
+
+      {/* Pay Card Section */}
+      <LegalNoticePayCard />
 
       {/* Most in Need Section */}
       <section className="py-16">
