@@ -34,7 +34,7 @@ interface LawyerApplication {
   whyJoinUs: string;
   availabilityType: string;
   expectedCompensation: string;
-  resumeFile: File | null;
+  resumeDriveLink: string;
 }
 
 export function CareerApplicationForm() {
@@ -55,7 +55,7 @@ export function CareerApplicationForm() {
     whyJoinUs: "",
     availabilityType: "",
     expectedCompensation: "",
-    resumeFile: null,
+    resumeDriveLink: "",
   });
 
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -63,12 +63,6 @@ export function CareerApplicationForm() {
 
   const handleInputChange = (field: keyof LawyerApplication, value: string) => {
     setFormData((prev) => ({ ...prev, [field]: value }));
-  };
-
-  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (e.target.files && e.target.files[0]) {
-      setFormData((prev) => ({ ...prev, resumeFile: e.target.files![0] }));
-    }
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -79,34 +73,10 @@ export function CareerApplicationForm() {
       // Log form submission for analytics
       logFormSubmitted("career_application", "no_payment", 1);
 
-      // Optional: handle resume upload separately to storage and get URL
-      let resumeUrl: string | null = null;
-      if (formData.resumeFile) {
-        const data = new FormData();
-        data.set("file", formData.resumeFile);
-
-        const uploadRes = await fetch("/api/uploads/resume", {
-          method: "POST",
-          body: data,
-        });
-
-        if (!uploadRes.ok) {
-          const err = await uploadRes
-            .json()
-            .catch(() => ({ error: "Resume upload failed" }));
-          throw new Error(err.error || "Resume upload failed");
-        }
-
-        const uploadJson = (await uploadRes.json()) as {
-          success: boolean;
-          url: string | null;
-          path: string;
-        };
-
-        // Prefer a signed URL; if unavailable, fall back to storing the storage path
-        // (still useful for backoffice retrieval/signing later)
-        resumeUrl = uploadJson.url ?? uploadJson.path;
-      }
+      // Use provided Google Drive link instead of uploading files
+      const resumeUrl: string | null = formData.resumeDriveLink
+        ? formData.resumeDriveLink
+        : null;
 
       const response = await fetch("/api/lawyer-leads", {
         method: "POST",
@@ -211,7 +181,7 @@ export function CareerApplicationForm() {
                 whyJoinUs: "",
                 availabilityType: "",
                 expectedCompensation: "",
-                resumeFile: null,
+                resumeDriveLink: "",
               });
             }}
           >
@@ -456,7 +426,7 @@ export function CareerApplicationForm() {
           <div>
             <h3 className="text-xl font-semibold text-foreground mb-6 flex items-center">
               <Clock className="h-5 w-5 mr-2 text-primary" />
-              Availability & Compensation
+              Availability
             </h3>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <div>
@@ -482,19 +452,21 @@ export function CareerApplicationForm() {
             </div>
           </div>
 
-          {/* Resume Upload */}
+          {/* Resume Link (Google Drive) */}
           <div>
             <label className="block text-sm font-medium text-foreground mb-2">
-              Resume/CV Upload
+              Resume/CV Link (Google Drive)
             </label>
-            <input
-              type="file"
-              accept=".pdf,.doc,.docx"
-              onChange={handleFileChange}
-              className="block w-full text-sm text-muted-foreground file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-medium file:bg-primary/10 file:text-primary hover:file:bg-primary/20 transition-colors"
+            <Input
+              type="url"
+              placeholder="https://drive.google.com/..."
+              value={formData.resumeDriveLink}
+              onChange={(e) =>
+                handleInputChange("resumeDriveLink", e.target.value)
+              }
             />
             <p className="text-xs text-muted-foreground mt-2">
-              Accepted formats: PDF, DOC, DOCX (Max 5MB)
+              Ensure the link is accessible: Anyone with the link can view.
             </p>
           </div>
 
