@@ -4,31 +4,37 @@ export interface LeadFormData {
   location: string;
   whatsappNumber: string;
   whatsappConsent: boolean;
-  
+
   // Step 2: Service Selection
-  service: 'legal-notice' | 'consultation' | 'document-drafting' | 'corporate-retainer';
+  service:
+    | "legal-notice"
+    | "consultation"
+    | "document-drafting"
+    | "corporate-retainer"
+    | "legal-drafts-bundle";
   serviceDetails?: string;
-  
+  bundleType?: "hindi-english" | "marathi-only" | "hindi-english-marathi";
+
   // Step 3: Review (no payment choice)
   // Step 4: Post-submission (paymentChoice set by WhatsNextStep)
-  paymentChoice?: 'pay-advance' | 'submit-only';
-  
+  paymentChoice?: "pay-advance" | "submit-only";
+
   // Metadata
   step: number;
   submittedAt?: Date;
-  
+
   // Submission response data
   leadId?: string;
   customId?: string;
   submissionSuccess?: boolean;
-  
+
   // Payment data
   paymentSuccess?: boolean;
   paymentId?: string;
 }
 
 // Payment status types for database
-export type PaymentStatus = 'pending' | 'paid' | 'failed' | 'refunded';
+export type PaymentStatus = "pending" | "paid" | "failed" | "refunded";
 
 export interface FormStep {
   id: number;
@@ -40,4 +46,4 @@ export interface FormStep {
 export interface FormValidationError {
   field: string;
   message: string;
-} 
+}

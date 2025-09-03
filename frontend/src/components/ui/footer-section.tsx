@@ -37,7 +37,7 @@ function Footerdemo() {
                 alt="Vakil Tech"
                 width={120}
                 height={120}
-                className="dark:bg-white dark:p-2 dark:rounded-lg dark:shadow-md"
+                className="dark: dark:p-2 dark:rounded-lg dark:shadow-md"
               />
             </div>
             <p className="mb-6 text-muted-foreground">
@@ -128,7 +128,7 @@ function Footerdemo() {
                       size="icon"
                       className="rounded-full"
                       onClick={() =>
-                        (window.location.href = "mailto:contact@vakiltech.com")
+                        (window.location.href = "mailto:contact@vakiltech.in")
                       }
                     >
                       <Mail className="h-4 w-4" />

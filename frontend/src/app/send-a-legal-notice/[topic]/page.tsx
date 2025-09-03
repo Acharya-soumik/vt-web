@@ -4,10 +4,9 @@ import LegalNoticeTopicLandingUniform from "@/components/features/landing-pages/
 import { generateServiceMetadata } from "@/lib/seo";
 import { legalNoticeTopics } from "@/data/legal-notice-topics";
 import Link from "next/link";
-import TestimonialsSection from "@/components/shared/testimonials-section";
 import { TrustSignalsSection } from "@/components/features/homepage/trust-signals";
 import { FAQSection } from "@/components/shared/faq-section";
-import { legalNoticeFAQs, getLegalNoticeTopicFaqs } from "@/data/faqs";
+import { getLegalNoticeTopicFaqs } from "@/data/faqs";
 
 export function generateStaticParams() {
   return legalNoticeTopics.map((t) => ({ topic: t.id }));
@@ -38,8 +37,11 @@ export default async function LegalNoticeTopicPage({
   // Create shorter breadcrumb label by removing common prefixes
   const getBreadcrumbLabel = (title: string) => {
     return title
-      .replace(/^(Legal Notice for|Notice for|Demand Notice for|Legal Notice to)\s*/i, '')
-      .replace(/^(Recovery of|Recovery from)\s*/i, '')
+      .replace(
+        /^(Legal Notice for|Notice for|Demand Notice for|Legal Notice to)\s*/i,
+        ""
+      )
+      .replace(/^(Recovery of|Recovery from)\s*/i, "")
       .trim();
   };
 
@@ -72,12 +74,20 @@ export default async function LegalNoticeTopicPage({
       {/* Popular Topics Section - After FAQ */}
       <section className="container mx-auto px-4 py-12">
         <div className="max-w-4xl mx-auto text-center space-y-8">
-          <h2 className="text-3xl font-bold text-foreground">Popular Legal Notice Topics</h2>
-          <p className="text-lg text-muted-foreground">Explore our comprehensive legal notice services for various legal matters</p>
-          
+          <h2 className="text-3xl font-bold text-foreground">
+            Popular Legal Notice Topics
+          </h2>
+          <p className="text-lg text-muted-foreground">
+            Explore our comprehensive legal notice services for various legal
+            matters
+          </p>
+
           <div className="grid md:grid-cols-3 gap-4">
             {[
-              { id: "demand-notice-recovery-of-money", title: "Money Recovery" },
+              {
+                id: "demand-notice-recovery-of-money",
+                title: "Money Recovery",
+              },
               { id: "dishonoured-cheque", title: "Cheque Bounce" },
               { id: "unpaid-salary-wages", title: "Unpaid Salary" },
               { id: "security-deposit-recovery", title: "Security Deposit" },
@@ -85,23 +95,26 @@ export default async function LegalNoticeTopicPage({
               { id: "workplace-harassment", title: "Workplace Harassment" },
               { id: "breach-of-contract", title: "Contract Breach" },
               { id: "defamation", title: "Defamation" },
-              { id: "property-partition", title: "Property Partition" }
-            ].filter(t => t.id !== topicId).slice(0, 6).map((topic) => (
-              <Link
-                key={topic.id}
-                href={`/send-a-legal-notice/${topic.id}`}
-                className="block p-4 bg-card border border-border rounded-lg hover:border-primary/50 hover:shadow-md transition-all duration-300 group"
-              >
-                <h3 className="font-semibold text-foreground group-hover:text-primary transition-colors">
-                  {topic.title}
-                </h3>
-                <p className="text-sm text-muted-foreground mt-1 group-hover:text-foreground transition-colors">
-                  Legal Notice Service
-                </p>
-              </Link>
-            ))}
+              { id: "property-partition", title: "Property Partition" },
+            ]
+              .filter((t) => t.id !== topicId)
+              .slice(0, 6)
+              .map((topic) => (
+                <Link
+                  key={topic.id}
+                  href={`/send-a-legal-notice/${topic.id}`}
+                  className="block p-4 bg-card border border-border rounded-lg hover:border-primary/50 hover:shadow-md transition-all duration-300 group"
+                >
+                  <h3 className="font-semibold text-foreground group-hover:text-primary transition-colors">
+                    {topic.title}
+                  </h3>
+                  <p className="text-sm text-muted-foreground mt-1 group-hover:text-foreground transition-colors">
+                    Legal Notice Service
+                  </p>
+                </Link>
+              ))}
           </div>
-          
+
           <div className="pt-6">
             <Link
               href="/send-a-legal-notice"
@@ -117,17 +130,19 @@ export default async function LegalNoticeTopicPage({
       {/* Popular City Pages - At the bottom */}
       <section className="container mx-auto px-4 pb-12">
         <div className="max-w-4xl mx-auto text-center space-y-6">
-          <h3 className="text-xl font-semibold text-foreground">{topic?.title} services in popular cities</h3>
+          <h3 className="text-xl font-semibold text-foreground">
+            {topic?.title} services in popular cities
+          </h3>
           <div className="flex flex-wrap justify-center gap-3">
             {[
               "mumbai",
-              "delhi", 
+              "delhi",
               "bangalore",
               "chennai",
               "hyderabad",
               "kolkata",
               "pune",
-              "ahmedabad"
+              "ahmedabad",
             ].map((c) => (
               <Link
                 key={c}

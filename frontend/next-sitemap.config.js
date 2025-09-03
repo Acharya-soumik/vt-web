@@ -1,6 +1,6 @@
 /** @type {import('next-sitemap').IConfig} */
 module.exports = {
-  siteUrl: process.env.NEXT_PUBLIC_BASE_URL || "https://vakiltech.com",
+  siteUrl: process.env.NEXT_PUBLIC_BASE_URL || "https://vakiltech.in",
   generateRobotsTxt: true,
   generateIndexSitemap: false,
   outDir: "public",
@@ -15,7 +15,7 @@ module.exports = {
     ],
     additionalSitemaps: [
       `${
-        process.env.NEXT_PUBLIC_BASE_URL || "https://vakiltech.com"
+        process.env.NEXT_PUBLIC_BASE_URL || "https://vakiltech.in"
       }/sitemap.xml`,
     ],
   },

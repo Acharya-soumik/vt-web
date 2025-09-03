@@ -34,10 +34,12 @@ export function ExpertCarousel({
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isClient, setIsClient] = useState(false);
   const [itemsPerView, setItemsPerView] = useState(3);
+  const [isPaused, setIsPaused] = useState(false);
+  const [slideDirection, setSlideDirection] = useState<"next" | "prev">("next");
 
   useEffect(() => {
     setIsClient(true);
-    
+
     const updateItemsPerView = () => {
       if (window.innerWidth < 768) {
         setItemsPerView(1);
@@ -47,36 +49,59 @@ export function ExpertCarousel({
     };
 
     updateItemsPerView();
-    window.addEventListener('resize', updateItemsPerView);
-    
-    return () => window.removeEventListener('resize', updateItemsPerView);
+    window.addEventListener("resize", updateItemsPerView);
+
+    return () => window.removeEventListener("resize", updateItemsPerView);
   }, []);
 
   const maxIndex = Math.max(0, experts.length - itemsPerView);
 
   const nextSlide = () => {
+    setSlideDirection("next");
     setCurrentIndex((prev) => (prev >= maxIndex ? 0 : prev + 1));
   };
 
   const prevSlide = () => {
+    setSlideDirection("prev");
     setCurrentIndex((prev) => (prev <= 0 ? maxIndex : prev - 1));
   };
+
+  // Autoplay: advance slides every 4s unless paused (hover/touch)
+  // Placed before any conditional returns to keep hook order stable across renders
+  useEffect(() => {
+    if (isPaused || !isClient) return;
+    if (experts.length <= itemsPerView) return;
+    const intervalId = setInterval(() => {
+      nextSlide();
+    }, 4000);
+    return () => clearInterval(intervalId);
+  }, [isPaused, isClient, maxIndex]);
 
   const maskName = (name: string) => {
     const parts = name.split(" ");
     if (parts.length === 1) {
-      return parts[0].slice(0, 2) + "*".repeat(Math.max(0, parts[0].length - 2));
+      return (
+        parts[0].slice(0, 2) + "*".repeat(Math.max(0, parts[0].length - 2))
+      );
     }
-    return parts[0].slice(0, 2) + "*".repeat(Math.max(0, parts[0].length - 2)) + " " + 
-           parts[1].slice(0, 3) + "*".repeat(Math.max(0, parts[1].length - 3));
+    return (
+      parts[0].slice(0, 2) +
+      "*".repeat(Math.max(0, parts[0].length - 2)) +
+      " " +
+      parts[1].slice(0, 3) +
+      "*".repeat(Math.max(0, parts[1].length - 3))
+    );
   };
 
   if (!experts || experts.length === 0 || !isClient) {
     return null;
   }
 
-  const visibleExperts = experts.slice(currentIndex, currentIndex + itemsPerView);
-  
+  const visibleExperts = experts.slice(
+    currentIndex,
+    currentIndex + itemsPerView
+  );
+
   // If we're at the end and don't have enough items, wrap around
   if (visibleExperts.length < itemsPerView && currentIndex > 0) {
     const remainingCount = itemsPerView - visibleExperts.length;
@@ -100,14 +125,20 @@ export function ExpertCarousel({
         </div>
 
         {/* Carousel Container */}
-        <div className="relative max-w-6xl mx-auto">
+        <div
+          className="relative max-w-6xl mx-auto"
+          onMouseEnter={() => setIsPaused(true)}
+          onMouseLeave={() => setIsPaused(false)}
+          onTouchStart={() => setIsPaused(true)}
+          onTouchEnd={() => setIsPaused(false)}
+        >
           {/* Navigation Buttons - Only show if more items than can be displayed */}
           {experts.length > itemsPerView && (
             <>
               <Button
                 variant="outline"
                 size="icon"
-                className="absolute left-0 top-1/2 -translate-y-1/2 z-10 w-12 h-12 rounded-full bg-white shadow-lg border-2 hover:shadow-xl transition-all duration-300 md:block hidden"
+                className="absolute left-0 top-1/2 -translate-y-1/2 z-10 w-12 h-12 rounded-full  shadow-lg border-2 hover:shadow-xl transition-all duration-300 md:block hidden"
                 onClick={prevSlide}
               >
                 <ChevronLeft className="h-6 w-6" />
@@ -116,7 +147,7 @@ export function ExpertCarousel({
               <Button
                 variant="outline"
                 size="icon"
-                className="absolute right-0 top-1/2 -translate-y-1/2 z-10 w-12 h-12 rounded-full bg-white shadow-lg border-2 hover:shadow-xl transition-all duration-300 md:block hidden"
+                className="absolute right-0 top-1/2 -translate-y-1/2 z-10 w-12 h-12 rounded-full  shadow-lg border-2 hover:shadow-xl transition-all duration-300 md:block hidden"
                 onClick={nextSlide}
               >
                 <ChevronRight className="h-6 w-6" />
@@ -128,13 +159,27 @@ export function ExpertCarousel({
           <div className="overflow-hidden md:mx-16 mx-0">
             <motion.div
               key={currentIndex}
-              initial={{ x: 300, opacity: 0 }}
+              initial={{
+                x: slideDirection === "next" ? 300 : -300,
+                opacity: 0,
+              }}
               animate={{ x: 0, opacity: 1 }}
               transition={{ duration: 0.3, ease: "easeOut" }}
+              drag="x"
+              dragConstraints={{ left: 0, right: 0 }}
+              dragElastic={0.2}
+              dragMomentum={false}
+              onDragEnd={(_, info) => {
+                if (info.offset.x < -50) {
+                  nextSlide();
+                } else if (info.offset.x > 50) {
+                  prevSlide();
+                }
+              }}
               className={`grid gap-6 ${
-                itemsPerView === 1 
-                  ? 'grid-cols-1' 
-                  : 'grid-cols-1 md:grid-cols-3'
+                itemsPerView === 1
+                  ? "grid-cols-1"
+                  : "grid-cols-1 md:grid-cols-3"
               }`}
             >
               {visibleExperts.map((expert, index) => (
@@ -143,16 +188,6 @@ export function ExpertCarousel({
                   className="text-center hover:shadow-lg transition-all duration-300 border-2 hover:border-primary/20"
                 >
                   <CardContent className="p-6">
-                    {/* Expert Image */}
-                    <div className="relative w-24 h-24 mx-auto mb-4">
-                      <div className="w-full h-full rounded-full bg-gradient-to-br from-gray-200 to-gray-300 flex items-center justify-center">
-                        <div className="w-20 h-20 rounded-full bg-gradient-to-br from-gray-300 to-gray-400"></div>
-                      </div>
-                      {expert.isOnline && (
-                        <div className="absolute bottom-2 right-2 w-4 h-4 bg-green-500 rounded-full border-2 border-white"></div>
-                      )}
-                    </div>
-
                     {/* Expert Name */}
                     <h3 className="text-lg font-bold mb-2 text-foreground">
                       {maskName(expert.name)}
@@ -168,17 +203,6 @@ export function ExpertCarousel({
                           {expert.expertise.slice(1).join("+")} more
                         </p>
                       )}
-                    </div>
-
-                    {/* Rating and Reviews */}
-                    <div className="flex items-center justify-center mb-3">
-                      <span className="text-orange-500 mr-1">⭐</span>
-                      <span className="font-semibold text-sm">
-                        {expert.rating}
-                      </span>
-                      <span className="text-muted-foreground text-sm ml-1">
-                        | {expert.reviews} reviews
-                      </span>
                     </div>
 
                     {/* Experience */}
@@ -205,7 +229,7 @@ export function ExpertCarousel({
                 variant="outline"
                 size="sm"
                 onClick={prevSlide}
-                className="bg-white shadow-md"
+                className=" shadow-md"
               >
                 <ChevronLeft className="h-4 w-4 mr-1" />
                 Previous
@@ -214,7 +238,7 @@ export function ExpertCarousel({
                 variant="outline"
                 size="sm"
                 onClick={nextSlide}
-                className="bg-white shadow-md"
+                className=" shadow-md"
               >
                 Next
                 <ChevronRight className="h-4 w-4 ml-1" />
@@ -225,22 +249,24 @@ export function ExpertCarousel({
           {/* Dots Indicator */}
           {experts.length > itemsPerView && (
             <div className="flex justify-center mt-6 space-x-2">
-              {Array.from({ length: Math.ceil(experts.length / itemsPerView) }).map(
-                (_, index) => {
-                  const pageIndex = index * itemsPerView;
-                  const isActive = currentIndex >= pageIndex && currentIndex < pageIndex + itemsPerView;
-                  
-                  return (
-                    <button
-                      key={index}
-                      className={`w-2 h-2 rounded-full transition-all duration-300 ${
-                        isActive ? "bg-primary" : "bg-gray-300"
-                      }`}
-                      onClick={() => setCurrentIndex(pageIndex)}
-                    />
-                  );
-                }
-              )}
+              {Array.from({
+                length: Math.ceil(experts.length / itemsPerView),
+              }).map((_, index) => {
+                const pageIndex = index * itemsPerView;
+                const isActive =
+                  currentIndex >= pageIndex &&
+                  currentIndex < pageIndex + itemsPerView;
+
+                return (
+                  <button
+                    key={index}
+                    className={`w-2 h-2 rounded-full transition-all duration-300 ${
+                      isActive ? "bg-primary" : "bg-gray-300"
+                    }`}
+                    onClick={() => setCurrentIndex(pageIndex)}
+                  />
+                );
+              })}
             </div>
           )}
         </div>

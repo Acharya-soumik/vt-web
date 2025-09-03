@@ -1,4 +1,4 @@
-"use client"
+"use client";
 
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -7,46 +7,55 @@ import { SimpleProcess } from "../homepage/simple-process";
 
 export function DocumentDraftingLanding() {
   const { openForm } = useFormContext();
-  
+
   const features = [
     {
       title: "Business Contracts",
-      description: "Professional drafting of business contracts, agreements, and legal documents",
-      icon: "📄"
+      description:
+        "Professional drafting of business contracts, agreements, and legal documents",
+      icon: "📄",
     },
     {
-      title: "Employment Documents", 
-      description: "Employment contracts, policies, and HR-related legal documents",
-      icon: "👥"
+      title: "Employment Documents",
+      description:
+        "Employment contracts, policies, and HR-related legal documents",
+      icon: "👥",
     },
     {
       title: "Compliance Documents",
-      description: "Regulatory compliance documents and legal filings for businesses",
-      icon: "📋"
-    }
+      description:
+        "Regulatory compliance documents and legal filings for businesses",
+      icon: "📋",
+    },
   ];
 
   const processSteps = [
     {
       icon: "💰",
       title: "Submit Requirements",
-      description: "Pay ₹1,500 advance and submit your document requirements"
+      description: "Pay ₹1,500 advance and submit your document requirements",
+      svgPath: "/4-step-process/pay_advance.svg",
     },
     {
       icon: "👨‍💼",
       title: "Consult & Plan",
-      description: "Discuss with legal expert to understand your specific needs"
+      description:
+        "Discuss with legal expert to understand your specific needs",
+      svgPath: "/4-step-process/connect_consult.svg",
     },
     {
       icon: "📝",
       title: "Document Drafting",
-      description: "Expert drafts your legal document with proper legal compliance"
+      description:
+        "Expert drafts your legal document with proper legal compliance",
+      svgPath: "/4-step-process/draft.svg",
     },
     {
       icon: "✅",
       title: "Review & Finalize",
-      description: "Review, approve and get your finalized legal document"
-    }
+      description: "Review, approve and get your finalized legal document",
+      svgPath: "/4-step-process/approve_send.svg",
+    },
   ];
 
   return (
@@ -58,16 +67,17 @@ export function DocumentDraftingLanding() {
             Professional Document Drafting
           </h1>
           <p className="text-xl text-muted-foreground mb-8 max-w-2xl mx-auto">
-            Expert legal document drafting for businesses. Get professionally crafted 
-            contracts, agreements, and legal documents tailored to your needs.
+            Expert legal document drafting for businesses. Get professionally
+            crafted contracts, agreements, and legal documents tailored to your
+            needs.
           </p>
           <div className="text-3xl font-bold text-primary mb-8">
             Starting from ₹1,500
           </div>
-          <Button 
-            size="lg" 
+          <Button
+            size="lg"
             className="bg-primary hover:bg-primary/90 text-primary-foreground px-8 py-3"
-            onClick={() => openForm('document-drafting')}
+            onClick={() => openForm("document-drafting")}
           >
             Draft Document
           </Button>
@@ -81,13 +91,17 @@ export function DocumentDraftingLanding() {
             Document Drafting Services
           </h2>
           <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
-            Comprehensive legal document drafting solutions for your business needs
+            Comprehensive legal document drafting solutions for your business
+            needs
           </p>
         </div>
-        
+
         <div className="grid md:grid-cols-3 gap-8">
           {features.map((feature, index) => (
-            <Card key={index} className="text-center hover:shadow-lg transition-all duration-300">
+            <Card
+              key={index}
+              className="text-center hover:shadow-lg transition-all duration-300"
+            >
               <CardHeader>
                 <div className="w-16 h-16 bg-secondary rounded-lg flex items-center justify-center mx-auto mb-4">
                   <span className="text-2xl">{feature.icon}</span>
@@ -108,7 +122,7 @@ export function DocumentDraftingLanding() {
         subtitle="Professional document drafting service designed for simplicity and effectiveness"
         steps={processSteps}
       />
-<br />
+      <br />
       {/* Pricing & Value Proposition */}
       <section className="py-16 bg-card border rounded-lg">
         <div className="text-center max-w-4xl mx-auto px-4">
@@ -121,19 +135,27 @@ export function DocumentDraftingLanding() {
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
             <div className="flex items-center">
               <div className="w-2 h-2 bg-primary rounded-full mr-3"></div>
-              <span className="text-muted-foreground">Expert legal professionals</span>
+              <span className="text-muted-foreground">
+                Expert legal professionals
+              </span>
             </div>
             <div className="flex items-center">
               <div className="w-2 h-2 bg-primary rounded-full mr-3"></div>
-              <span className="text-muted-foreground">Legally compliant documents</span>
+              <span className="text-muted-foreground">
+                Legally compliant documents
+              </span>
             </div>
             <div className="flex items-center">
               <div className="w-2 h-2 bg-primary rounded-full mr-3"></div>
-              <span className="text-muted-foreground">Customized to your needs</span>
+              <span className="text-muted-foreground">
+                Customized to your needs
+              </span>
             </div>
             <div className="flex items-center">
               <div className="w-2 h-2 bg-primary rounded-full mr-3"></div>
-              <span className="text-muted-foreground">Fast turnaround time</span>
+              <span className="text-muted-foreground">
+                Fast turnaround time
+              </span>
             </div>
             <div className="flex items-center">
               <div className="w-2 h-2 bg-primary rounded-full mr-3"></div>
@@ -154,26 +176,28 @@ export function DocumentDraftingLanding() {
             Ready to Draft Your Document?
           </h2>
           <p className="text-lg text-muted-foreground mb-8">
-            Get started with professional document drafting today. Our experts will help you 
-            create legally sound documents tailored to your business needs.
+            Get started with professional document drafting today. Our experts
+            will help you create legally sound documents tailored to your
+            business needs.
           </p>
           <div className="space-x-4">
-            <Button 
-              size="lg" 
+            <Button
+              size="lg"
               className="bg-primary hover:bg-primary/90 text-primary-foreground px-8 py-3"
-              onClick={() => openForm('document-drafting')}
+              onClick={() => openForm("document-drafting")}
             >
               Draft Document
             </Button>
-            <Button 
-              variant="outline" 
-              size="lg" 
+            <Button
+              variant="outline"
+              size="lg"
               className="border-primary text-primary hover:bg-secondary px-8 py-3"
               onClick={() => {
                 // Expand service details or show FAQ
-                const serviceDetails = document.getElementById('service-details');
+                const serviceDetails =
+                  document.getElementById("service-details");
                 if (serviceDetails) {
-                  serviceDetails.scrollIntoView({ behavior: 'smooth' });
+                  serviceDetails.scrollIntoView({ behavior: "smooth" });
                 }
               }}
             >
@@ -184,4 +208,4 @@ export function DocumentDraftingLanding() {
       </section>
     </div>
   );
-} 
+}

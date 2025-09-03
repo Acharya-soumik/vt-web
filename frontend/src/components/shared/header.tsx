@@ -14,12 +14,21 @@ import {
 import Image from "next/image";
 import { useFormContext } from "@/contexts/form-context";
 import { AlertCircle } from "lucide-react";
+import { useAnalytics } from "@/hooks/use-analytics";
 
 export function Header() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [showPaymentBanner, setShowPaymentBanner] = useState(false);
+  const [currentCTA, setCurrentCTA] = useState({ text: "Book Consultation", service: "consultation" });
   const { openForm, paymentStatus, processPayment, isProcessingPayment } =
     useFormContext();
+
+  const {
+    logNavigationClick,
+    logCTAClick,
+    logServiceViewed,
+    logPaymentBannerDismissed,
+  } = useAnalytics();
 
   const BANNER_DISMISS_KEY = "vt-payment-banner-dismiss";
   const DISMISS_TTL_MS = 12 * 60 * 60 * 1000; // 12 hours
@@ -28,9 +37,77 @@ export function Header() {
     setIsMobileMenuOpen(false);
   };
 
+  // Get page-specific CTA text and service
+  const getPageSpecificCTA = () => {
+    if (typeof window === "undefined") return { text: "Book Consultation", service: "consultation" };
+    
+    const pathname = window.location.pathname;
+    
+    // Legal notice pages - various URL patterns
+    if (pathname.includes("/send-a-legal-notice") || 
+        pathname.includes("/legal-notice") ||
+        pathname.includes("/cheque-bounce") ||
+        pathname.includes("/property-dispute") ||
+        pathname.includes("/tenant-eviction") ||
+        pathname.includes("/consumer-dispute")) {
+      return { text: "Send Legal Notice", service: "legal-notice" };
+    }
+    if (pathname.includes("/document-drafting")) {
+      return { text: "Draft Document", service: "document-drafting" };
+    }
+    if (pathname.includes("/corporate-retainer")) {
+      return { text: "Get Retainer", service: "corporate-retainer" };
+    }
+    if (pathname.includes("/consultation")) {
+      return { text: "Book Consultation", service: "consultation" };
+    }
+    
+    // Default for home page and other pages
+    return { text: "Book Consultation", service: "consultation" };
+  };
+
+  // Update CTA when pathname changes
+  useEffect(() => {
+    const updateCTA = () => {
+      setCurrentCTA(getPageSpecificCTA());
+    };
+    
+    updateCTA();
+    
+    // Check for pathname changes periodically (for client-side routing)
+    const interval = setInterval(updateCTA, 500);
+    
+    return () => clearInterval(interval);
+  }, []);
+
   const handleOpenForm = () => {
-    openForm();
+    logCTAClick(
+      "header_cta",
+      currentCTA.text,
+      typeof window !== "undefined" ? window.location.pathname : undefined
+    );
+    openForm(currentCTA.service);
     handleMobileMenuClose();
+  };
+
+  // Track service page views when navigation occurs
+  const handleNavigationClick = (
+    elementType: string,
+    elementText: string,
+    destinationUrl: string
+  ) => {
+    logNavigationClick(elementType, elementText, destinationUrl);
+
+    // Track service views for specific service pages
+    if (destinationUrl.includes("/send-a-legal-notice")) {
+      logServiceViewed("legal-notice", destinationUrl);
+    } else if (destinationUrl.includes("/consultation")) {
+      logServiceViewed("consultation", destinationUrl);
+    } else if (destinationUrl.includes("/document-drafting")) {
+      logServiceViewed("document-drafting", destinationUrl);
+    } else if (destinationUrl.includes("/corporate-retainer")) {
+      logServiceViewed("corporate-retainer", destinationUrl);
+    }
   };
 
   // Decide whether to show payment banner, honoring a two-dismiss, 12-hour TTL session
@@ -78,6 +155,11 @@ export function Header() {
     e.preventDefault();
     e.stopPropagation();
     try {
+      logPaymentBannerDismissed(
+        paymentStatus === "failed" ? "failed_state" : "pending_state"
+      );
+    } catch {}
+    try {
       const raw =
         typeof window !== "undefined"
           ? localStorage.getItem(BANNER_DISMISS_KEY)
@@ -118,6 +200,11 @@ export function Header() {
 
   const handleBannerActivate = () => {
     if (!isProcessingPayment) {
+      logCTAClick(
+        "payment_banner",
+        "Complete Payment",
+        typeof window !== "undefined" ? window.location.pathname : undefined
+      );
       processPayment();
     }
   };
@@ -130,7 +217,10 @@ export function Header() {
           {/* Logo */}
           <Link
             href="/"
-            className="flex items-center space-x-2 dark:bg-white dark:p-2 dark:rounded-lg dark:shadow-md"
+            className="flex items-center space-x-2 dark: dark:p-2 dark:rounded-lg dark:shadow-md"
+            onClick={() =>
+              handleNavigationClick("logo", "Vakil Tech Logo", "/")
+            }
           >
             <Image src="/logo.png" alt="Vakil Tech" width={150} height={150} />
           </Link>
@@ -140,26 +230,45 @@ export function Header() {
             <Link
               href="/"
               className="text-muted-foreground hover:text-primary transition-colors"
+              onClick={() => handleNavigationClick("nav_link", "Home", "/")}
             >
               Home
             </Link>
             <Link
               href="/about"
               className="text-muted-foreground hover:text-primary transition-colors"
+              onClick={() =>
+                handleNavigationClick("nav_link", "About", "/about")
+              }
             >
               About
             </Link>
             <Link
               href="/pricing"
               className="text-muted-foreground hover:text-primary transition-colors"
+              onClick={() =>
+                handleNavigationClick("nav_link", "Pricing", "/pricing")
+              }
             >
               Pricing
             </Link>
             <Link
               href="/contact"
               className="text-muted-foreground hover:text-primary transition-colors"
+              onClick={() =>
+                handleNavigationClick("nav_link", "Contact", "/contact")
+              }
             >
               Contact
+            </Link>
+            <Link
+              href="/careers"
+              className="text-muted-foreground hover:text-primary transition-colors"
+              onClick={() =>
+                handleNavigationClick("nav_link", "Careers", "/careers")
+              }
+            >
+              Careers
             </Link>
 
             <DropdownMenu>
@@ -171,37 +280,84 @@ export function Header() {
               </DropdownMenuTrigger>
               <DropdownMenuContent align="start" className="w-48">
                 <DropdownMenuItem asChild>
-                  <Link href="/send-a-legal-notice" className="cursor-pointer">
+                  <Link
+                    href="/send-a-legal-notice"
+                    className="cursor-pointer"
+                    onClick={() =>
+                      handleNavigationClick(
+                        "dropdown_link",
+                        "Legal Notice",
+                        "/send-a-legal-notice"
+                      )
+                    }
+                  >
                     Legal Notice
                   </Link>
                 </DropdownMenuItem>
                 <DropdownMenuItem asChild>
-                  <Link href="/consultation" className="cursor-pointer">
+                  <Link
+                    href="/consultation"
+                    className="cursor-pointer"
+                    onClick={() =>
+                      handleNavigationClick(
+                        "dropdown_link",
+                        "Consultation",
+                        "/consultation"
+                      )
+                    }
+                  >
                     Consultation
                   </Link>
                 </DropdownMenuItem>
                 <DropdownMenuItem asChild>
-                  <Link href="/document-drafting" className="cursor-pointer">
+                  <Link
+                    href="/document-drafting"
+                    className="cursor-pointer"
+                    onClick={() =>
+                      handleNavigationClick(
+                        "dropdown_link",
+                        "Document Drafting",
+                        "/document-drafting"
+                      )
+                    }
+                  >
                     Document Drafting
                   </Link>
                 </DropdownMenuItem>
                 <DropdownMenuItem asChild>
-                  <Link href="/corporate-retainer" className="cursor-pointer">
+                  <Link
+                    href="/corporate-retainer"
+                    className="cursor-pointer"
+                    onClick={() =>
+                      handleNavigationClick(
+                        "dropdown_link",
+                        "Corporate Retainer",
+                        "/corporate-retainer"
+                      )
+                    }
+                  >
                     Corporate Retainer
                   </Link>
                 </DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>
 
-            <Button onClick={() => openForm()} size="sm">
-              Get Started
+            <Button onClick={handleOpenForm} size="sm">
+              {currentCTA.text}
             </Button>
           </nav>
 
           {/* Mobile Menu Button (right aligned) */}
           <Dialog open={isMobileMenuOpen} onOpenChange={setIsMobileMenuOpen}>
             <DialogTrigger asChild>
-              <Button variant="outline" size="sm" className="md:hidden">
+              <Button
+                variant="outline"
+                size="sm"
+                className="md:hidden"
+                onClick={() =>
+                  logNavigationClick("mobile_menu_button", "Menu", "#")
+                }
+              >
                 <Menu className="h-4 w-4" />
                 <span className="sr-only">Open menu</span>
               </Button>
@@ -225,30 +381,68 @@ export function Header() {
                   <Link
                     href="/"
                     className="text-left text-muted-foreground hover:text-primary transition-colors py-2 px-3 rounded-md hover:bg-accent"
-                    onClick={handleMobileMenuClose}
+                    onClick={() => {
+                      handleMobileMenuClose();
+                      handleNavigationClick("mobile_nav_link", "Home", "/");
+                    }}
                   >
                     Home
                   </Link>
                   <Link
                     href="/about"
                     className="text-left text-muted-foreground hover:text-primary transition-colors py-2 px-3 rounded-md hover:bg-accent"
-                    onClick={handleMobileMenuClose}
+                    onClick={() => {
+                      handleMobileMenuClose();
+                      handleNavigationClick(
+                        "mobile_nav_link",
+                        "About",
+                        "/about"
+                      );
+                    }}
                   >
                     About
                   </Link>
                   <Link
                     href="/pricing"
                     className="text-left text-muted-foreground hover:text-primary transition-colors py-2 px-3 rounded-md hover:bg-accent"
-                    onClick={handleMobileMenuClose}
+                    onClick={() => {
+                      handleMobileMenuClose();
+                      handleNavigationClick(
+                        "mobile_nav_link",
+                        "Pricing",
+                        "/pricing"
+                      );
+                    }}
                   >
                     Pricing
                   </Link>
                   <Link
                     href="/contact"
                     className="text-left text-muted-foreground hover:text-primary transition-colors py-2 px-3 rounded-md hover:bg-accent"
-                    onClick={handleMobileMenuClose}
+                    onClick={() => {
+                      handleMobileMenuClose();
+                      handleNavigationClick(
+                        "mobile_nav_link",
+                        "Contact",
+                        "/contact"
+                      );
+                    }}
                   >
                     Contact
+                  </Link>
+                  <Link
+                    href="/careers"
+                    className="text-left text-muted-foreground hover:text-primary transition-colors py-2 px-3 rounded-md hover:bg-accent"
+                    onClick={() => {
+                      handleMobileMenuClose();
+                      handleNavigationClick(
+                        "mobile_nav_link",
+                        "Careers",
+                        "/careers"
+                      );
+                    }}
+                  >
+                    Careers
                   </Link>
 
                   <div className="space-y-1">
@@ -258,28 +452,56 @@ export function Header() {
                     <Link
                       href="/send-a-legal-notice"
                       className="block text-left text-muted-foreground hover:text-primary transition-colors py-2 px-6 rounded-md hover:bg-accent"
-                      onClick={handleMobileMenuClose}
+                      onClick={() => {
+                        handleMobileMenuClose();
+                        handleNavigationClick(
+                          "mobile_service_link",
+                          "Legal Notice",
+                          "/send-a-legal-notice"
+                        );
+                      }}
                     >
                       Legal Notice
                     </Link>
                     <Link
                       href="/consultation"
                       className="block text-left text-muted-foreground hover:text-primary transition-colors py-2 px-6 rounded-md hover:bg-accent"
-                      onClick={handleMobileMenuClose}
+                      onClick={() => {
+                        handleMobileMenuClose();
+                        handleNavigationClick(
+                          "mobile_service_link",
+                          "Consultation",
+                          "/consultation"
+                        );
+                      }}
                     >
                       Consultation
                     </Link>
                     <Link
                       href="/document-drafting"
                       className="block text-left text-muted-foreground hover:text-primary transition-colors py-2 px-6 rounded-md hover:bg-accent"
-                      onClick={handleMobileMenuClose}
+                      onClick={() => {
+                        handleMobileMenuClose();
+                        handleNavigationClick(
+                          "mobile_service_link",
+                          "Document Drafting",
+                          "/document-drafting"
+                        );
+                      }}
                     >
                       Document Drafting
                     </Link>
                     <Link
                       href="/corporate-retainer"
                       className="block text-left text-muted-foreground hover:text-primary transition-colors py-2 px-6 rounded-md hover:bg-accent"
-                      onClick={handleMobileMenuClose}
+                      onClick={() => {
+                        handleMobileMenuClose();
+                        handleNavigationClick(
+                          "mobile_service_link",
+                          "Corporate Retainer",
+                          "/corporate-retainer"
+                        );
+                      }}
                     >
                       Corporate Retainer
                     </Link>
@@ -287,7 +509,7 @@ export function Header() {
 
                   <div className="pt-2">
                     <Button onClick={handleOpenForm} className="w-full">
-                      Get Started
+                      {currentCTA.text}
                     </Button>
                   </div>
                 </nav>

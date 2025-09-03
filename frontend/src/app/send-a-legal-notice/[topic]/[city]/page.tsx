@@ -7,10 +7,9 @@ import { legalNoticeTopics } from "@/data/legal-notice-topics";
 import { slugify } from "@/lib/slug";
 import Link from "next/link";
 import { getLocalitiesByCity } from "@/data/localities";
-import TestimonialsSection from "@/components/shared/testimonials-section";
 import { TrustSignalsSection } from "@/components/features/homepage/trust-signals";
 import { FAQSection } from "@/components/shared/faq-section";
-import { legalNoticeFAQs, getLegalNoticeTopicFaqs } from "@/data/faqs";
+import { getLegalNoticeTopicFaqs } from "@/data/faqs";
 
 export function generateStaticParams() {
   const topics = legalNoticeTopics.map((t) => t.id);

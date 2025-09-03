@@ -1,6 +1,10 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
+  env: {
+    CSS_TRANSFORMER_WASM: "1",
+    NAPI_RS_FORCE_WASI: "1",
+  },
   images: {
     remotePatterns: [
       {
@@ -12,6 +16,12 @@ const nextConfig: NextConfig = {
       {
         protocol: "https",
         hostname: "i.pravatar.cc",
+        port: "",
+        pathname: "/**",
+      },
+      {
+        protocol: "https",
+        hostname: "img.icons8.com",
         port: "",
         pathname: "/**",
       },

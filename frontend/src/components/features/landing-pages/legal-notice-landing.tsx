@@ -8,6 +8,9 @@ import { useFormContext } from "@/contexts/form-context";
 import { SimpleProcess } from "../homepage/simple-process";
 import { legalExperts } from "@/data/experts";
 import Image from "next/image";
+import { LegalNoticePayCard } from "./legal-notice-pay-card";
+import { useAnalytics } from "@/hooks/use-analytics";
+import { useEffect } from "react";
 
 export function LegalNoticeLanding({
   topicTitle,
@@ -46,26 +49,24 @@ export function LegalNoticeLanding({
   const processSteps = [
     {
       icon: "₹",
-      title: "Pay Advance",
+      title: "Pay & Connect",
       description:
-        "Pay ₹400 advance to get connected with a legal professional",
-    },
-    {
-      icon: "👨‍💼",
-      title: "Connect & Consult",
-      description: "Chat or call with qualified advocate to discuss your case",
+        "Pay ₹400 advance and we instantly connect you with a qualified legal professional",
+      svgPath: "/4-step-process/pay_advance.svg",
     },
     {
       icon: "📝",
-      title: "Notice Drafting",
+      title: "Relax While We Draft",
       description:
-        "Advocate drafts professional legal notice after document review",
+        "Sit back while our advocate handles consultation, document review, and drafts your professional legal notice",
+      svgPath: "/4-step-process/draft.svg",
     },
     {
       icon: "✅",
-      title: "Approve & Send",
+      title: "Review & Send",
       description:
-        "Review, approve and get signed notice posted with acknowledgment",
+        "We handle final review, get your approval, and send the signed notice with acknowledgment",
+      svgPath: "/4-step-process/approve_send.svg",
     },
   ];
 
@@ -74,13 +75,13 @@ export function LegalNoticeLanding({
       {/* Hero Section */}
       <section className="relative text-center py-16 md:py-20 overflow-hidden">
         {/* Animated Gradient Background */}
-        <div className="absolute inset-0 bg-gradient-to-br from-primary/5 via-secondary/10 to-primary/5 animate-pulse"></div>
+        <div className="absolute inset-0"></div>
         <div
-          className="absolute inset-0 bg-gradient-to-tr from-transparent via-primary/3 to-transparent animate-pulse"
+          className="absolute inset-0 animate-pulse"
           style={{ animationDelay: "1s", animationDuration: "3s" }}
         ></div>
         <div
-          className="absolute inset-0 bg-gradient-to-bl from-secondary/5 via-transparent to-primary/3 animate-pulse"
+          className="absolute inset-0"
           style={{ animationDelay: "2s", animationDuration: "4s" }}
         ></div>
 
@@ -99,8 +100,25 @@ export function LegalNoticeLanding({
         ></div>
 
         <div className="relative z-10 max-w-4xl mx-auto">
+          {/* Image first */}
+          <div className="relative mb-8 max-w-md mx-auto">
+            <div className="relative w-full h-80 rounded-2xl overflow-hidden">
+              {/* Subtle circular gradient behind the illustration */}
+              <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
+                <div className="w-[72%] aspect-square rounded-full bg-[radial-gradient(circle_at_center,rgba(244,63,94,0.22)_0%,rgba(59,130,246,0.16)_50%,transparent_80%)] animate-gradient-pulse"></div>
+              </div>
+              <Image
+                src="/legal-notice/hero.svg"
+                alt="Legal Notice Consultation"
+                fill
+                className="object-contain p-4"
+                priority
+              />
+            </div>
+          </div>
+
           {/* Main Headline with Word Rotation */}
-          <h1 className="text-4xl md:text-5xl font-bold mb-6 text-foreground">
+          <h1 className="text-4xl md:text-5xl font-bold mb-4 text-foreground">
             {topicTitle ? (
               <>
                 Send a Legal Notice for{" "}
@@ -136,59 +154,33 @@ export function LegalNoticeLanding({
             )}
           </h1>
 
-          {/* Tagline */}
+          {/* Description */}
           <p className="text-md md:text-xl font-semibold text-muted-foreground mb-6">
             Send Legally Valid Notices in 24 Hours
           </p>
 
-          {/* Image with Integrated CTA */}
-          <div className="relative mb-8 max-w-md mx-auto">
-            <div className="relative w-full h-80 rounded-2xl overflow-hidden shadow-2xl">
-              {/* Image Container with Gradient Overlay */}
-              <div className="absolute inset-0 bg-gradient-to-br from-primary/20 via-transparent to-secondary/20 rounded-2xl"></div>
-              <Image
-                src="/legal-notice/request-a-callback.png"
-                alt="Legal Notice Consultation"
-                fill
-                className="object-contain p-4"
-                priority
-              />
-
-              {/* Floating Call-to-Action Card */}
-              <div className="absolute bottom-4 left-4 right-4 bg-white/95 backdrop-blur-sm rounded-xl p-4 shadow-lg border border-primary/20">
-                <div className="text-center">
-                  <h3 className="text-lg font-bold text-primary mb-2">
-                    Need Help with Legal Notice?
-                  </h3>
-                  <Button
-                    size="sm"
-                    className="bg-primary hover:bg-primary/90 text-primary-foreground w-full"
-                    onClick={handleCallbackRequest}
-                  >
-                    Request Callback
-                  </Button>
-                </div>
-              </div>
-            </div>
-
-            {/* Decorative Elements */}
-            <div className="absolute -top-4 -right-4 w-8 h-8 bg-primary/20 rounded-full animate-pulse"></div>
-            <div
-              className="absolute -bottom-4 -left-4 w-6 h-6 bg-secondary/20 rounded-full animate-pulse"
-              style={{ animationDelay: "1s" }}
-            ></div>
+          {/* Primary CTA */}
+          <div className="flex justify-center">
+            <Button
+              size="lg"
+              className="bg-primary hover:bg-primary/90 text-primary-foreground px-8 py-6 text-lg"
+              onClick={handleCallbackRequest}
+            >
+              Request Callback
+            </Button>
           </div>
-
-          {/* CTA Buttons */}
         </div>
       </section>
 
       {/* Expert Carousel Section */}
-      <ExpertCarousel 
+      <ExpertCarousel
         experts={legalExperts}
         title="Consult top experts across legal areas"
         subtitle="Connect with experienced legal professionals who can help you with your specific legal needs"
       />
+
+      {/* Pay Card Section */}
+      <LegalNoticePayCard />
 
       {/* Most in Need Section */}
       <section className="py-16">
@@ -236,11 +228,11 @@ export function LegalNoticeLanding({
         </div>
       </section>
 
-      {/* 4-Step Process */}
+      {/* 3-Step Process */}
       <section id="legal-process" className="py-16">
         <SimpleProcess
-          title="Simple 4-Step Process"
-          subtitle="Professional legal notice service designed for simplicity and effectiveness"
+          title="Simple 3-Step Process"
+          subtitle="Sit back and relax while we handle your legal notice from start to finish"
           steps={processSteps}
           className="border-0 shadow shadow-primary border-b-2 border-primary"
         />

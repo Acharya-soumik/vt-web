@@ -1,17 +1,22 @@
 import type { Metadata } from "next";
 import { Breadcrumb } from "@/components/ui/breadcrumb";
-import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
+import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+} from "@/components/ui/accordion";
 import { LegalCTA } from "@/components/features/legal/legal-cta";
 import { generateLegalMetadata } from "@/lib/seo";
 
-export const metadata: Metadata = generateLegalMetadata('terms-and-conditions');
+export const metadata: Metadata = generateLegalMetadata("terms-and-conditions");
 
 export default function TermsAndConditionsPage() {
   const breadcrumbItems = [
     { label: "Home", href: "/" },
-    { label: "Terms and Conditions", current: true }
+    { label: "Terms and Conditions", current: true },
   ];
-  
+
   return (
     <div className="min-h-screen bg-background">
       <div className="container mx-auto px-4 py-16">
@@ -26,8 +31,9 @@ export default function TermsAndConditionsPage() {
             Terms and Conditions
           </h1>
           <p className="text-xl text-muted-foreground max-w-3xl mx-auto">
-            These terms and conditions govern your use of Vakiltech.in and the services provided by Vakil Tech. 
-            Please read them carefully before using our platform.
+            These terms and conditions govern your use of Vakiltech.in and the
+            services provided by Vakil Tech. Please read them carefully before
+            using our platform.
           </p>
           <p className="text-sm text-muted-foreground mt-4">
             Last updated: October 20, 2023
@@ -43,8 +49,9 @@ export default function TermsAndConditionsPage() {
               </AccordionTrigger>
               <AccordionContent>
                 <p className="text-muted-foreground">
-                  By accessing and using Vakiltech.in, you accept and agree to be bound by these Terms and Conditions. 
-                  If you do not agree to these terms, please do not use our website or services.
+                  By accessing and using Vakiltech.in, you accept and agree to
+                  be bound by these Terms and Conditions. If you do not agree to
+                  these terms, please do not use our website or services.
                 </p>
               </AccordionContent>
             </AccordionItem>
@@ -55,8 +62,9 @@ export default function TermsAndConditionsPage() {
               </AccordionTrigger>
               <AccordionContent>
                 <p className="text-muted-foreground mb-4">
-                  Vakil Tech operates as a legal services aggregator platform. We connect clients with qualified legal professionals 
-                  who provide various legal services including:
+                  Vakil Tech operates as a legal services aggregator platform.
+                  We connect clients with qualified legal professionals who
+                  provide various legal services including:
                 </p>
                 <ul className="list-disc list-inside text-muted-foreground space-y-1">
                   <li>Legal consultation and advice</li>
@@ -66,7 +74,8 @@ export default function TermsAndConditionsPage() {
                   <li>Compliance and regulatory guidance</li>
                 </ul>
                 <p className="text-muted-foreground mt-4">
-                  All legal services are provided by qualified legal professionals registered with the Bar Council of India.
+                  All legal services are provided by qualified legal
+                  professionals registered with the Bar Council of India.
                 </p>
               </AccordionContent>
             </AccordionItem>
@@ -86,7 +95,9 @@ export default function TermsAndConditionsPage() {
                   <li>Maintain confidentiality of legal advice</li>
                   <li>Not use our services for illegal purposes</li>
                   <li>Respect the intellectual property rights of others</li>
-                  <li>Not attempt to gain unauthorized access to our systems</li>
+                  <li>
+                    Not attempt to gain unauthorized access to our systems
+                  </li>
                 </ul>
               </AccordionContent>
             </AccordionItem>
@@ -100,15 +111,19 @@ export default function TermsAndConditionsPage() {
                   <div>
                     <h3 className="font-semibold mb-2">Payment Terms</h3>
                     <p className="text-muted-foreground">
-                      All fees are quoted in Indian Rupees (INR) and include applicable taxes. Payment is due as specified 
-                      in your service agreement. We accept various payment methods including online transfers and digital payments.
+                      All fees are quoted in Indian Rupees (INR) and include
+                      applicable taxes. Payment is due as specified in your
+                      service agreement. We accept various payment methods
+                      including online transfers and digital payments.
                     </p>
                   </div>
                   <div>
                     <h3 className="font-semibold mb-2">Refund Policy</h3>
                     <p className="text-muted-foreground">
-                      We offer refunds in accordance with our satisfaction guarantee. Refund requests must be made within 
-                      30 days of service completion. Processing fees may apply and are non-refundable.
+                      We offer refunds in accordance with our satisfaction
+                      guarantee. Refund requests must be made within 30 days of
+                      service completion. Processing fees may apply and are
+                      non-refundable.
                     </p>
                   </div>
                 </div>
@@ -121,9 +136,12 @@ export default function TermsAndConditionsPage() {
               </AccordionTrigger>
               <AccordionContent>
                 <p className="text-muted-foreground">
-                  We maintain strict confidentiality of all client information and legal matters, subject to legal requirements 
-                  and your consent. Our confidentiality obligations are governed by applicable laws and professional ethics. 
-                  All communications between you and our legal professionals are protected by attorney-client privilege.
+                  We maintain strict confidentiality of all client information
+                  and legal matters, subject to legal requirements and your
+                  consent. Our confidentiality obligations are governed by
+                  applicable laws and professional ethics. All communications
+                  between you and our legal professionals are protected by
+                  attorney-client privilege.
                 </p>
               </AccordionContent>
             </AccordionItem>
@@ -134,12 +152,15 @@ export default function TermsAndConditionsPage() {
               </AccordionTrigger>
               <AccordionContent>
                 <p className="text-muted-foreground mb-4">
-                  Vakil Tech&apos;s liability is limited to the extent permitted by law. We are not liable for:
+                  Vakil Tech&apos;s liability is limited to the extent permitted
+                  by law. We are not liable for:
                 </p>
                 <ul className="list-disc list-inside text-muted-foreground space-y-1">
                   <li>Indirect or consequential damages</li>
                   <li>Loss of profits or business opportunities</li>
-                  <li>Damages arising from client&apos;s failure to follow advice</li>
+                  <li>
+                    Damages arising from client&apos;s failure to follow advice
+                  </li>
                   <li>Third-party actions or decisions</li>
                   <li>Technical issues or service interruptions</li>
                   <li>Data loss or security breaches beyond our control</li>
@@ -153,9 +174,11 @@ export default function TermsAndConditionsPage() {
               </AccordionTrigger>
               <AccordionContent>
                 <p className="text-muted-foreground">
-                  All content on our website, including text, graphics, logos, and software, is owned by Vakil Tech and 
-                  protected by intellectual property laws. You may not reproduce, distribute, or create derivative works 
-                  without our written permission. Legal documents prepared for you remain your property.
+                  All content on our website, including text, graphics, logos,
+                  and software, is owned by Vakil Tech and protected by
+                  intellectual property laws. You may not reproduce, distribute,
+                  or create derivative works without our written permission.
+                  Legal documents prepared for you remain your property.
                 </p>
               </AccordionContent>
             </AccordionItem>
@@ -169,17 +192,24 @@ export default function TermsAndConditionsPage() {
                   <div>
                     <h3 className="font-semibold mb-2">Acceptable Use</h3>
                     <p className="text-muted-foreground">
-                      You agree to use our website only for lawful purposes and in accordance with these terms.
+                      You agree to use our website only for lawful purposes and
+                      in accordance with these terms.
                     </p>
                   </div>
                   <div>
-                    <h3 className="font-semibold mb-2">Prohibited Activities</h3>
+                    <h3 className="font-semibold mb-2">
+                      Prohibited Activities
+                    </h3>
                     <ul className="list-disc list-inside text-muted-foreground space-y-1">
-                      <li>Attempting to gain unauthorized access to our systems</li>
+                      <li>
+                        Attempting to gain unauthorized access to our systems
+                      </li>
                       <li>Interfering with website functionality</li>
                       <li>Transmitting harmful code or content</li>
                       <li>Violating any applicable laws or regulations</li>
-                      <li>Impersonating others or providing false information</li>
+                      <li>
+                        Impersonating others or providing false information
+                      </li>
                     </ul>
                   </div>
                 </div>
@@ -192,7 +222,8 @@ export default function TermsAndConditionsPage() {
               </AccordionTrigger>
               <AccordionContent>
                 <p className="text-muted-foreground mb-4">
-                  Any disputes arising from these terms or our services will be resolved through:
+                  Any disputes arising from these terms or our services will be
+                  resolved through:
                 </p>
                 <ol className="list-decimal list-inside text-muted-foreground space-y-1">
                   <li>Direct communication and negotiation</li>
@@ -209,8 +240,10 @@ export default function TermsAndConditionsPage() {
               </AccordionTrigger>
               <AccordionContent>
                 <p className="text-muted-foreground">
-                  These terms are governed by the laws of India. Any legal proceedings will be subject to the jurisdiction 
-                  of courts in Mumbai, Maharashtra. All disputes will be resolved in accordance with Indian law.
+                  These terms are governed by the laws of India. Any legal
+                  proceedings will be subject to the jurisdiction of courts in
+                  Mumbai, Maharashtra. All disputes will be resolved in
+                  accordance with Indian law.
                 </p>
               </AccordionContent>
             </AccordionItem>
@@ -221,9 +254,11 @@ export default function TermsAndConditionsPage() {
               </AccordionTrigger>
               <AccordionContent>
                 <p className="text-muted-foreground">
-                  We reserve the right to modify these terms at any time. Changes will be effective immediately upon posting 
-                  on our website. Continued use of our services constitutes acceptance of modified terms. We will notify 
-                  users of significant changes via email or website notification.
+                  We reserve the right to modify these terms at any time.
+                  Changes will be effective immediately upon posting on our
+                  website. Continued use of our services constitutes acceptance
+                  of modified terms. We will notify users of significant changes
+                  via email or website notification.
                 </p>
               </AccordionContent>
             </AccordionItem>
@@ -234,12 +269,16 @@ export default function TermsAndConditionsPage() {
               </AccordionTrigger>
               <AccordionContent>
                 <p className="text-muted-foreground mb-4">
-                  For questions about these terms and conditions, please contact us:
+                  For questions about these terms and conditions, please contact
+                  us:
                 </p>
                 <div className="space-y-2 text-muted-foreground">
-                  <p>Email: legal@vakiltech.com</p>
+                  <p>Email: legal@vakiltech.in</p>
                   <p>Phone: +91 7047683995</p>
-                  <p>Address: Vakil Tech Legal Services, Mumbai, Maharashtra, India</p>
+                  <p>
+                    Address: Vakil Tech Legal Services, Mumbai, Maharashtra,
+                    India
+                  </p>
                 </div>
               </AccordionContent>
             </AccordionItem>
@@ -251,4 +290,4 @@ export default function TermsAndConditionsPage() {
       </div>
     </div>
   );
-} 
+}

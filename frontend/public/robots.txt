@@ -6,7 +6,7 @@ Disallow: /admin/*
 Disallow: /_next/*
 
 # Host
-Host: https://vakiltech.com
+Host: https://vakiltech.in
 
 # Sitemaps
-Sitemap: https://vakiltech.com/sitemap.xml
+Sitemap: https://vakiltech.in/sitemap.xml
