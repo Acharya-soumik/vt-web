@@ -4,18 +4,14 @@ import { useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
 import {
   Users,
   Scale,
   CheckCircle,
   Mail,
   Phone,
-  MapPin,
   FileText,
   Clock,
-  BookOpen,
-  Trophy,
 } from "lucide-react";
 import { useAnalytics } from "@/hooks/use-analytics";
 
@@ -23,17 +19,8 @@ interface LawyerApplication {
   fullName: string;
   email: string;
   phone: string;
-  location: string;
-  specialty: string;
-  yearsOfPractice: string;
   barCouncilNumber: string;
-  currentFirm: string;
-  education: string;
-  languages: string;
-  notableAchievements: string;
-  whyJoinUs: string;
   availabilityType: string;
-  expectedCompensation: string;
   resumeDriveLink: string;
 }
 
@@ -44,17 +31,8 @@ export function CareerApplicationForm() {
     fullName: "",
     email: "",
     phone: "",
-    location: "",
-    specialty: "",
-    yearsOfPractice: "",
     barCouncilNumber: "",
-    currentFirm: "",
-    education: "",
-    languages: "",
-    notableAchievements: "",
-    whyJoinUs: "",
     availabilityType: "",
-    expectedCompensation: "",
     resumeDriveLink: "",
   });
 
@@ -85,17 +63,8 @@ export function CareerApplicationForm() {
           fullName: formData.fullName,
           email: formData.email,
           phone: formData.phone,
-          location: formData.location,
-          specialty: formData.specialty,
-          yearsOfPractice: formData.yearsOfPractice,
           barCouncilNumber: formData.barCouncilNumber,
-          currentFirm: formData.currentFirm || null,
-          education: formData.education,
-          languages: formData.languages,
-          notableAchievements: formData.notableAchievements || null,
-          whyJoinUs: formData.whyJoinUs,
           availabilityType: formData.availabilityType,
-          expectedCompensation: formData.expectedCompensation || null,
           resumeUrl,
         }),
       });
@@ -115,36 +84,9 @@ export function CareerApplicationForm() {
     }
   };
 
-  const specialties = [
-    "Corporate Law",
-    "Criminal Law",
-    "Civil Litigation",
-    "Family Law",
-    "Property Law",
-    "Tax Law",
-    "Labor & Employment Law",
-    "Intellectual Property Law",
-    "Constitutional Law",
-    "Environmental Law",
-    "Immigration Law",
-    "Banking & Finance Law",
-    "Cyber Law",
-    "Consumer Law",
-    "Other",
-  ];
-
-  const experienceRanges = [
-    "0-2 years",
-    "3-5 years",
-    "6-10 years",
-    "11-15 years",
-    "16-20 years",
-    "20+ years",
-  ];
-
   const availabilityTypes = [
     "Full-time",
-    "Part-time",
+    "Part-time", 
     "Contract/Project-based",
     "Consulting",
     "Flexible",
@@ -156,12 +98,10 @@ export function CareerApplicationForm() {
         <CardContent className="p-8">
           <CheckCircle className="h-16 w-16 text-green-600 mx-auto mb-4" />
           <h2 className="text-2xl font-bold mb-2">
-            Application Submitted Successfully!
+            Application Received!
           </h2>
           <p className="text-muted-foreground mb-4">
-            Thank you for your interest in joining our expert legal team. We
-            will review your application and get back to you within 3-5 business
-            days.
+            Thank you for applying! We'll review your application and get back to you within 3-5 business days.
           </p>
           <Button
             onClick={() => {
@@ -170,17 +110,8 @@ export function CareerApplicationForm() {
                 fullName: "",
                 email: "",
                 phone: "",
-                location: "",
-                specialty: "",
-                yearsOfPractice: "",
                 barCouncilNumber: "",
-                currentFirm: "",
-                education: "",
-                languages: "",
-                notableAchievements: "",
-                whyJoinUs: "",
                 availabilityType: "",
-                expectedCompensation: "",
                 resumeDriveLink: "",
               });
             }}
@@ -196,134 +127,69 @@ export function CareerApplicationForm() {
     <Card id="apply" className="scroll-mt-28">
       <CardHeader>
         <CardTitle className="flex items-center text-2xl">
-          <FileText className="h-6 w-6 mr-3 text-primary" />
-          Expert Lawyer Application Form
+          <Users className="h-6 w-6 mr-3 text-primary" />
+          Join Our Legal Team
         </CardTitle>
       </CardHeader>
       <CardContent>
-        <form onSubmit={handleSubmit} className="space-y-8">
-          {/* Personal Information */}
-          <div>
-            <h3 className="text-xl font-semibold text-foreground mb-6 flex items-center">
-              <Users className="h-5 w-5 mr-2 text-primary" />
-              Personal Information
-            </h3>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              <div>
-                <label className="block text-sm font-medium text-foreground mb-2">
-                  Full Name *
-                </label>
+        <form onSubmit={handleSubmit} className="space-y-6">
+          {/* Simple Form Layout */}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            {/* Full Name */}
+            <div>
+              <label className="block text-sm font-medium text-foreground mb-2">
+                Full Name *
+              </label>
+              <Input
+                required
+                value={formData.fullName}
+                onChange={(e) => handleInputChange("fullName", e.target.value)}
+                placeholder="Enter your full name"
+              />
+            </div>
+
+            {/* Email */}
+            <div>
+              <label className="block text-sm font-medium text-foreground mb-2">
+                Email Address *
+              </label>
+              <div className="relative">
+                <Mail className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
                 <Input
                   required
-                  value={formData.fullName}
-                  onChange={(e) =>
-                    handleInputChange("fullName", e.target.value)
-                  }
-                  placeholder="Enter your full name"
+                  type="email"
+                  value={formData.email}
+                  onChange={(e) => handleInputChange("email", e.target.value)}
+                  placeholder="your.email@example.com"
+                  className="pl-10"
                 />
               </div>
-              <div>
-                <label className="block text-sm font-medium text-foreground mb-2">
-                  Email Address *
-                </label>
-                <div className="relative">
-                  <Mail className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-                  <Input
-                    required
-                    type="email"
-                    value={formData.email}
-                    onChange={(e) => handleInputChange("email", e.target.value)}
-                    placeholder="your.email@example.com"
-                    className="pl-10"
-                  />
-                </div>
-              </div>
-              <div>
-                <label className="block text-sm font-medium text-foreground mb-2">
-                  Phone Number *
-                </label>
-                <div className="relative">
-                  <Phone className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-                  <Input
-                    required
-                    value={formData.phone}
-                    onChange={(e) => handleInputChange("phone", e.target.value)}
-                    placeholder="+91 9876543210"
-                    className="pl-10"
-                  />
-                </div>
-              </div>
-              <div>
-                <label className="block text-sm font-medium text-foreground mb-2">
-                  Location/City *
-                </label>
-                <div className="relative">
-                  <MapPin className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-                  <Input
-                    required
-                    value={formData.location}
-                    onChange={(e) =>
-                      handleInputChange("location", e.target.value)
-                    }
-                    placeholder="Mumbai, Delhi, Bangalore, etc."
-                    className="pl-10"
-                  />
-                </div>
+            </div>
+
+            {/* Phone */}
+            <div>
+              <label className="block text-sm font-medium text-foreground mb-2">
+                Phone Number *
+              </label>
+              <div className="relative">
+                <Phone className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+                <Input
+                  required
+                  value={formData.phone}
+                  onChange={(e) => handleInputChange("phone", e.target.value)}
+                  placeholder="+91 9876543210"
+                  className="pl-10"
+                />
               </div>
             </div>
-          </div>
 
-          {/* Professional Information */}
-          <div>
-            <h3 className="text-xl font-semibold text-foreground mb-6 flex items-center">
-              <Scale className="h-5 w-5 mr-2 text-primary" />
-              Professional Information
-            </h3>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              <div>
-                <label className="block text-sm font-medium text-foreground mb-2">
-                  Primary Specialty *
-                </label>
-                <select
-                  required
-                  value={formData.specialty}
-                  onChange={(e) =>
-                    handleInputChange("specialty", e.target.value)
-                  }
-                  className="flex h-10 w-full items-center justify-between rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
-                >
-                  <option value="">Select your specialty</option>
-                  {specialties.map((specialty) => (
-                    <option key={specialty} value={specialty}>
-                      {specialty}
-                    </option>
-                  ))}
-                </select>
-              </div>
-              <div>
-                <label className="block text-sm font-medium text-foreground mb-2">
-                  Years of Practice *
-                </label>
-                <select
-                  required
-                  value={formData.yearsOfPractice}
-                  onChange={(e) =>
-                    handleInputChange("yearsOfPractice", e.target.value)
-                  }
-                  className="flex h-10 w-full items-center justify-between rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
-                >
-                  <option value="">Select experience range</option>
-                  {experienceRanges.map((range) => (
-                    <option key={range} value={range}>
-                      {range}
-                    </option>
-                  ))}
-                </select>
-              </div>
-              <div>
-                <label className="block text-sm font-medium text-foreground mb-2">
-                  Bar Council Enrollment Number *
-                </label>
+            {/* Bar Council Number */}
+            <div>
+              <label className="block text-sm font-medium text-foreground mb-2">
+                Bar Council Enrollment Number *
+              </label>
+              <div className="relative">
+                <Scale className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
                 <Input
                   required
                   value={formData.barCouncilNumber}
@@ -331,147 +197,59 @@ export function CareerApplicationForm() {
                     handleInputChange("barCouncilNumber", e.target.value)
                   }
                   placeholder="Your Bar Council enrollment number"
-                />
-              </div>
-              <div>
-                <label className="block text-sm font-medium text-foreground mb-2">
-                  Current Firm/Organization
-                </label>
-                <Input
-                  value={formData.currentFirm}
-                  onChange={(e) =>
-                    handleInputChange("currentFirm", e.target.value)
-                  }
-                  placeholder="Current workplace (optional)"
+                  className="pl-10"
                 />
               </div>
             </div>
-          </div>
 
-          {/* Education and Skills */}
-          <div>
-            <h3 className="text-xl font-semibold text-foreground mb-6 flex items-center">
-              <BookOpen className="h-5 w-5 mr-2 text-primary" />
-              Education & Skills
-            </h3>
-            <div className="space-y-6">
-              <div>
-                <label className="block text-sm font-medium text-foreground mb-2">
-                  Educational Qualifications *
-                </label>
-                <Textarea
-                  required
-                  value={formData.education}
-                  onChange={(e) =>
-                    handleInputChange("education", e.target.value)
-                  }
-                  placeholder="List your law degree(s), institution(s), and any additional qualifications..."
-                  rows={3}
-                />
-              </div>
-              <div>
-                <label className="block text-sm font-medium text-foreground mb-2">
-                  Languages (Hindi, English, etc.) *
-                </label>
+            {/* Availability Type */}
+            <div>
+              <label className="block text-sm font-medium text-foreground mb-2">
+                Availability Type *
+              </label>
+              <select
+                required
+                value={formData.availabilityType}
+                onChange={(e) =>
+                  handleInputChange("availabilityType", e.target.value)
+                }
+                className="flex h-10 w-full items-center justify-between rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
+              >
+                <option value="">Select availability</option>
+                {availabilityTypes.map((type) => (
+                  <option key={type} value={type}>
+                    {type}
+                  </option>
+                ))}
+              </select>
+            </div>
+
+            {/* Resume Link */}
+            <div>
+              <label className="block text-sm font-medium text-foreground mb-2">
+                Resume/CV Link (Google Drive) *
+              </label>
+              <div className="relative">
+                <FileText className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
                 <Input
                   required
-                  value={formData.languages}
+                  type="url"
+                  placeholder="https://drive.google.com/..."
+                  value={formData.resumeDriveLink}
                   onChange={(e) =>
-                    handleInputChange("languages", e.target.value)
+                    handleInputChange("resumeDriveLink", e.target.value)
                   }
-                  placeholder="e.g., Hindi (Native), English (Fluent), Tamil (Conversational)"
+                  className="pl-10"
                 />
               </div>
+              <p className="text-xs text-muted-foreground mt-1">
+                Share your Google Drive link (make sure it's accessible to anyone with the link)
+              </p>
             </div>
-          </div>
-
-          {/* Experience and Achievements */}
-          <div>
-            <h3 className="text-xl font-semibold text-foreground mb-6 flex items-center">
-              <Trophy className="h-5 w-5 mr-2 text-primary" />
-              Experience & Achievements
-            </h3>
-            <div className="space-y-6">
-              <div>
-                <label className="block text-sm font-medium text-foreground mb-2">
-                  Notable Achievements & Cases
-                </label>
-                <Textarea
-                  value={formData.notableAchievements}
-                  onChange={(e) =>
-                    handleInputChange("notableAchievements", e.target.value)
-                  }
-                  placeholder="Describe significant cases, awards, publications, or achievements that demonstrate your expertise..."
-                  rows={4}
-                />
-              </div>
-              <div>
-                <label className="block text-sm font-medium text-foreground mb-2">
-                  Why do you want to join our team? *
-                </label>
-                <Textarea
-                  required
-                  value={formData.whyJoinUs}
-                  onChange={(e) =>
-                    handleInputChange("whyJoinUs", e.target.value)
-                  }
-                  placeholder="Tell us what motivates you to work with our expert legal team and how you can contribute..."
-                  rows={4}
-                />
-              </div>
-            </div>
-          </div>
-
-          {/* Availability and Compensation */}
-          <div>
-            <h3 className="text-xl font-semibold text-foreground mb-6 flex items-center">
-              <Clock className="h-5 w-5 mr-2 text-primary" />
-              Availability
-            </h3>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              <div>
-                <label className="block text-sm font-medium text-foreground mb-2">
-                  Availability Type *
-                </label>
-                <select
-                  required
-                  value={formData.availabilityType}
-                  onChange={(e) =>
-                    handleInputChange("availabilityType", e.target.value)
-                  }
-                  className="flex h-10 w-full items-center justify-between rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
-                >
-                  <option value="">Select availability</option>
-                  {availabilityTypes.map((type) => (
-                    <option key={type} value={type}>
-                      {type}
-                    </option>
-                  ))}
-                </select>
-              </div>
-            </div>
-          </div>
-
-          {/* Resume Link (Google Drive) */}
-          <div>
-            <label className="block text-sm font-medium text-foreground mb-2">
-              Resume/CV Link (Google Drive)
-            </label>
-            <Input
-              type="url"
-              placeholder="https://drive.google.com/..."
-              value={formData.resumeDriveLink}
-              onChange={(e) =>
-                handleInputChange("resumeDriveLink", e.target.value)
-              }
-            />
-            <p className="text-xs text-muted-foreground mt-2">
-              Ensure the link is accessible: Anyone with the link can view.
-            </p>
           </div>
 
           {/* Submit Button */}
-          <div className="pt-6">
+          <div className="pt-4">
             <Button
               type="submit"
               disabled={isSubmitting}
@@ -488,8 +266,8 @@ export function CareerApplicationForm() {
                 </>
               ) : (
                 <>
-                  <FileText className="h-4 w-4 mr-2" />
-                  Submit Application
+                  <Users className="h-4 w-4 mr-2" />
+                  Join Our Legal Team
                 </>
               )}
             </Button>

@@ -14,8 +14,14 @@ interface ClientLayoutProps {
 }
 
 export function ClientLayout({ children }: ClientLayoutProps) {
-  const { logEnhancedPageView, logScrollDepth, logTimeOnPage, getPageType } =
-    useAnalytics();
+  const { 
+    logEnhancedPageView, 
+    logScrollDepth, 
+    logTimeOnPage, 
+    logServiceViewed,
+    getPageType,
+    getUTMParams
+  } = useAnalytics();
   const pathname = usePathname();
   const pageStartTime = useRef<number>(Date.now());
   const scrollDepthTracked = useRef<Set<number>>(new Set());
@@ -24,17 +30,36 @@ export function ClientLayout({ children }: ClientLayoutProps) {
   useEffect(() => {
     const pageType = getPageType(pathname);
     const pageTitle = document.title || "Vakil Tech";
+    const utmParams = getUTMParams();
+
+    // Auto-detect service type from URL
+    let serviceType = null;
+    if (pathname.includes("/send-a-legal-notice")) serviceType = "legal-notice";
+    else if (pathname.includes("/consultation")) serviceType = "consultation";
+    else if (pathname.includes("/document-drafting")) serviceType = "document-drafting";
+    else if (pathname.includes("/corporate-retainer")) serviceType = "corporate-retainer";
 
     logEnhancedPageView(pathname, pageTitle, {
       page_type: pageType,
+      service_type: serviceType,
+      utm_source: utmParams.utm_source,
+      utm_medium: utmParams.utm_medium,
+      utm_campaign: utmParams.utm_campaign,
+      utm_term: utmParams.utm_term,
+      utm_content: utmParams.utm_content,
       referrer: typeof window !== "undefined" ? document.referrer : "",
       user_agent: typeof window !== "undefined" ? navigator.userAgent : "",
     });
 
+    // Track service viewed for service pages
+    if (serviceType) {
+      logServiceViewed(serviceType, pathname);
+    }
+
     // Reset page tracking
     pageStartTime.current = Date.now();
     scrollDepthTracked.current.clear();
-  }, [pathname, logEnhancedPageView, getPageType]);
+  }, [pathname, logEnhancedPageView, logServiceViewed, getPageType, getUTMParams]);
 
   // Track scroll depth
   useEffect(() => {
@@ -45,7 +70,11 @@ export function ClientLayout({ children }: ClientLayoutProps) {
         window.pageYOffset || document.documentElement.scrollTop;
       const scrollHeight =
         document.documentElement.scrollHeight - window.innerHeight;
-      const scrollPercentage = Math.round((scrollTop / scrollHeight) * 100);
+      
+      // Avoid division by zero
+      if (scrollHeight <= 0) return;
+      
+      const scrollPercentage = Math.min(100, Math.round((scrollTop / scrollHeight) * 100));
 
       // Track at 25%, 50%, 75%, and 100% scroll depths
       const trackingPoints = [25, 50, 75, 100];

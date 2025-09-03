@@ -119,6 +119,19 @@ export function trackEvent(
       // eslint-disable-next-line no-console
       console.error("[Analytics] Failed to track event:", event, err);
     }
+    // Track analytics errors as events (only in production to avoid spam)
+    if (typeof window !== "undefined" && process.env.NODE_ENV === "production") {
+      try {
+        window.gtag?.("event", "analytics_error", {
+          error_type: "event_tracking_failed",
+          event_name: event,
+          error_message: err instanceof Error ? err.message : String(err),
+          timestamp: Date.now(),
+        });
+      } catch {
+        // Silent fail for error tracking errors
+      }
+    }
   }
 }
 
@@ -316,14 +329,21 @@ export function trackPaymentCompleted(
   paymentMethod: string,
   paymentId?: string
 ) {
-  trackEvent(EVENT_NAMES.PAYMENT_COMPLETED, {
+  const eventData = {
     service_type: serviceType,
     payment_amount: amount,
     payment_method: paymentMethod,
     payment_id: paymentId,
     currency: "INR",
     timestamp: Date.now(),
-  });
+  };
+  
+  trackEvent(EVENT_NAMES.PAYMENT_COMPLETED, eventData);
+  
+  // Debug logging for payment completion
+  if (ANALYTICS_DEBUG) {
+    console.log("[Analytics] Payment completed event:", eventData);
+  }
 }
 
 export function trackPaymentFailed(
@@ -508,10 +528,21 @@ export function getUTMParams(): Record<string, string> {
 
 // Utility function to get page type from URL
 export function getPageType(url: string): string {
-  if (url.includes("/send-a-legal-notice")) return "legal_notice_page";
+  // Legal notice pages (most specific first)
+  if (url.includes("/send-a-legal-notice")) {
+    if (url.includes("/demand-notice-recovery-of-money")) return "legal_notice_money_recovery";
+    if (url.includes("/divorce") || url.includes("/matrimonial")) return "legal_notice_divorce";
+    if (url.includes("/cheque") || url.includes("/dishonour")) return "legal_notice_cheque_bounce";
+    if (url.includes("/eviction")) return "legal_notice_eviction";
+    if (url.includes("/breach") || url.includes("/contract")) return "legal_notice_contract_breach";
+    return "legal_notice_generic";
+  }
+  
+  // Other service pages
   if (url.includes("/consultation")) return "consultation_page";
   if (url.includes("/document-drafting")) return "document_drafting_page";
   if (url.includes("/corporate-retainer")) return "corporate_retainer_page";
+  if (url.includes("/careers")) return "careers_page";
   if (url.includes("/pricing")) return "pricing_page";
   if (url.includes("/about")) return "about_page";
   if (url.includes("/contact")) return "contact_page";

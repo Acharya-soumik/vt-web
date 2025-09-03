@@ -70,11 +70,19 @@ export const PaymentStep = ({ formData }: PaymentStepProps) => {
       <motion.div variants={formElementVariants}>
         <Card className="border-primary/20 bg-primary/5">
           <CardContent className="pt-6 space-y-4">
-            <div className="flex justify-between items-center">
-              <span className="text-gray-700 font-medium">{serviceName}</span>
-              <span className="text-2xl font-bold text-primary">
-                {servicePrice}
-              </span>
+            <div className="space-y-2">
+              <div className="flex justify-between items-center">
+                <span className="text-gray-700 font-medium">{serviceName}</span>
+                <span className="text-lg font-semibold text-gray-700">
+                  Total: ₹1999
+                </span>
+              </div>
+              <div className="flex justify-between items-center">
+                <span className="text-gray-600">Advance Payment</span>
+                <span className="text-2xl font-bold text-primary">
+                  ₹499
+                </span>
+              </div>
             </div>
             <div className="flex items-center justify-between text-sm">
               <div className="flex items-center gap-2 text-gray-600">

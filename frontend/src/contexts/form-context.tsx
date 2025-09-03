@@ -410,13 +410,29 @@ export const FormProvider: React.FC<FormProviderProps> = ({
             localStorage.removeItem(PAYMENT_STORAGE_KEY);
           } catch {}
 
-          // Analytics: Payment completed
+          // Analytics: Payment completed - Enhanced tracking
           logPaymentCompleted(
             formData.service || "unknown",
             paymentRequest.amount,
             "razorpay",
             response.razorpay_payment_id
           );
+          
+          // Also track as generic event for backup funnel tracking
+          const utmParams = getUTMParams();
+          logEvent("payment_completed", {
+            service_type: formData.service || "unknown",
+            payment_amount: paymentRequest.amount,
+            payment_method: "razorpay",
+            payment_id: response.razorpay_payment_id,
+            step: 2,
+            step_name: "Payment",
+            currency: "INR",
+            utm_source: utmParams.utm_source,
+            utm_medium: utmParams.utm_medium,
+            utm_campaign: utmParams.utm_campaign,
+            timestamp: Date.now(),
+          });
 
           // Reopen modal on step 3 (success screen)
           setIsFormOpen(true);

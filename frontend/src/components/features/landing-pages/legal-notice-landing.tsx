@@ -9,6 +9,8 @@ import { SimpleProcess } from "../homepage/simple-process";
 import { legalExperts } from "@/data/experts";
 import Image from "next/image";
 import { LegalNoticePayCard } from "./legal-notice-pay-card";
+import { useAnalytics } from "@/hooks/use-analytics";
+import { useEffect } from "react";
 
 export function LegalNoticeLanding({
   topicTitle,

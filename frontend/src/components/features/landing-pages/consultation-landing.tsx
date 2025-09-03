@@ -6,9 +6,21 @@ import { ExpertCarousel } from "@/components/ui/expert-carousel";
 import { useFormContext } from "@/contexts/form-context";
 import { SimpleProcess } from "../homepage/simple-process";
 import { consultationExperts } from "@/data/experts";
+import { useAnalytics } from "@/hooks/use-analytics";
 
 export function ConsultationLanding({ city }: { city?: string } = {}) {
   const { openForm } = useFormContext();
+  const { logCTAClick } = useAnalytics();
+
+  const handleBookConsultation = () => {
+    logCTAClick(
+      "consultation",
+      "Book Consultation",
+      typeof window !== "undefined" ? window.location.pathname : undefined,
+      "consultation"
+    );
+    openForm("consultation");
+  };
 
   const features = [
     {
@@ -85,7 +97,7 @@ export function ConsultationLanding({ city }: { city?: string } = {}) {
           <Button
             size="lg"
             className="bg-primary hover:bg-primary/90 text-primary-foreground px-8 py-3"
-            onClick={() => openForm("consultation")}
+            onClick={handleBookConsultation}
           >
             Book Consultation
           </Button>
@@ -191,7 +203,7 @@ export function ConsultationLanding({ city }: { city?: string } = {}) {
             <Button
               size="lg"
               className="bg-primary hover:bg-primary/90 text-primary-foreground px-8 py-3"
-              onClick={() => openForm("consultation")}
+              onClick={handleBookConsultation}
             >
               Book Consultation
             </Button>
