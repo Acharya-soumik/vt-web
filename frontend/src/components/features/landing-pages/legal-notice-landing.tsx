@@ -51,7 +51,7 @@ export function LegalNoticeLanding({
       icon: "₹",
       title: "Pay & Connect",
       description:
-        "Pay ₹400 advance and we instantly connect you with a qualified legal professional",
+        "Pay ₹499 advance and we instantly connect you with a qualified legal professional",
       svgPath: "/4-step-process/pay_advance.svg",
     },
     {
@@ -166,7 +166,7 @@ export function LegalNoticeLanding({
               className="bg-primary hover:bg-primary/90 text-primary-foreground px-8 py-6 text-lg"
               onClick={handleCallbackRequest}
             >
-              Request Callback
+              Get Started
             </Button>
           </div>
         </div>

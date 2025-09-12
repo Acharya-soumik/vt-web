@@ -112,7 +112,7 @@ export const LeadFormModal = () => {
   // Get payment amount for the service
   const getPaymentAmount = () => {
     const config = getPaymentConfig(formData.service || "consultation");
-    return config ? formatAmount(config.amount) : "₹400";
+    return config ? formatAmount(config.amount) : "₹499";
   };
 
   // Handle close attempt with confirmation for step 3

@@ -19,7 +19,10 @@ import { useAnalytics } from "@/hooks/use-analytics";
 export function Header() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [showPaymentBanner, setShowPaymentBanner] = useState(false);
-  const [currentCTA, setCurrentCTA] = useState({ text: "Book Consultation", service: "consultation" });
+  const [currentCTA, setCurrentCTA] = useState({
+    text: "Book Consultation",
+    service: "consultation",
+  });
   const { openForm, paymentStatus, processPayment, isProcessingPayment } =
     useFormContext();
 
@@ -39,17 +42,20 @@ export function Header() {
 
   // Get page-specific CTA text and service
   const getPageSpecificCTA = () => {
-    if (typeof window === "undefined") return { text: "Book Consultation", service: "consultation" };
-    
+    if (typeof window === "undefined")
+      return { text: "Book Consultation", service: "consultation" };
+
     const pathname = window.location.pathname;
-    
+
     // Legal notice pages - various URL patterns
-    if (pathname.includes("/send-a-legal-notice") || 
-        pathname.includes("/legal-notice") ||
-        pathname.includes("/cheque-bounce") ||
-        pathname.includes("/property-dispute") ||
-        pathname.includes("/tenant-eviction") ||
-        pathname.includes("/consumer-dispute")) {
+    if (
+      pathname.includes("/send-a-legal-notice") ||
+      pathname.includes("/legal-notice") ||
+      pathname.includes("/cheque-bounce") ||
+      pathname.includes("/property-dispute") ||
+      pathname.includes("/tenant-eviction") ||
+      pathname.includes("/consumer-dispute")
+    ) {
       return { text: "Send Legal Notice", service: "legal-notice" };
     }
     if (pathname.includes("/document-drafting")) {
@@ -61,7 +67,7 @@ export function Header() {
     if (pathname.includes("/consultation")) {
       return { text: "Book Consultation", service: "consultation" };
     }
-    
+
     // Default for home page and other pages
     return { text: "Book Consultation", service: "consultation" };
   };
@@ -71,12 +77,12 @@ export function Header() {
     const updateCTA = () => {
       setCurrentCTA(getPageSpecificCTA());
     };
-    
+
     updateCTA();
-    
+
     // Check for pathname changes periodically (for client-side routing)
     const interval = setInterval(updateCTA, 500);
-    
+
     return () => clearInterval(interval);
   }, []);
 
@@ -243,7 +249,7 @@ export function Header() {
             >
               About
             </Link>
-            <Link
+            {/* <Link
               href="/pricing"
               className="text-muted-foreground hover:text-primary transition-colors"
               onClick={() =>
@@ -251,7 +257,7 @@ export function Header() {
               }
             >
               Pricing
-            </Link>
+            </Link> */}
             <Link
               href="/contact"
               className="text-muted-foreground hover:text-primary transition-colors"
@@ -261,7 +267,7 @@ export function Header() {
             >
               Contact
             </Link>
-            <Link
+            {/* <Link
               href="/careers"
               className="text-muted-foreground hover:text-primary transition-colors"
               onClick={() =>
@@ -269,12 +275,12 @@ export function Header() {
               }
             >
               Careers
-            </Link>
+            </Link> */}
 
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
                 <button className="flex items-center text-muted-foreground hover:text-primary transition-colors">
-                  Products
+                  Our Services
                   <ChevronDown className="ml-1 h-4 w-4" />
                 </button>
               </DropdownMenuTrigger>
@@ -306,7 +312,7 @@ export function Header() {
                       )
                     }
                   >
-                    Consultation
+                    Book Consultation
                   </Link>
                 </DropdownMenuItem>
                 <DropdownMenuItem asChild>
@@ -341,10 +347,10 @@ export function Header() {
                 </DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>
-
+            {/* 
             <Button onClick={handleOpenForm} size="sm">
               {currentCTA.text}
-            </Button>
+            </Button> */}
           </nav>
 
           {/* Mobile Menu Button (right aligned) */}

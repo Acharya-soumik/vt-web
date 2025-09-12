@@ -28,14 +28,14 @@ export function HeroSection() {
       <div className="text-center max-w-5xl mx-auto">
         {/* Main Headline */}
         <h1 className="text-5xl md:text-7xl font-bold tracking-tight mb-8 text-foreground leading-tight">
-          Find the Right Lawyer,
+          find the right Lawyer
           <br />
           <WordRotate
             className="text-primary text-3xl md:text-5xl"
             words={[
-              "send a legal notice!",
-              "get lawyer consultation!",
-              "business legal services!",
+              "file your notice instantly!",
+              "access expert consultation!!",
+              "Your case, our concern!",
             ]}
           />
           {/* <span className="text-primary">Right Here!</span> */}
@@ -43,14 +43,14 @@ export function HeroSection() {
 
         {/* Tagline */}
         <p className="text-2xl md:text-3xl font-semibold text-muted-foreground mb-6">
-          Reimagine Legal Assistance At Your Fingertips
+          Legal Confusion to Clear Solutions - We Will Guide You
         </p>
 
         {/* Description */}
         <p className="text-lg md:text-xl text-muted-foreground mb-10 max-w-4xl mx-auto leading-relaxed">
           Our team of top-tier lawyers delivers seamless legal solutions—fast,
           reliable, and effortless. <br />
-          You ask. We handle. Done.
+          <span className="font-bold">You ask. We handle.</span>
         </p>
         <div className="flex flex-col sm:flex-row gap-4 justify-center mb-8">
           <Button

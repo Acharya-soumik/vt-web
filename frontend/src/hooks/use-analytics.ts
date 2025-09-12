@@ -114,8 +114,25 @@ export function useAnalytics() {
   );
 
   const logFormValidationError = useCallback(
-    (fieldName: string, errorType: string, stepNumber?: number) => {
-      trackFormValidationError(fieldName, errorType, stepNumber);
+    (
+      fieldName: string,
+      errorType: string,
+      stepNumber?: number,
+      additionalDetails?: {
+        errorMessage?: string;
+        userInput?: string;
+        validationRule?: string;
+        countryCode?: string;
+        fieldValue?: string;
+        errorCode?: string;
+      }
+    ) => {
+      trackFormValidationError(
+        fieldName,
+        errorType,
+        stepNumber,
+        additionalDetails
+      );
     },
     []
   );

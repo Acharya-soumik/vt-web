@@ -89,7 +89,7 @@ export default async function LegalNoticeTopicCityPage({
             <div className="space-y-3">
               <div className="flex items-center justify-between">
                 <span className="text-sm">Advance to initiate case</span>
-                <span className="font-semibold">₹400</span>
+                <span className="font-semibold">₹499</span>
               </div>
               <Link
                 href={`?type=legal-notice`}

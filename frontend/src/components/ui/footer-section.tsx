@@ -82,20 +82,28 @@ function Footerdemo() {
               >
                 Legal Notice
               </Link>
-              <Link
-                href="/contact"
-                className="block transition-colors hover:text-primary"
-              >
-                Contact Us
-              </Link>
             </nav>
           </div>
           <div>
-            <h3 className="mb-4 text-lg font-semibold">Contact Us</h3>
-            <address className="space-y-2 text-sm not-italic">
-              <p>Phone: +91 7047683995</p>
-              <p>Email: help@vakiltech.in</p>
-            </address>
+            <h3 className="mb-4 text-lg font-semibold">Know More</h3>
+            <Link
+              href="/contact"
+              className="block transition-colors hover:text-primary"
+            >
+              Contact Us
+            </Link>
+            <Link
+              href="/pricing"
+              className="block transition-colors hover:text-primary"
+            >
+              Pricing
+            </Link>
+            <Link
+              href="/careers"
+              className="block transition-colors hover:text-primary"
+            >
+              Careers
+            </Link>
           </div>
           <div className="relative">
             <h3 className="mb-4 text-lg font-semibold">Follow Us</h3>

@@ -120,7 +120,10 @@ export function trackEvent(
       console.error("[Analytics] Failed to track event:", event, err);
     }
     // Track analytics errors as events (only in production to avoid spam)
-    if (typeof window !== "undefined" && process.env.NODE_ENV === "production") {
+    if (
+      typeof window !== "undefined" &&
+      process.env.NODE_ENV === "production"
+    ) {
       try {
         window.gtag?.("event", "analytics_error", {
           error_type: "event_tracking_failed",
@@ -247,7 +250,15 @@ export function trackFormFieldInput(
 export function trackFormValidationError(
   fieldName: string,
   errorType: string,
-  stepNumber?: number
+  stepNumber?: number,
+  additionalDetails?: {
+    errorMessage?: string;
+    userInput?: string;
+    validationRule?: string;
+    countryCode?: string;
+    fieldValue?: string;
+    errorCode?: string;
+  }
 ) {
   trackEvent(EVENT_NAMES.FORM_VALIDATION_ERROR, {
     field_name: fieldName,
@@ -255,6 +266,13 @@ export function trackFormValidationError(
     step_number: stepNumber,
     step: stepNumber != null ? String(stepNumber) : undefined,
     timestamp: Date.now(),
+    // Enhanced error details
+    error_message: additionalDetails?.errorMessage,
+    user_input: additionalDetails?.userInput,
+    validation_rule: additionalDetails?.validationRule,
+    country_code: additionalDetails?.countryCode,
+    field_value: additionalDetails?.fieldValue,
+    error_code: additionalDetails?.errorCode,
   });
 }
 
@@ -337,9 +355,9 @@ export function trackPaymentCompleted(
     currency: "INR",
     timestamp: Date.now(),
   };
-  
+
   trackEvent(EVENT_NAMES.PAYMENT_COMPLETED, eventData);
-  
+
   // Debug logging for payment completion
   if (ANALYTICS_DEBUG) {
     console.log("[Analytics] Payment completed event:", eventData);
@@ -530,14 +548,18 @@ export function getUTMParams(): Record<string, string> {
 export function getPageType(url: string): string {
   // Legal notice pages (most specific first)
   if (url.includes("/send-a-legal-notice")) {
-    if (url.includes("/demand-notice-recovery-of-money")) return "legal_notice_money_recovery";
-    if (url.includes("/divorce") || url.includes("/matrimonial")) return "legal_notice_divorce";
-    if (url.includes("/cheque") || url.includes("/dishonour")) return "legal_notice_cheque_bounce";
+    if (url.includes("/demand-notice-recovery-of-money"))
+      return "legal_notice_money_recovery";
+    if (url.includes("/divorce") || url.includes("/matrimonial"))
+      return "legal_notice_divorce";
+    if (url.includes("/cheque") || url.includes("/dishonour"))
+      return "legal_notice_cheque_bounce";
     if (url.includes("/eviction")) return "legal_notice_eviction";
-    if (url.includes("/breach") || url.includes("/contract")) return "legal_notice_contract_breach";
+    if (url.includes("/breach") || url.includes("/contract"))
+      return "legal_notice_contract_breach";
     return "legal_notice_generic";
   }
-  
+
   // Other service pages
   if (url.includes("/consultation")) return "consultation_page";
   if (url.includes("/document-drafting")) return "document_drafting_page";

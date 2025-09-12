@@ -80,6 +80,7 @@ export const FormProvider: React.FC<FormProviderProps> = ({
     logPaymentCompleted,
     logPaymentFailed,
     logPaymentAbandoned,
+    logEvent,
 
     logLeadGenerated,
     logConsultationBooked,
@@ -101,7 +102,7 @@ export const FormProvider: React.FC<FormProviderProps> = ({
 
     // Track step completion
     const stepNames = {
-      1: "Personal Details", 
+      1: "Personal Details",
       2: "Payment",
       3: "What's Next",
     };
@@ -122,7 +123,7 @@ export const FormProvider: React.FC<FormProviderProps> = ({
     if (!isFormOpen) return;
     const stepNames = {
       1: "Personal Details",
-      2: "Payment", 
+      2: "Payment",
       3: "What's Next",
     } as const;
     logFormStepViewed(
@@ -193,7 +194,7 @@ export const FormProvider: React.FC<FormProviderProps> = ({
     (serviceType?: string, bundleType?: string) => {
       // Always require a service - default to consultation if none provided
       const selectedService = serviceType || "consultation";
-      
+
       setFormData((prev) => ({
         ...prev,
         service: selectedService as LeadFormData["service"],
@@ -201,7 +202,7 @@ export const FormProvider: React.FC<FormProviderProps> = ({
       }));
       // Always go directly to step 1 (personal details) since we always have a service
       setCurrentStep(1);
-      
+
       setIsFormOpen(true);
       setPaymentStatus(null); // Reset payment status when opening form
       setStepStartTime(Date.now());
@@ -320,8 +321,13 @@ export const FormProvider: React.FC<FormProviderProps> = ({
         nextStep();
       } else {
         // Handle different types of errors
-        if (result.error === "Duplicate lead" || result.error === "Duplicate unpaid lead") {
-          setSubmissionError(result.message || "A ticket already exists for this service.");
+        if (
+          result.error === "Duplicate lead" ||
+          result.error === "Duplicate unpaid lead"
+        ) {
+          setSubmissionError(
+            result.message || "A ticket already exists for this service."
+          );
         } else {
           setSubmissionError(
             result.message || "Failed to submit lead. Please try again."
@@ -417,7 +423,7 @@ export const FormProvider: React.FC<FormProviderProps> = ({
             "razorpay",
             response.razorpay_payment_id
           );
-          
+
           // Also track as generic event for backup funnel tracking
           const utmParams = getUTMParams();
           logEvent("payment_completed", {
@@ -499,6 +505,7 @@ export const FormProvider: React.FC<FormProviderProps> = ({
     logPaymentCompleted,
     logPaymentFailed,
     logPaymentAbandoned,
+    logEvent,
   ]);
 
   // Hydrate payment pending state from localStorage on mount

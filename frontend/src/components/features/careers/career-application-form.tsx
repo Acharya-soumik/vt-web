@@ -86,7 +86,7 @@ export function CareerApplicationForm() {
 
   const availabilityTypes = [
     "Full-time",
-    "Part-time", 
+    "Part-time",
     "Contract/Project-based",
     "Consulting",
     "Flexible",
@@ -97,11 +97,10 @@ export function CareerApplicationForm() {
       <Card className="text-center max-w-2xl mx-auto">
         <CardContent className="p-8">
           <CheckCircle className="h-16 w-16 text-green-600 mx-auto mb-4" />
-          <h2 className="text-2xl font-bold mb-2">
-            Application Received!
-          </h2>
+          <h2 className="text-2xl font-bold mb-2">Application Received!</h2>
           <p className="text-muted-foreground mb-4">
-            Thank you for applying! We'll review your application and get back to you within 3-5 business days.
+            Thank you for applying! We&apos;ll review your application and get
+            back to you within 3-5 business days.
           </p>
           <Button
             onClick={() => {
@@ -243,7 +242,8 @@ export function CareerApplicationForm() {
                 />
               </div>
               <p className="text-xs text-muted-foreground mt-1">
-                Share your Google Drive link (make sure it's accessible to anyone with the link)
+                Share your Google Drive link (make sure it&apos;s accessible to
+                anyone with the link)
               </p>
             </div>
           </div>

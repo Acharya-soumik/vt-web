@@ -69,6 +69,7 @@ export const PersonalDetailsStep = ({
     register,
     handleSubmit,
     setValue,
+    watch,
     formState: { errors, isValid },
   } = useForm<PersonalDetailsFormData>({
     resolver: zodResolver(personalDetailsSchema),
@@ -211,19 +212,41 @@ export const PersonalDetailsStep = ({
     }
   };
 
-  // Track validation errors
+  // Track validation errors with detailed information
   useEffect(() => {
     if (errors.name) {
-      logFormValidationError("name", "required", 1);
+      logFormValidationError("name", "required", 1, {
+        errorMessage: errors.name.message || "Name is required",
+        userInput: watch("name") || "",
+        validationRule: "required",
+        errorCode: "NAME_REQUIRED",
+      });
     }
     if (errors.location) {
-      logFormValidationError("location", "required", 1);
+      logFormValidationError("location", "required", 1, {
+        errorMessage: errors.location.message || "Location is required",
+        userInput: watch("location") || "",
+        validationRule: "required",
+        errorCode: "LOCATION_REQUIRED",
+      });
     }
     if (errors.whatsappNumber) {
-      logFormValidationError("whatsappNumber", "invalid_format", 1);
+      logFormValidationError("whatsappNumber", "invalid_format", 1, {
+        errorMessage: errors.whatsappNumber.message || "Invalid phone format",
+        userInput: watch("whatsappNumber") || "",
+        validationRule: "phone_format",
+        countryCode: selectedCountryCode?.code || "IN",
+        errorCode: "PHONE_INVALID_FORMAT",
+      });
     }
     if (phoneValidationError) {
-      logFormValidationError("whatsappNumber", "validation_error", 1);
+      logFormValidationError("whatsappNumber", "validation_error", 1, {
+        errorMessage: phoneValidationError,
+        userInput: phoneNumber || "",
+        validationRule: "country_specific_validation",
+        countryCode: selectedCountryCode?.code || "IN",
+        errorCode: "PHONE_VALIDATION_FAILED",
+      });
     }
   }, [
     errors.name,
@@ -231,6 +254,8 @@ export const PersonalDetailsStep = ({
     errors.whatsappNumber,
     phoneValidationError,
     logFormValidationError,
+    selectedCountryCode,
+    phoneNumber,
   ]);
 
   return (
@@ -252,7 +277,9 @@ export const PersonalDetailsStep = ({
 
       <form onSubmit={handleSubmit(onSubmit)} className="space-y-5">
         <motion.div variants={formElementVariants} className="space-y-2">
-          <Label htmlFor="name" className="text-base font-medium">Full Name *</Label>
+          <Label htmlFor="name" className="text-base font-medium">
+            Full Name *
+          </Label>
           <Input
             id="name"
             type="text"
@@ -279,7 +306,9 @@ export const PersonalDetailsStep = ({
         </motion.div>
 
         <motion.div variants={formElementVariants} className="space-y-2">
-          <Label htmlFor="location" className="text-base font-medium">City *</Label>
+          <Label htmlFor="location" className="text-base font-medium">
+            City *
+          </Label>
           <SimpleCombobox
             options={cityOptions}
             value={selectedCity}
@@ -287,7 +316,9 @@ export const PersonalDetailsStep = ({
             placeholder="Search your city"
             searchPlaceholder="Search cities..."
             emptyMessage="No cities found"
-            className={`h-12 text-base ${errors.location ? "border-destructive" : ""}`}
+            className={`h-12 text-base ${
+              errors.location ? "border-destructive" : ""
+            }`}
           />
           {errors.location && (
             <motion.p
@@ -302,7 +333,9 @@ export const PersonalDetailsStep = ({
         </motion.div>
 
         <motion.div variants={formElementVariants} className="space-y-2">
-          <Label htmlFor="whatsappNumber" className="text-base font-medium">WhatsApp Number *</Label>
+          <Label htmlFor="whatsappNumber" className="text-base font-medium">
+            WhatsApp Number *
+          </Label>
           <div className="flex gap-2">
             <Select
               value={`${selectedCountryCode.code}-${selectedCountryCode.dialCode}`}
