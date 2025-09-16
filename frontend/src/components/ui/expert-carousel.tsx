@@ -1,10 +1,20 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { ChevronLeft, ChevronRight } from "lucide-react";
+import {
+  ChevronLeft,
+  ChevronRight,
+  Briefcase,
+  MessageCircle,
+  Star,
+  Award,
+  CheckCircle2,
+  MapPin,
+} from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { motion } from "framer-motion";
+import { useFormContext } from "@/contexts/form-context";
 
 export interface Expert {
   id: string;
@@ -16,6 +26,7 @@ export interface Expert {
   languages: string[];
   image: string;
   isOnline?: boolean;
+  location?: string;
 }
 
 interface ExpertCarouselProps {
@@ -36,6 +47,7 @@ export function ExpertCarousel({
   const [itemsPerView, setItemsPerView] = useState(3);
   const [isPaused, setIsPaused] = useState(false);
   const [slideDirection, setSlideDirection] = useState<"next" | "prev">("next");
+  const { openForm } = useFormContext();
 
   useEffect(() => {
     setIsClient(true);
@@ -93,6 +105,34 @@ export function ExpertCarousel({
     );
   };
 
+  const getExpertiseIcon = (expertise: string) => {
+    if (
+      expertise.toLowerCase().includes("money") ||
+      expertise.toLowerCase().includes("cheque")
+    ) {
+      return <Briefcase className="w-4 h-4 text-green-600" />;
+    }
+    if (
+      expertise.toLowerCase().includes("family") ||
+      expertise.toLowerCase().includes("matrimonial")
+    ) {
+      return <CheckCircle2 className="w-4 h-4 text-pink-600" />;
+    }
+    if (
+      expertise.toLowerCase().includes("cyber") ||
+      expertise.toLowerCase().includes("crime")
+    ) {
+      return <Award className="w-4 h-4 text-red-600" />;
+    }
+    if (
+      expertise.toLowerCase().includes("corporate") ||
+      expertise.toLowerCase().includes("business")
+    ) {
+      return <Star className="w-4 h-4 text-blue-600" />;
+    }
+    return <CheckCircle2 className="w-4 h-4 text-primary" />;
+  };
+
   if (!experts || experts.length === 0 || !isClient) {
     return null;
   }
@@ -118,7 +158,7 @@ export function ExpertCarousel({
             {title}
           </h2>
           {subtitle && (
-            <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
+            <p className="text-lg text-muted-foreground max-w-2xl mx-auto mb-4">
               {subtitle}
             </p>
           )}
@@ -185,36 +225,95 @@ export function ExpertCarousel({
               {visibleExperts.map((expert, index) => (
                 <Card
                   key={`${expert.id}-${currentIndex}-${index}`}
-                  className="text-center hover:shadow-lg transition-all duration-300 border-2 hover:border-primary/20"
+                  className="text-center hover:shadow-xl transition-all duration-300 border-2 hover:border-primary/30 bg-gradient-to-br from-white/95 via-white/80 to-secondary/20 hover:from-white to-secondary/30"
                 >
                   <CardContent className="p-6">
-                    {/* Expert Name */}
-                    <h3 className="text-lg font-bold mb-2 text-foreground">
-                      {maskName(expert.name)}
-                    </h3>
+                    {/* Rating and Online Status */}
+                    <div className="flex items-center justify-between mb-3">
+                      <div className="flex items-center space-x-1">
+                        <Star className="w-4 h-4 fill-yellow-400 text-yellow-400" />
+                        <span className="text-sm font-semibold text-foreground">
+                          {expert.rating}
+                        </span>
+                        <span className="text-xs text-muted-foreground">
+                          ({expert.reviews})
+                        </span>
+                      </div>
+                      {expert.isOnline && (
+                        <div className="flex items-center space-x-1">
+                          <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
+                          <span className="text-xs text-green-600 font-medium">
+                            Online
+                          </span>
+                        </div>
+                      )}
+                    </div>
 
-                    {/* Expertise */}
+                    {/* Expert Name with Professional Title */}
                     <div className="mb-4">
-                      <p className="text-sm text-muted-foreground mb-1">
-                        {expert.expertise[0]}
-                      </p>
+                      <h3 className="text-lg font-bold text-foreground">
+                        Advocate {maskName(expert.name)}
+                      </h3>
+                      <div className="flex items-center justify-center space-x-2 mt-1">
+                        <Award className="w-3 h-3 text-amber-500" />
+                        <p className="text-xs text-primary font-medium">
+                          Senior Legal Consultant
+                        </p>
+                        <Award className="w-3 h-3 text-amber-500" />
+                      </div>
+                    </div>
+
+                    {/* Expertise with Icons */}
+                    <div className="mb-4 space-y-2">
+                      <div className="flex items-center justify-center space-x-2">
+                        {getExpertiseIcon(expert.expertise[0])}
+                        <p className="text-sm font-medium text-foreground">
+                          {expert.expertise[0]}
+                        </p>
+                      </div>
                       {expert.expertise.length > 1 && (
                         <p className="text-xs text-muted-foreground">
-                          {expert.expertise.slice(1).join("+")} more
+                          +{expert.expertise.length - 1} more specializations
                         </p>
                       )}
                     </div>
 
-                    {/* Experience */}
-                    <div className="flex items-center justify-center mb-3 text-sm text-muted-foreground">
-                      <span className="mr-2">💼</span>
-                      <span>{expert.experience} years of Experience</span>
+                    {/* Experience with Professional Icon */}
+                    <div className="flex items-center justify-center mb-3 text-sm bg-primary/5 rounded-lg p-2">
+                      <Briefcase className="w-4 h-4 mr-2 text-primary" />
+                      <span className="font-semibold text-foreground">
+                        {expert.experience}+ years Experience
+                      </span>
                     </div>
+
+                    {/* Location */}
+                    {expert.location && (
+                      <div className="flex items-center justify-center text-sm text-muted-foreground mb-2">
+                        <MapPin className="w-4 h-4 mr-2 text-orange-500" />
+                        <span className="font-medium">{expert.location}</span>
+                      </div>
+                    )}
 
                     {/* Languages */}
                     <div className="flex items-center justify-center text-sm text-muted-foreground">
-                      <span className="mr-2">💬</span>
-                      <span>{expert.languages.join(", ")}</span>
+                      <MessageCircle className="w-4 h-4 mr-2 text-blue-500" />
+                      <span className="truncate">
+                        {expert.languages.slice(0, 3).join(", ")}
+                      </span>
+                      {expert.languages.length > 3 && (
+                        <span className="ml-1">
+                          +{expert.languages.length - 3}
+                        </span>
+                      )}
+                    </div>
+                    <div className="flex justify-center mt-2">
+                      <Button
+                        size="sm"
+                        onClick={() => openForm("consultation")}
+                        className="bg-secondary hover:bg-secondary/90 text-secondary-foreground shadow-md text-xs py-0 my-0"
+                      >
+                        Consult Now
+                      </Button>
                     </div>
                   </CardContent>
                 </Card>

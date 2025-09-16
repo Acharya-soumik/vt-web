@@ -46,11 +46,45 @@ export class LeadService {
   private static readonly API_BASE_URL = "/api/leads";
 
   /**
+   * Check if debug mode is enabled
+   */
+  private static isDebugMode(): boolean {
+    if (typeof window === "undefined") return false;
+    const urlParams = new URLSearchParams(window.location.search);
+    return urlParams.get('debug') === 'vt-new';
+  }
+
+  /**
+   * Mock lead submission for debug mode
+   */
+  private static async mockSubmitLead(
+    formData: LeadFormData
+  ): Promise<LeadSubmissionResponse> {
+    console.log("🚧 DEBUG MODE: Mocking lead submission", formData);
+    
+    // Simulate network delay
+    await new Promise(resolve => setTimeout(resolve, 1000));
+    
+    // Mock success response
+    return {
+      success: true,
+      leadId: `debug-lead-${Date.now()}`,
+      customId: `DBG${Math.floor(Math.random() * 10000)}`,
+      message: "Lead submitted successfully (DEBUG MODE)"
+    };
+  }
+
+  /**
    * Submit a lead to the backend
    */
   static async submitLead(
     formData: LeadFormData
   ): Promise<LeadSubmissionResponse> {
+    // Check for debug mode
+    if (LeadService.isDebugMode()) {
+      return LeadService.mockSubmitLead(formData);
+    }
+
     try {
       // Transform form data to API request format
       const requestData: LeadSubmissionRequest = {
@@ -162,12 +196,36 @@ export class LeadService {
   }
 
   /**
+   * Mock lead payment update for debug mode
+   */
+  private static async mockUpdateLeadPayment(
+    leadId: string,
+    updateData: LeadUpdateRequest
+  ): Promise<LeadUpdateResponse> {
+    console.log("🚧 DEBUG MODE: Mocking lead payment update", { leadId, updateData });
+    
+    // Simulate network delay
+    await new Promise(resolve => setTimeout(resolve, 500));
+    
+    return {
+      success: true,
+      leadId,
+      message: "Lead payment updated successfully (DEBUG MODE)"
+    };
+  }
+
+  /**
    * Update lead payment status
    */
   static async updateLeadPayment(
     leadId: string,
     updateData: LeadUpdateRequest
   ): Promise<LeadUpdateResponse> {
+    // Check for debug mode
+    if (LeadService.isDebugMode()) {
+      return LeadService.mockUpdateLeadPayment(leadId, updateData);
+    }
+
     try {
       const response = await fetch(`${LeadService.API_BASE_URL}/${leadId}`, {
         method: "PUT",

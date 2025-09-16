@@ -76,7 +76,7 @@ export const LeadFormModal = () => {
       case 1:
         return "Your Details";
       case 2:
-        return "Secure Payment";
+        return "Secure a Lawyer with an Advance";
       case 3:
         if (paymentStatus === "success") {
           return "Payment Successful!";
@@ -95,7 +95,7 @@ export const LeadFormModal = () => {
       case 1:
         return "Provide your contact information";
       case 2:
-        return "Complete your secure payment";
+        return "Pay an advance so we can connect you with a lawyer";
       case 3:
         if (paymentStatus === "success") {
           return "Your payment has been processed successfully!";

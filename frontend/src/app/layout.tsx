@@ -4,7 +4,7 @@ import "./globals.css";
 import { ClientLayout } from "@/components/shared/client-layout";
 import { Suspense } from "react";
 import Script from "next/script";
-import { GA_MEASUREMENT_ID, GOOGLE_ADS_ID } from "@/lib/analytics-config";
+import { GA_MEASUREMENT_ID, GOOGLE_ADS_ID, CLARITY_PROJECT_ID } from "@/lib/analytics-config";
 import { defaultMetadata } from "@/lib/seo";
 
 const geistSans = Geist({
@@ -57,6 +57,17 @@ export default function RootLayout({
               `}
             </Script>
           </>
+        )}
+        {CLARITY_PROJECT_ID && (
+          <Script id="clarity-init" strategy="afterInteractive">
+            {`
+              (function(c,l,a,r,i,t,y){
+                c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};
+                t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;
+                y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);
+              })(window, document, "clarity", "script", "${CLARITY_PROJECT_ID}");
+            `}
+          </Script>
         )}
         <Suspense fallback={null}>
           <ClientLayout>{children}</ClientLayout>

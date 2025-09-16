@@ -32,7 +32,7 @@ export const WhatsNextStep = ({ formData, leadId }: WhatsNextStepProps) => {
   // Get payment amount for the service
   const getPaymentAmount = () => {
     const config = getPaymentConfig(formData.service || "consultation");
-    return config ? formatAmount(config.amount) : "₹499";
+    return config ? formatAmount(config.amount) : "₹400";
   };
 
   // Render different content based on payment status

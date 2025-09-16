@@ -32,18 +32,29 @@ const leadInsertSchema = z.object({
   name: z.string().min(2).max(255),
   location: z.string().min(3).max(255),
   whatsapp_number: z.string().refine((phoneNumber) => {
-    // Check if it's a valid international phone number
+    // Check if it's a valid international phone number format
     if (!phoneNumber.startsWith('+')) {
       return false;
     }
     
-    // Extract country code and validate using our comprehensive phone validation
+    // Basic validation: +<country_code><number> with 7-15 total digits
+    const phoneDigits = phoneNumber.replace(/\D/g, ''); // Remove all non-digits
+    if (phoneDigits.length < 7 || phoneDigits.length > 15) {
+      return false;
+    }
+    
+    // Find matching country code
     const country = countryCodes.find(c => phoneNumber.startsWith(c.dialCode));
     if (!country) {
       return false;
     }
     
-    const validation = validatePhoneNumber(phoneNumber.replace(country.dialCode, ''), country);
+    // Extract the number part (without country code)
+    const numberPart = phoneNumber.replace(country.dialCode, '');
+    const numberDigits = numberPart.replace(/\D/g, '');
+    
+    // Validate the number part using our comprehensive phone validation
+    const validation = validatePhoneNumber(numberDigits, country);
     return validation.isValid;
   }, {
     message: 'Please enter a valid international phone number'

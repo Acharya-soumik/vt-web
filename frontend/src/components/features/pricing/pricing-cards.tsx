@@ -1,4 +1,4 @@
-"use client"
+"use client";
 
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -10,35 +10,39 @@ export function PricingCards() {
   const pricingPlans = [
     {
       title: "Legal Notice",
-      price: "₹1,999",
+      price: "₹1,499",
+      originalPrice: "₹1,999",
+      discount: "25% OFF",
       period: "per notice",
-      description: "Professional legal notices for payment recovery and compliance",
+      description:
+        "Professional legal notices for payment recovery and compliance",
       features: [
         "Payment recovery notices",
-        "Contract breach notices", 
+        "Contract breach notices",
         "Compliance violation notices",
         "Professional drafting",
         "Signed and posted",
-        "Acknowledgment tracking"
+        "Acknowledgment tracking",
       ],
       cta: "Send Notice",
-      serviceType: "legal-notice"
+      serviceType: "legal-notice",
     },
     {
       title: "Legal Consultation",
       price: "₹299",
       period: "per session",
-      description: "Expert legal consultation for business decisions and strategy",
+      description:
+        "Expert legal consultation for business decisions and strategy",
       features: [
         "1-hour consultation session",
         "Business legal advice",
         "Contract review",
         "Compliance guidance",
         "Written summary",
-        "Follow-up support"
+        "Follow-up support",
       ],
       cta: "Book Consultation",
-      serviceType: "consultation"
+      serviceType: "consultation",
     },
     {
       title: "Document Drafting",
@@ -51,10 +55,10 @@ export function PricingCards() {
         "Business contracts",
         "Legal compliance review",
         "Unlimited revisions",
-        "Final document delivery"
+        "Final document delivery",
       ],
       cta: "Draft Document",
-      serviceType: "document-drafting"
+      serviceType: "document-drafting",
     },
     {
       title: "Corporate Retainer",
@@ -67,30 +71,43 @@ export function PricingCards() {
         "Compliance monitoring",
         "Monthly legal reports",
         "Priority support",
-        "Dedicated legal team"
+        "Dedicated legal team",
       ],
       cta: "Get Retainer",
-      serviceType: "corporate-retainer"
-    }
+      serviceType: "corporate-retainer",
+    },
   ];
 
   return (
     <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
       {pricingPlans.map((plan, index) => (
-        <Card key={index} className="relative hover:shadow-lg transition-all duration-300">
+        <Card
+          key={index}
+          className="relative hover:shadow-lg transition-all duration-300"
+        >
           <CardHeader className="text-center">
             <CardTitle className="text-2xl font-bold text-foreground">
               {plan.title}
             </CardTitle>
-            <div className="text-4xl font-bold text-primary mb-2">
-              {plan.price}
+            <div className="mb-2">
+              {plan.originalPrice && (
+                <div className="flex items-center justify-center gap-2 mb-1">
+                  <span className="text-lg text-muted-foreground line-through">
+                    {plan.originalPrice}
+                  </span>
+                  <span className="text-xs bg-red-500 text-white px-2 py-1 rounded-full">
+                    {plan.discount}
+                  </span>
+                </div>
+              )}
+              <div className="text-4xl font-bold text-primary">
+                {plan.price}
+              </div>
             </div>
             <div className="text-sm text-muted-foreground mb-4">
               {plan.period}
             </div>
-            <p className="text-sm text-muted-foreground">
-              {plan.description}
-            </p>
+            <p className="text-sm text-muted-foreground">{plan.description}</p>
           </CardHeader>
           <CardContent>
             <ul className="space-y-3 mb-8">
@@ -101,7 +118,7 @@ export function PricingCards() {
                 </li>
               ))}
             </ul>
-            <Button 
+            <Button
               className="w-full bg-primary hover:bg-primary/90 text-primary-foreground"
               onClick={() => openForm(plan.serviceType)}
             >
@@ -112,4 +129,4 @@ export function PricingCards() {
       ))}
     </div>
   );
-} 
+}

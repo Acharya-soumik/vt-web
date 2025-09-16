@@ -92,7 +92,7 @@ export function ConsultationLanding({ city }: { city?: string } = {}) {
             strategy.
           </p>
           <div className="text-3xl font-bold text-primary mb-8">
-            Starting from ₹1,000
+            Starting from ₹299
           </div>
           <Button
             size="lg"

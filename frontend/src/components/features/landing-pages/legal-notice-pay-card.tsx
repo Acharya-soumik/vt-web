@@ -33,7 +33,12 @@ export function LegalNoticePayCard() {
 
           <div className="flex items-center justify-between text-sm mb-4">
             <span className="text-muted-foreground">Total Charges</span>
-            <span className="font-semibold text-foreground">₹1999</span>
+            <div className="text-right">
+              <span className="text-sm text-muted-foreground line-through mr-2">
+                ₹1999
+              </span>
+              <span className="font-semibold text-foreground">₹1499</span>
+            </div>
           </div>
 
           <div className="border rounded-xl p-4 mb-5">
@@ -51,7 +56,7 @@ export function LegalNoticePayCard() {
                 ₹499 now
               </span>
               <span className="px-2 py-1 rounded-full bg-background text-muted-foreground border">
-                ₹1500 later
+                ₹1000 later
               </span>
             </div>
 

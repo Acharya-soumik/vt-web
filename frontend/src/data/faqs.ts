@@ -16,7 +16,7 @@ export const homepageFAQs: FAQItem[] = [
   {
     question: "How much do your legal services cost?",
     answer:
-      "We offer transparent, competitive pricing. Consultation starts at ₹999, document drafting from ₹1,999, and corporate retainer services from ₹25,000/month. All prices are clearly listed on our website with no hidden fees.",
+      "We offer transparent, competitive pricing. Consultation starts at ₹999, document drafting from ₹1,499, and corporate retainer services from ₹25,000/month. All prices are clearly listed on our website with no hidden fees.",
   },
   {
     question: "Are your lawyers qualified and experienced?",
@@ -152,17 +152,17 @@ export const legalNoticeFAQs: FAQItem[] = [
   {
     question: "How much does a legal notice cost?",
     answer:
-      "Legal notices start at ₹1,999 and vary based on complexity. Simple notices cost ₹1,999-2,999, while complex ones may cost ₹3,999-5,999. We provide transparent pricing upfront.",
+      "Legal notices typically cost ₹1,499–5,999 depending on complexity, but we charge a fixed price of ₹1,499 with full transparency",
   },
   {
     question: "How long does it take to draft and send a legal notice?",
     answer:
-      "We typically draft and send legal notices within 2-3 business days. Urgent notices can be completed within 24 hours for an additional fee. We also handle the delivery and tracking.",
+      "We typically draft and send legal notices within 2-3 business days. Urgent notices can be completed within 24 hours for an additional fee. We also handle the delivery and tracking. Contanct our helpdes for priority support",
   },
   {
     question: "What happens after sending a legal notice?",
     answer:
-      "After sending, the recipient has 30-60 days to respond (depending on the notice type). If they don't respond or resolve the issue, you can proceed with legal action. We guide you through the next steps.",
+      "The recipient must reply within 15–30 days. They can settle, deny, or ignore the notice. If they don’t resolve the issue, you can proceed with legal action—Vakiltech will assist you if need be.",
   },
   {
     question: "Can you help if I receive a legal notice?",
@@ -220,7 +220,8 @@ const legalNoticeTopicFAQMap: Record<string, FAQItem[]> = {
         "We need the loan agreement, bank transfer receipts, repayment schedule, and any written communications about the loan. Even informal loans with digital evidence can be legally pursued.",
     },
     {
-      question: "Can I recover interest on an unpaid loan through a legal notice?",
+      question:
+        "Can I recover interest on an unpaid loan through a legal notice?",
       answer:
         "Yes, if the loan agreement specifies interest rates. For informal loans without written agreements, we can claim reasonable interest as per banking norms and legal precedents.",
     },
@@ -317,7 +318,8 @@ const legalNoticeTopicFAQMap: Record<string, FAQItem[]> = {
   // Security deposit recovery
   "security-deposit-recovery": [
     {
-      question: "What if my landlord claims property damages for deposit retention?",
+      question:
+        "What if my landlord claims property damages for deposit retention?",
       answer:
         "Landlords must provide detailed bills and proof of actual damages. Normal wear and tear cannot be deducted. We scrutinize their claims and challenge unjustified deductions.",
     },
@@ -390,7 +392,8 @@ const legalNoticeTopicFAQMap: Record<string, FAQItem[]> = {
         "Yes, you're entitled to fees for work completed. Professional service contracts typically include provisions for partial completion payments and termination fees.",
     },
     {
-      question: "What if the client claims the professional work was inadequate?",
+      question:
+        "What if the client claims the professional work was inadequate?",
       answer:
         "Professional standards and industry practices govern service quality. We defend against frivolous claims while establishing your right to reasonable compensation.",
     },
@@ -419,7 +422,8 @@ const legalNoticeTopicFAQMap: Record<string, FAQItem[]> = {
   // Refund from builder
   "refund-from-builder": [
     {
-      question: "What if the builder claims project is still under construction?",
+      question:
+        "What if the builder claims project is still under construction?",
       answer:
         "RERA mandates specific timelines and compensation for delays. Even ongoing projects must provide timeline clarity and compensation for extended delays beyond agreed dates.",
     },
@@ -570,7 +574,8 @@ const legalNoticeTopicFAQMap: Record<string, FAQItem[]> = {
         "Yes, you can claim compensation for mental trauma, career damage, medical expenses, and punitive damages. The law recognizes workplace harassment as a serious violation.",
     },
     {
-      question: "What if my employer retaliates after the harassment complaint?",
+      question:
+        "What if my employer retaliates after the harassment complaint?",
       answer:
         "Retaliation is illegal and strengthens your case significantly. We can seek additional remedies and enhanced compensation for retaliatory actions.",
     },
@@ -594,7 +599,8 @@ const legalNoticeTopicFAQMap: Record<string, FAQItem[]> = {
         "CCTV footage, witness statements, documented incidents, financial irregularities, or policy violations with proper evidence justify misconduct notices requiring employee response.",
     },
     {
-      question: "Must I follow internal procedures before sending legal notice?",
+      question:
+        "Must I follow internal procedures before sending legal notice?",
       answer:
         "Company policies usually require internal procedures first. Legal notices typically follow failed internal processes or for serious misconduct requiring immediate action.",
     },
@@ -623,7 +629,8 @@ const legalNoticeTopicFAQMap: Record<string, FAQItem[]> = {
   // Breach employment contract
   "breach-employment-contract": [
     {
-      question: "What common employment contract breaches justify legal notice?",
+      question:
+        "What common employment contract breaches justify legal notice?",
       answer:
         "Non-compete violations, confidentiality breaches, early resignation without notice, misuse of company resources, and violation of specific contract terms require formal action.",
     },
@@ -672,7 +679,8 @@ const legalNoticeTopicFAQMap: Record<string, FAQItem[]> = {
         "Legal notices document negligence patterns, establish expectations, and create formal record. They often motivate improvement while protecting termination rights.",
     },
     {
-      question: "What progressive discipline should precede termination notices?",
+      question:
+        "What progressive discipline should precede termination notices?",
       answer:
         "Verbal warnings, written warnings, and improvement plans typically precede termination. Legal notices can formalize any stage of progressive discipline effectively.",
     },
@@ -963,7 +971,8 @@ const legalNoticeTopicFAQMap: Record<string, FAQItem[]> = {
   // Specific performance
   "specific-performance": [
     {
-      question: "When can I demand specific performance of property agreements?",
+      question:
+        "When can I demand specific performance of property agreements?",
       answer:
         "When monetary compensation is inadequate, property is unique, or seller refuses to complete agreed sale despite receiving payment, specific performance becomes legally appropriate.",
     },
@@ -1063,7 +1072,7 @@ const legalNoticeTopicFAQMap: Record<string, FAQItem[]> = {
   ],
 
   // Divorce / family matters
-  "divorce": [
+  divorce: [
     {
       question: "Why send a legal notice before divorce proceedings?",
       answer:
@@ -1267,7 +1276,7 @@ const legalNoticeTopicFAQMap: Record<string, FAQItem[]> = {
   ],
 
   // Defamation
-  "defamation": [
+  defamation: [
     {
       question: "What constitutes defamation requiring legal notice?",
       answer:
@@ -1323,7 +1332,8 @@ const legalNoticeTopicFAQMap: Record<string, FAQItem[]> = {
         "Yes, legal notices can claim medical expenses, counseling costs, lost income, and mental trauma compensation caused by harassment behavior.",
     },
     {
-      question: "Should I file police complaints along with harassment notices?",
+      question:
+        "Should I file police complaints along with harassment notices?",
       answer:
         "Parallel police action and legal notices provide comprehensive protection. Multiple proceedings often achieve better results and deterrent effects.",
     },
@@ -1507,7 +1517,8 @@ const legalNoticeTopicFAQMap: Record<string, FAQItem[]> = {
   // Recovery supply of goods
   "recovery-supply-of-goods": [
     {
-      question: "Can I recover payments for undelivered goods through legal notice?",
+      question:
+        "Can I recover payments for undelivered goods through legal notice?",
       answer:
         "Yes, failure to deliver goods as agreed justifies payment recovery through legal notices claiming refund, damages, and alternative procurement costs.",
     },
@@ -1711,7 +1722,8 @@ const legalNoticeTopicFAQMap: Record<string, FAQItem[]> = {
   // Insurance claim disputes
   "insurance-claim-disputes": [
     {
-      question: "Can I challenge insurance claim rejections through legal notice?",
+      question:
+        "Can I challenge insurance claim rejections through legal notice?",
       answer:
         "Yes, wrongful claim rejections, inadequate settlements, and procedural violations by insurers can be challenged through legal notices seeking proper claim processing.",
     },
@@ -1745,7 +1757,8 @@ const legalNoticeTopicFAQMap: Record<string, FAQItem[]> = {
   // Bank loan settlement
   "bank-loan-settlement": [
     {
-      question: "Can I challenge unfair bank loan practices through legal notice?",
+      question:
+        "Can I challenge unfair bank loan practices through legal notice?",
       answer:
         "Yes, excessive interest charges, hidden fees, improper recovery methods, and regulatory violations can be challenged through bank dispute legal notices.",
     },
@@ -1891,7 +1904,8 @@ const legalNoticeTopicFAQMap: Record<string, FAQItem[]> = {
         "Criminal defamation involves police complaints and potential imprisonment, while civil defamation focuses on monetary compensation. Both can proceed simultaneously.",
     },
     {
-      question: "Can I demand public apology through criminal defamation notice?",
+      question:
+        "Can I demand public apology through criminal defamation notice?",
       answer:
         "Yes, legal notices can demand public retraction, apology, and cessation of defamatory statements before initiating criminal proceedings.",
     },
@@ -1915,7 +1929,8 @@ const legalNoticeTopicFAQMap: Record<string, FAQItem[]> = {
   // Criminal intimidation
   "criminal-intimidation": [
     {
-      question: "What constitutes criminal intimidation requiring legal action?",
+      question:
+        "What constitutes criminal intimidation requiring legal action?",
       answer:
         "Threats of injury to person, property, or reputation intended to cause alarm constitute criminal intimidation under IPC Section 506/BNS Section 351.",
     },
@@ -1983,7 +1998,8 @@ const legalNoticeTopicFAQMap: Record<string, FAQItem[]> = {
   // Copyright trademark
   "copyright-trademark": [
     {
-      question: "How can legal notices protect my intellectual property rights?",
+      question:
+        "How can legal notices protect my intellectual property rights?",
       answer:
         "Legal notices can demand cessation of infringement, claim damages, and threaten court proceedings, often resolving IP disputes without expensive litigation.",
     },
@@ -2061,7 +2077,8 @@ const legalNoticeTopicFAQMap: Record<string, FAQItem[]> = {
         "Companies must notify affected individuals, provide credit protection, implement security measures, and compensate for breach-related damages.",
     },
     {
-      question: "Should I complain to Data Protection Authority simultaneously?",
+      question:
+        "Should I complain to Data Protection Authority simultaneously?",
       answer:
         "Yes, regulatory complaints combined with legal notices create comprehensive pressure for breach response and enhanced compensation prospects.",
     },
@@ -2085,7 +2102,8 @@ const legalNoticeTopicFAQMap: Record<string, FAQItem[]> = {
   // Cyber defamation
   "cyber-defamation": [
     {
-      question: "How is cyber defamation different from traditional defamation?",
+      question:
+        "How is cyber defamation different from traditional defamation?",
       answer:
         "Cyber defamation involves online publication with wider reach and permanent record. IT Act provisions provide additional remedies beyond traditional defamation laws.",
     },
@@ -2124,7 +2142,8 @@ const legalNoticeTopicFAQMap: Record<string, FAQItem[]> = {
         "Yes, pollution, waste disposal violations, and environmental damage affecting your interests can be addressed through environmental violation notices.",
     },
     {
-      question: "What authorities should I approach for environmental violations?",
+      question:
+        "What authorities should I approach for environmental violations?",
       answer:
         "Environmental boards, municipal authorities, and courts can address violations. Legal notices can support regulatory complaints and court proceedings.",
     },
@@ -2168,7 +2187,8 @@ const legalNoticeTopicFAQMap: Record<string, FAQItem[]> = {
         "Refusal to arbitrate when contractually bound allows court intervention. Legal notices establish formal arbitration demands before court proceedings.",
     },
     {
-      question: "Can I claim urgent interim relief through arbitration notices?",
+      question:
+        "Can I claim urgent interim relief through arbitration notices?",
       answer:
         "Yes, legal notices can demand interim measures, injunctions, and emergency relief while arbitration proceedings are being constituted.",
     },
@@ -2212,7 +2232,8 @@ const legalNoticeTopicFAQMap: Record<string, FAQItem[]> = {
         "RTI requests can provide supporting information for legal notices. Comprehensive approach often achieves better results from government authorities.",
     },
     {
-      question: "What remedies can I seek from government through legal notices?",
+      question:
+        "What remedies can I seek from government through legal notices?",
       answer:
         "Service provision, policy compliance, rights restoration, and compensation for government failures are achievable through properly drafted government notices.",
     },
@@ -2224,7 +2245,10 @@ export function getLegalNoticeTopicFaqs(
   city?: string
 ): FAQItem[] {
   // Try comprehensive FAQs first, then fall back to existing ones
-  const base = comprehensiveLegalNoticeTopicFAQMap[topicId] || legalNoticeTopicFAQMap[topicId] || legalNoticeFAQs;
+  const base =
+    comprehensiveLegalNoticeTopicFAQMap[topicId] ||
+    legalNoticeTopicFAQMap[topicId] ||
+    legalNoticeFAQs;
   if (!city) return base;
   // Append a city-specific serviceability FAQ
   return [

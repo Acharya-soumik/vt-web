@@ -9,7 +9,7 @@ export function WhyChooseUsSection() {
     {
       title: "Transparent Pricing",
       description:
-        "No hidden fees, no surprises. We show you exactly what you'll pay upfront - from ₹1,999 legal notices to comprehensive retainers.",
+        "No hidden fees, no surprises. We show you exactly what you'll pay upfront - from ₹1,499 (down from ₹1,999) legal notices to comprehensive retainers.",
       icon: "🔍",
     },
     {

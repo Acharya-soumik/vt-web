@@ -43,11 +43,11 @@ export interface ServicePageMetadata extends PageMetadata {
 // Default metadata for the site
 export const defaultMetadata: Metadata = {
   title: {
-    default: "Vakil Tech - Professional Legal Services",
-    template: "%s | Vakil Tech",
+    default: "Vakiltech | Built on the Calibre of Expert Lawyers",
+    template: "%s | Vakiltech",
   },
   description:
-    "Professional legal services and consultation platform. Expert legal advice, document drafting, corporate retainers, and legal notices.",
+    "Get instant legal help from expert lawyers! Legal consultation, document drafting, legal notices & corporate services. 10,000+ happy clients across India.",
   keywords: [
     "legal services",
     "legal consultation",
@@ -82,10 +82,10 @@ export const defaultMetadata: Metadata = {
     type: "website",
     locale: "en_US",
     url: BASE_URL,
-    siteName: "Vakil Tech",
-    title: "Vakil Tech - Professional Legal Services",
+    siteName: "Vakiltech",
+    title: "Vakiltech | Built on the Calibre of Expert Lawyers",
     description:
-      "Professional legal services and consultation platform. Expert legal advice, document drafting, corporate retainers, and legal notices.",
+      "Get instant legal help from expert lawyers! Legal consultation, document drafting, legal notices & corporate services. 15,000+ happy clients across India.",
     images: [
       {
         url: "/logo.png",
@@ -97,9 +97,9 @@ export const defaultMetadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "Vakil Tech - Professional Legal Services",
+    title: "Vakiltech | Built on the Calibre of Expert Lawyers",
     description:
-      "Professional legal services and consultation platform. Expert legal advice, document drafting, corporate retainers, and legal notices.",
+      "Get instant legal help from expert lawyers! Legal consultation, document drafting, legal notices & corporate services. 15,000+ happy clients across India.",
     images: ["/logo.png"],
   },
   robots: {
@@ -124,48 +124,53 @@ export function generateServiceMetadata(
 ): Metadata {
   const serviceConfig = {
     consultation: {
-      title: "Legal Consultation Services",
+      title: "Talk to Expert Lawyers Online | Get Legal Advice in Minutes",
       description:
-        "Get expert legal consultation from experienced lawyers. Professional advice for all your legal needs.",
+        "Connect with top-rated lawyers instantly! Get expert legal consultation from experienced advocates. 24/7 support, affordable rates, trusted by 10,000+ clients.",
       keywords: [
-        "legal consultation",
-        "lawyer consultation",
-        "legal advice",
-        "legal expert",
+        "online lawyer consultation",
+        "legal advice online",
+        "expert lawyers",
+        "instant legal help",
+        "lawyer consultation online",
       ],
     },
     "document-drafting": {
-      title: "Legal Document Drafting Services",
+      title:
+        "Professional Legal Document Drafting | Custom Legal Papers Online",
       description:
-        "Professional legal document drafting services. Contracts, agreements, notices, and legal documents.",
+        "Get custom legal documents drafted by expert lawyers. Contracts, agreements, MOUs, and more. Quick turnaround, legally sound, affordable pricing.",
       keywords: [
-        "document drafting",
-        "legal documents",
-        "contracts",
-        "agreements",
-        "legal notices",
+        "legal document drafting",
+        "custom legal documents",
+        "contract drafting",
+        "agreement drafting",
+        "legal papers online",
       ],
     },
     "corporate-retainer": {
-      title: "Corporate Legal Retainer Services",
+      title: "Corporate Legal Retainer | Complete Business Law Support",
       description:
-        "Comprehensive corporate legal retainer services for businesses. Ongoing legal support and consultation.",
+        "Comprehensive legal retainer services for startups and enterprises. Dedicated legal team, compliance support, contract management. Scale your business confidently.",
       keywords: [
-        "corporate legal",
-        "legal retainer",
-        "business legal",
-        "corporate law",
+        "corporate legal retainer",
+        "business legal services",
+        "startup legal support",
+        "corporate law firm",
+        "legal compliance",
       ],
     },
     "send-a-legal-notice": {
-      title: "Legal Notice Services",
+      title:
+        "Send Legal Notice Online in 24 Hours | Legally Valid & Affordable",
       description:
-        "Professional legal notice drafting and filing services. Cease and desist, demand letters, and legal notices.",
+        "Send legally valid notices online without visiting any office. Expert lawyers, instant drafting, 24-hour delivery. Trusted by 15,000+ clients across India.",
       keywords: [
-        "legal notices",
-        "cease and desist",
-        "demand letters",
-        "legal filing",
+        "send legal notice online",
+        "legal notice online",
+        "legal notice drafting",
+        "online legal notice",
+        "legal notice india",
       ],
     },
   };
@@ -274,28 +279,54 @@ export function generatePageMetadata(
 ): Metadata {
   const pageConfig = {
     about: {
-      title: "About Us",
+      title: "About Vakiltech | India's Leading Online Legal Platform",
       description:
-        "Learn about Vakil Tech and our commitment to providing professional legal services.",
-      keywords: ["about us", "legal services", "company"],
+        "Discover how Vakiltech revolutionizes legal services in India. 15,000+ satisfied clients, ₹2Cr+ legal fees saved, 4.8/5 rating. Expert lawyers, instant solutions.",
+      keywords: [
+        "about vakiltech",
+        "online legal platform",
+        "legal services india",
+        "expert lawyers",
+        "legal innovation",
+      ],
     },
     contact: {
-      title: "Contact Us",
+      title: "Contact Expert Lawyers | Get Legal Help Now | Vakiltech",
       description:
-        "Get in touch with Vakil Tech for professional legal services and consultation.",
-      keywords: ["contact us", "legal consultation", "get help"],
+        "Need legal help? Contact our expert lawyers instantly! 24/7 support, instant consultation, affordable rates. Get your legal questions answered today.",
+      keywords: [
+        "contact lawyers",
+        "legal help",
+        "instant consultation",
+        "expert legal advice",
+        "legal support",
+      ],
     },
     pricing: {
-      title: "Pricing",
+      title: "Affordable Legal Services Pricing | No Hidden Fees | Vakiltech",
       description:
-        "Transparent pricing for Vakil Tech legal services. View our service packages and rates.",
-      keywords: ["pricing", "legal services cost", "service rates"],
+        "Transparent, affordable legal service pricing. Fixed rates, no hidden fees. Legal consultation from ₹500, documents from ₹1000. Compare packages now!",
+      keywords: [
+        "legal services pricing",
+        "affordable lawyers",
+        "legal consultation fees",
+        "transparent pricing",
+        "fixed legal rates",
+      ],
     },
     careers: {
       title: "Careers - Join Our Expert Legal Team",
       description:
         "Join Vakil Tech's elite legal team. We're hiring expert lawyers to deliver exceptional legal services across India. Apply now to advance your career.",
-      keywords: ["legal careers", "lawyer jobs", "legal employment", "expert lawyers", "legal team", "bar council", "legal practice"],
+      keywords: [
+        "legal careers",
+        "lawyer jobs",
+        "legal employment",
+        "expert lawyers",
+        "legal team",
+        "bar council",
+        "legal practice",
+      ],
     },
   };
 

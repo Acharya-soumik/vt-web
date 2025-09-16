@@ -670,7 +670,7 @@ export function LegalNoticeTopicLanding({
               <div className="space-y-3">
                 <div className="flex items-center justify-between p-3 bg-background/50 rounded-lg">
                   <span className="text-sm font-medium">Advance Payment</span>
-                  <span className="text-2xl font-bold text-primary">₹499</span>
+                  <span className="text-2xl font-bold text-primary">₹400</span>
                 </div>
                 <p className="text-xs text-muted-foreground">
                   Balance due only after draft approval

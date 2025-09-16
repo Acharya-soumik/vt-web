@@ -13,7 +13,9 @@ export function ServicesOverviewSection() {
         "Professional legal notices drafted and sent my expert lawyers",
       icon: "📜",
       features: ["Payment Recovery", "Contract Breaches", "Compliance Issues"],
-      pricing: "Starting from ₹1,999",
+      pricing: "Starting from ₹1,499",
+      originalPrice: "₹1,999",
+      discount: "25% OFF",
       cta: "Send Notice",
       url: "/send-a-legal-notice",
     },
@@ -90,8 +92,20 @@ export function ServicesOverviewSection() {
                 <p className="text-muted-foreground text-sm mb-4">
                   {service.description}
                 </p>
-                <div className="text-primary font-semibold text-sm mb-4">
-                  {service.pricing}
+                <div className="mb-4">
+                  {service.originalPrice && (
+                    <div className="flex items-center justify-center gap-2 mb-1">
+                      <span className="text-xs text-muted-foreground line-through">
+                        {service.originalPrice}
+                      </span>
+                      <span className="text-xs bg-red-500 text-white px-2 py-0.5 rounded-full">
+                        {service.discount}
+                      </span>
+                    </div>
+                  )}
+                  <div className="text-primary font-semibold text-sm">
+                    {service.pricing}
+                  </div>
                 </div>
               </div>
 

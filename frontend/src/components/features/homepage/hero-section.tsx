@@ -28,7 +28,7 @@ export function HeroSection() {
       <div className="text-center max-w-5xl mx-auto">
         {/* Main Headline */}
         <h1 className="text-5xl md:text-7xl font-bold tracking-tight mb-8 text-foreground leading-tight">
-          find the right Lawyer
+          Find the Right Lawyer
           <br />
           <WordRotate
             className="text-primary text-3xl md:text-5xl"

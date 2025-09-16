@@ -43,6 +43,69 @@ export class PaymentService {
   private static readonly PAYMENT_VERIFY_URL = "/api/payment/verify";
 
   /**
+   * Check if debug mode is enabled
+   */
+  private static isDebugMode(): boolean {
+    if (typeof window === "undefined") return false;
+    const urlParams = new URLSearchParams(window.location.search);
+    return urlParams.get('debug') === 'vt-new';
+  }
+
+  /**
+   * Mock payment initialization for debug mode
+   */
+  private static async mockInitializePayment(
+    paymentRequest: RazorpayPaymentRequest,
+    customerName: string,
+    customerPhone: string,
+    onSuccess: (response: {
+      razorpay_payment_id: string;
+      razorpay_order_id: string;
+      razorpay_signature: string;
+    }) => void,
+    onError: (error: string) => void,
+    onDismiss?: () => void
+  ): Promise<void> {
+    console.log("🚧 DEBUG MODE: Mocking payment initialization", {
+      paymentRequest,
+      customerName,
+      customerPhone
+    });
+
+    // Simulate a brief delay
+    await new Promise(resolve => setTimeout(resolve, 1000));
+
+    // Mock successful payment response
+    const mockResponse = {
+      razorpay_payment_id: `debug_pay_${Date.now()}`,
+      razorpay_order_id: `debug_order_${Date.now()}`,
+      razorpay_signature: `debug_signature_${Date.now()}`
+    };
+
+    console.log("🚧 DEBUG MODE: Simulating successful payment", mockResponse);
+    onSuccess(mockResponse);
+  }
+
+  /**
+   * Mock payment verification for debug mode
+   */
+  private static async mockVerifyPayment(paymentResponse: {
+    razorpay_payment_id: string;
+    razorpay_order_id: string;
+    razorpay_signature: string;
+  }): Promise<PaymentVerificationResponse> {
+    console.log("🚧 DEBUG MODE: Mocking payment verification", paymentResponse);
+    
+    // Simulate network delay
+    await new Promise(resolve => setTimeout(resolve, 500));
+    
+    return {
+      success: true,
+      message: "Payment verified successfully (DEBUG MODE)"
+    };
+  }
+
+  /**
    * Load Razorpay script dynamically
    */
   static loadRazorpayScript(): Promise<void> {
@@ -81,6 +144,18 @@ export class PaymentService {
     onError: (error: string) => void,
     onDismiss?: () => void
   ): Promise<void> {
+    // Check for debug mode
+    if (PaymentService.isDebugMode()) {
+      return PaymentService.mockInitializePayment(
+        paymentRequest,
+        customerName,
+        customerPhone,
+        onSuccess,
+        onError,
+        onDismiss
+      );
+    }
+
     try {
       // Load Razorpay script
       await PaymentService.loadRazorpayScript();
@@ -222,6 +297,11 @@ export class PaymentService {
     razorpay_order_id: string;
     razorpay_signature: string;
   }): Promise<PaymentVerificationResponse> {
+    // Check for debug mode
+    if (PaymentService.isDebugMode()) {
+      return PaymentService.mockVerifyPayment(paymentResponse);
+    }
+
     try {
       const response = await fetch(this.PAYMENT_VERIFY_URL, {
         method: "POST",

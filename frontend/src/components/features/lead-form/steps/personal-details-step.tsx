@@ -5,6 +5,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { motion } from "framer-motion";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { Textarea } from "@/components/ui/textarea";
 import { SimpleCombobox } from "@/components/ui/simple-combobox";
 import { Checkbox } from "@/components/ui/checkbox";
 import {
@@ -271,7 +272,7 @@ export const PersonalDetailsStep = ({
         className="text-center space-y-2"
       >
         <p className="text-gray-600 text-base">
-          Fill in your details below to get started with your legal consultation
+          We will use this information to connect you with the right lawyer.
         </p>
       </motion.div>
 
@@ -401,6 +402,43 @@ export const PersonalDetailsStep = ({
               animate="visible"
             >
               ✓ Valid number
+            </motion.p>
+          )}
+        </motion.div>
+
+        <motion.div variants={formElementVariants} className="space-y-2">
+          <Label htmlFor="caseDescription" className="text-base font-medium">
+            Brief Description (Optional)
+          </Label>
+          <Textarea
+            id="caseDescription"
+            placeholder="Briefly describe your legal issue or requirements..."
+            {...register("caseDescription")}
+            onChange={(e) => {
+              register("caseDescription").onChange(e);
+              onDataUpdate?.({ caseDescription: e.target.value });
+            }}
+            onFocus={() => logFormFieldInteraction("caseDescription", "focus", 1)}
+            onBlur={() => logFormFieldInteraction("caseDescription", "blur", 1)}
+            className="h-20 text-base resize-none"
+            maxLength={1000}
+          />
+          <div className="flex justify-between items-center">
+            <p className="text-xs text-muted-foreground">
+              This would help us personalise your case
+            </p>
+            <p className="text-xs text-muted-foreground">
+              {watch("caseDescription")?.length || 0}/1000
+            </p>
+          </div>
+          {errors.caseDescription && (
+            <motion.p
+              className="text-sm text-destructive"
+              variants={formElementVariants}
+              initial="hidden"
+              animate="visible"
+            >
+              {errors.caseDescription.message}
             </motion.p>
           )}
         </motion.div>

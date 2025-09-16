@@ -5,7 +5,18 @@ import { motion } from "framer-motion";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { formElementVariants, staggerContainer } from "@/lib/animations";
 import { LeadFormData } from "@/types/lead-form";
-import { Shield, CheckCircle, CreditCard, Lock, Info } from "lucide-react";
+import { LucideIcon } from "lucide-react";
+import {
+  Shield,
+  CheckCircle,
+  CreditCard,
+  Lock,
+  Info,
+  UserCheck,
+  Phone,
+  FileCheck,
+  RefreshCw,
+} from "lucide-react";
 import { getPaymentConfig, formatAmount } from "@/lib/payment-config";
 import Image from "next/image";
 import { useState } from "react";
@@ -39,6 +50,93 @@ export const PaymentStep = ({ formData }: PaymentStepProps) => {
   const servicePrice = getServicePrice(service);
   const serviceName = getServiceName(service);
 
+  // Get service-specific configuration
+  const getServiceConfig = (service: string) => {
+    switch (service) {
+      case "legal-notice":
+        return {
+          headerTitle: "Secure Payment",
+          headerSubtitle: `${serviceName} for ${name}`,
+          isAdvancePayment: true,
+          totalPrice: "₹1499",
+          crossedPrice: "₹1999",
+          paymentLabel: "Advance Payment",
+          steps: [
+            {
+              icon: Phone,
+              title: "Help Desk Calls You under 30 mins",
+              description: "We call to review your case details",
+            },
+            {
+              icon: UserCheck,
+              title: "Instant Lawyer Assignment",
+              description: "an expert lawyer assigned to based on your case",
+            },
+            {
+              icon: FileCheck,
+              title: "Review and approve",
+              description:
+                "review the drafted notice and approve it to proceed",
+            },
+          ],
+        };
+      case "consultation":
+        return {
+          headerTitle: "Secure a Lawyer with an Advance",
+          headerSubtitle: "Pay an advance so we can connect you with a lawyer",
+          isAdvancePayment: false,
+          totalPrice: null,
+          crossedPrice: null,
+          paymentLabel: "Full Payment",
+          steps: [
+            {
+              icon: Phone,
+              title: "Help Desk Calls You under 30 mins",
+              description: "We call to understand your legal requirements",
+            },
+            {
+              icon: UserCheck,
+              title: "Expert Lawyer Assignment",
+              description: "We match you with the right lawyer for your case",
+            },
+            {
+              icon: FileCheck,
+              title: "Consultation Scheduled",
+              description: "Direct consultation call arranged with your lawyer",
+            },
+          ],
+        };
+      default:
+        return {
+          headerTitle: "Secure Payment",
+          headerSubtitle: `${serviceName} for ${name}`,
+          isAdvancePayment: true,
+          totalPrice: null,
+          crossedPrice: null,
+          paymentLabel: "Payment",
+          steps: [
+            {
+              icon: Phone,
+              title: "Help Desk Calls You",
+              description: "We call to review your requirements",
+            },
+            {
+              icon: UserCheck,
+              title: "Expert Assignment",
+              description: "Expert assigned based on your needs",
+            },
+            {
+              icon: FileCheck,
+              title: "Service Delivery",
+              description: "Professional service delivered on time",
+            },
+          ],
+        };
+    }
+  };
+
+  const config = getServiceConfig(service);
+
   return (
     <motion.div
       variants={staggerContainer}
@@ -46,47 +144,54 @@ export const PaymentStep = ({ formData }: PaymentStepProps) => {
       animate="visible"
       className="space-y-6 px-4 py-2 max-w-md mx-auto"
     >
-      {/* Header */}
+      {/* Header with Asset */}
       <motion.div
         variants={formElementVariants}
-        className="text-center space-y-4"
+        className="text-center space-y-3"
       >
         <div className="flex justify-center">
           <Image
             src="/pay_now.svg"
             alt="Secure Payment"
-            width={120}
-            height={80}
+            width={80}
+            height={50}
             className="object-contain"
           />
         </div>
-        <h2 className="text-2xl font-bold text-gray-900">Secure Payment</h2>
-        <p className="text-gray-600 text-base">
-          {serviceName} for {name}
-        </p>
       </motion.div>
 
-      {/* Service Summary */}
+      {/* Compact Service Summary */}
       <motion.div variants={formElementVariants}>
         <Card className="border-primary/20 bg-primary/5">
-          <CardContent className="pt-6 space-y-4">
-            <div className="space-y-2">
-              <div className="flex justify-between items-center">
-                <span className="text-gray-700 font-medium">{serviceName}</span>
-                <span className="text-lg font-semibold text-gray-700">
-                  Total: ₹1999
-                </span>
-              </div>
-              <div className="flex justify-between items-center">
-                <span className="text-gray-600">Advance Payment</span>
-                <span className="text-2xl font-bold text-primary">
-                  ₹499
-                </span>
-              </div>
+          <CardContent className="pt-4 pb-4 space-y-2">
+            <div className="flex justify-between items-center">
+              <span className="text-gray-700 font-medium text-sm">
+                {serviceName}
+              </span>
+              {config.totalPrice && (
+                <div className="text-right">
+                  {config.crossedPrice && (
+                    <span className="text-xs text-gray-500 line-through mr-1">
+                      {config.crossedPrice}
+                    </span>
+                  )}
+                  <span className="text-sm font-semibold text-gray-700">
+                    Total: {config.totalPrice}
+                  </span>
+                </div>
+              )}
             </div>
-            <div className="flex items-center justify-between text-sm">
-              <div className="flex items-center gap-2 text-gray-600">
-                <Lock className="w-4 h-4" />
+            <div className="flex justify-between items-center">
+              <span className="text-gray-600 text-sm">
+                {config.paymentLabel}
+              </span>
+              <span className="text-xl font-bold text-primary">
+                {servicePrice}
+              </span>
+            </div>
+            <div className="flex items-center justify-between text-xs pt-1">
+              <div className="flex items-center gap-1 text-gray-600">
+                <Lock className="w-3 h-3" />
                 <span>Secure payment</span>
               </div>
               <div className="flex items-center gap-1 text-gray-600">
@@ -109,7 +214,7 @@ export const PaymentStep = ({ formData }: PaymentStepProps) => {
                         )
                       }
                     >
-                      <Info className="w-4 h-4 text-blue-600 cursor-pointer" />
+                      <Info className="w-3 h-3 text-blue-600 cursor-pointer" />
                     </button>
                   </DialogTrigger>
                   <DialogContent className="max-w-md">
@@ -139,25 +244,35 @@ export const PaymentStep = ({ formData }: PaymentStepProps) => {
         </Card>
       </motion.div>
 
-      {/* Key Benefits - Simplified */}
+      {/* Prominent What Happens After Payment Section */}
       <motion.div variants={formElementVariants}>
-        <div className="grid grid-cols-2 gap-3 text-center">
-          {[
-            { icon: Shield, text: "Expert Legal Team" },
-            { icon: CheckCircle, text: "Priority Service" },
-            { icon: Lock, text: "Secure & Private" },
-            { icon: CreditCard, text: "Instant Confirmation" },
-          ].map((item, index) => {
-            const IconComponent = item.icon;
-            return (
-              <div key={index} className="p-3 bg-gray-50 rounded-lg">
-                <IconComponent className="w-5 h-5 text-primary mx-auto mb-1" />
-                <span className="text-xs text-gray-700 font-medium">
-                  {item.text}
-                </span>
-              </div>
-            );
-          })}
+        <div className="space-y-4">
+          <h3 className="text-xl font-bold text-gray-900 text-center">
+            What happens after you pay?
+          </h3>
+          <div className="space-y-3">
+            {config.steps.map((item, index) => {
+              const IconComponent = item.icon;
+              return (
+                <div
+                  key={index}
+                  className="flex items-center gap-3 p-3 bg-gradient-to-r from-primary/5 to-primary/10 rounded-lg border border-primary/20"
+                >
+                  <div className="flex-shrink-0">
+                    <IconComponent className="w-6 h-6 text-primary" />
+                  </div>
+                  <div className="flex-1 min-w-0">
+                    <h4 className="text-sm font-semibold text-gray-900 mb-1">
+                      {item.title}
+                    </h4>
+                    <p className="text-sm text-gray-600 leading-relaxed">
+                      {item.description}
+                    </p>
+                  </div>
+                </div>
+              );
+            })}
+          </div>
         </div>
       </motion.div>
 

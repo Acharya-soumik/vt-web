@@ -49,23 +49,22 @@ export function LegalNoticeLanding({
   const processSteps = [
     {
       icon: "₹",
-      title: "Pay & Connect",
-      description:
-        "Pay ₹499 advance and we instantly connect you with a qualified legal professional",
+      title: "Raise a Request",
+      description: "fill the form and get a lawyer assigned within 3 hrs",
       svgPath: "/4-step-process/pay_advance.svg",
     },
     {
       icon: "📝",
-      title: "Relax While We Draft",
+      title: "Get Expert Service",
       description:
-        "Sit back while our advocate handles consultation, document review, and drafts your professional legal notice",
+        "Sit back and relax while our legal team does the heavy lifting",
       svgPath: "/4-step-process/draft.svg",
     },
     {
       icon: "✅",
-      title: "Review & Send",
+      title: "Approve & Send",
       description:
-        "We handle final review, get your approval, and send the signed notice with acknowledgment",
+        "Review, approve and get signed notice posted with acknowledgment",
       svgPath: "/4-step-process/approve_send.svg",
     },
   ];
@@ -108,7 +107,7 @@ export function LegalNoticeLanding({
                 <div className="w-[72%] aspect-square rounded-full bg-[radial-gradient(circle_at_center,rgba(244,63,94,0.22)_0%,rgba(59,130,246,0.16)_50%,transparent_80%)] animate-gradient-pulse"></div>
               </div>
               <Image
-                src="/legal-notice/hero.svg"
+                src="/legal-notice/hero.png"
                 alt="Legal Notice Consultation"
                 fill
                 className="object-contain p-4"
@@ -182,6 +181,41 @@ export function LegalNoticeLanding({
       {/* Pay Card Section */}
       <LegalNoticePayCard />
 
+      {/* 3-Step Process */}
+      <section id="legal-process" className="py-16">
+        <SimpleProcess
+          title="Simple 3-Step Process"
+          subtitle="Sit back and relax while we handle your legal notice from start to finish"
+          steps={processSteps}
+          className="border-0 shadow shadow-primary border-b-2 border-primary"
+        />
+        <div className="mx-auto text-center">
+          <Button
+            size="lg"
+            className="bg-primary hover:bg-primary/90 text-primary-foreground px-8 py-4 text-lg mt-2"
+            onClick={handleCallbackRequest}
+          >
+            Raise a Request
+          </Button>
+        </div>
+
+        {/* Primary CTA after process explanation */}
+        {/* <div className="text-center mt-12">
+          <h3 className="text-2xl md:text-3xl font-bold mb-4 text-foreground">
+            Ready to Get Started?
+          </h3>
+          <p className="text-lg text-muted-foreground mb-8 max-w-2xl mx-auto">
+            Connect with our legal experts today and get your professional legal notice in 24 hours
+          </p>
+          <Button 
+            size="lg" 
+            className="bg-primary hover:bg-primary/90 text-primary-foreground px-8 py-4 text-lg"
+            onClick={handleCallbackRequest}
+          >
+            Start Your Legal Notice Now
+          </Button>
+        </div> */}
+      </section>
       {/* Most in Need Section */}
       <section className="py-16">
         <div className="text-center mb-12">
@@ -226,42 +260,6 @@ export function LegalNoticeLanding({
             </Card>
           ))}
         </div>
-      </section>
-
-      {/* 3-Step Process */}
-      <section id="legal-process" className="py-16">
-        <SimpleProcess
-          title="Simple 3-Step Process"
-          subtitle="Sit back and relax while we handle your legal notice from start to finish"
-          steps={processSteps}
-          className="border-0 shadow shadow-primary border-b-2 border-primary"
-        />
-        <div className="mx-auto text-center">
-          <Button
-            size="lg"
-            className="bg-primary hover:bg-primary/90 text-primary-foreground px-8 py-4 text-lg mt-2"
-            onClick={handleCallbackRequest}
-          >
-            Raise a Request
-          </Button>
-        </div>
-
-        {/* Primary CTA after process explanation */}
-        {/* <div className="text-center mt-12">
-          <h3 className="text-2xl md:text-3xl font-bold mb-4 text-foreground">
-            Ready to Get Started?
-          </h3>
-          <p className="text-lg text-muted-foreground mb-8 max-w-2xl mx-auto">
-            Connect with our legal experts today and get your professional legal notice in 24 hours
-          </p>
-          <Button 
-            size="lg" 
-            className="bg-primary hover:bg-primary/90 text-primary-foreground px-8 py-4 text-lg"
-            onClick={handleCallbackRequest}
-          >
-            Start Your Legal Notice Now
-          </Button>
-        </div> */}
       </section>
       <br />
       {/* Pricing & Value Proposition */}

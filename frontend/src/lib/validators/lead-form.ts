@@ -27,6 +27,11 @@ export const personalDetailsSchema = z.object({
         message: "Please enter a valid phone number with country code",
       }
     ),
+  caseDescription: z
+    .string()
+    .max(1000, "Description must be less than 1000 characters")
+    .optional()
+    .or(z.literal("")),
   whatsappConsent: z.boolean().refine((val) => val === true, {
     message: "You must consent to WhatsApp communication to proceed",
   }),
