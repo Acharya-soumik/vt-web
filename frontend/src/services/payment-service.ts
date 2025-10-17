@@ -269,7 +269,7 @@ export class PaymentService {
       setTimeout(() => {
         try {
           razorpay.open();
-        } catch (e) {
+        } catch {
           onError("Failed to open Razorpay modal");
         }
       }, 0);

@@ -1,0 +1,26 @@
+{
+  "mcpServers": {
+    "shadcn": {
+      "command": "npx",
+      "args": [
+        "shadcn@latest",
+        "mcp"
+      ]
+    },
+    "strapi": {
+      "command": "npx",
+      "args": ["-y", "@bschauer/strapi-mcp-server@2.6.0"]
+    },
+    "supabase": {
+      "command": "npx",
+      "args": [
+        "-y",
+        "@supabase/mcp-server-supabase@latest",
+        "--project-ref=xmawmworhpksnusoyfaq"
+      ],
+      "env": {
+        "SUPABASE_ACCESS_TOKEN": "sbp_7479acc557a01ca9a167173c4b72d6134c74b795"
+      }
+    }
+  }
+}

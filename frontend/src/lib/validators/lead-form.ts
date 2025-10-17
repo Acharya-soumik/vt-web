@@ -79,6 +79,13 @@ export const leadFormSchema = z.object({
   ...serviceSelectionSchema.shape,
   // paymentChoice is set in step 4 only
   paymentChoice: z.enum(["pay-advance", "submit-only"]).optional(),
+  // Optional free-text description used by API insertion
+  description: z
+    .string()
+    .max(1000, "Description must be less than 1000 characters")
+    .optional()
+    .nullable()
+    .or(z.literal("")),
   step: z.number().min(1).max(4),
   submittedAt: z.union([z.date(), z.string().datetime()]).optional(),
 });

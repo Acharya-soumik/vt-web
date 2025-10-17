@@ -34,7 +34,7 @@ function selectContent(topicTitle: string, topicKey?: string) {
     t.includes("demand notice for recovery of money")
   ) {
     return {
-      heroImage: "/legal-notice/consumer-disputes.png",
+      heroImage: "/legal-notice/lawyer-customer-desk.svg",
       hero: {
         title: "Recover Your Money Legally",
         subtitle:
@@ -102,7 +102,7 @@ function selectContent(topicTitle: string, topicKey?: string) {
 
   if (t.includes("dishonour") || t.includes("cheque") || t.includes("bounce")) {
     return {
-      heroImage: "/legal-notice/consumer-disputes.png",
+      heroImage: "/legal-notice/lawyer-customer-desk.svg",
       hero: {
         title: "Cheque Bounce Legal Notice",
         subtitle:
@@ -221,7 +221,7 @@ function selectContent(topicTitle: string, topicKey?: string) {
 
   if (t.includes("eviction") || t.includes("tenant")) {
     return {
-      heroImage: "/legal-notice/consumer-disputes.png",
+      heroImage: "/legal-notice/lawyer-customer-desk.svg",
       who: [
         "Tenant defaulted on rent or violated terms",
         "You need to recover possession or dues",
@@ -272,7 +272,7 @@ function selectContent(topicTitle: string, topicKey?: string) {
     t.includes("specific performance")
   ) {
     return {
-      heroImage: "/legal-notice/consumer-disputes.png",
+      heroImage: "/legal-notice/lawyer-customer-desk.svg",
       who: [
         "Counter‑party failed to perform contractual duties",
         "You seek performance or damages under the Contract Act",
@@ -671,6 +671,14 @@ export function LegalNoticeTopicLanding({
                 <div className="flex items-center justify-between p-3 bg-background/50 rounded-lg">
                   <span className="text-sm font-medium">Advance Payment</span>
                   <span className="text-2xl font-bold text-primary">₹400</span>
+                </div>
+                <hr />
+                <div className="flex items-center justify-between p-3 bg-background/50 rounded-lg">
+                  <span className="text-sm font-medium">Final Payment</span>
+                  <span className="text-2xl font-bold text-primary">
+                    <span className="line-through text-gray-400">₹1,499</span>{" "}
+                    ₹1,000
+                  </span>
                 </div>
                 <p className="text-xs text-muted-foreground">
                   Balance due only after draft approval

@@ -36,23 +36,23 @@ const leadInsertSchema = z.object({
     if (!phoneNumber.startsWith('+')) {
       return false;
     }
-    
+
     // Basic validation: +<country_code><number> with 7-15 total digits
     const phoneDigits = phoneNumber.replace(/\D/g, ''); // Remove all non-digits
     if (phoneDigits.length < 7 || phoneDigits.length > 15) {
       return false;
     }
-    
+
     // Find matching country code
     const country = countryCodes.find(c => phoneNumber.startsWith(c.dialCode));
     if (!country) {
       return false;
     }
-    
+
     // Extract the number part (without country code)
     const numberPart = phoneNumber.replace(country.dialCode, '');
     const numberDigits = numberPart.replace(/\D/g, '');
-    
+
     // Validate the number part using our comprehensive phone validation
     const validation = validatePhoneNumber(numberDigits, country);
     return validation.isValid;
@@ -60,13 +60,10 @@ const leadInsertSchema = z.object({
     message: 'Please enter a valid international phone number'
   }),
   service: z.enum(['legal-notice', 'consultation', 'document-drafting', 'corporate-retainer']),
-  service_details: z.string().max(500).optional(),
-  payment_choice: z.enum(['pay-advance', 'submit-only']),
-  whatsapp_consent: z.boolean(),
+  description: z.string().max(1000).optional().nullable(),
   payment_status: z.literal('pending'),
   status: z.literal('new'),
   custom_id: z.string().min(1).max(50),
-  user_id: z.null().optional(),
 });
 
 export async function POST(request: NextRequest): Promise<NextResponse<LeadSubmissionResponse>> {
@@ -136,20 +133,17 @@ export async function POST(request: NextRequest): Promise<NextResponse<LeadSubmi
       
       // Different service - allow but generate unique custom_id by including service
       const serviceBasedCustomId = `${customId}-${validatedData.service}`;
-      
+
       // Transform form data to database format
       const leadData = {
         name: validatedData.name,
         location: validatedData.location,
         whatsapp_number: validatedData.whatsappNumber,
         service: validatedData.service,
-        service_details: validatedData.serviceDetails,
-        payment_choice: validatedData.paymentChoice || 'submit-only', // Default if not set
-        whatsapp_consent: validatedData.whatsappConsent,
+        description: validatedData.description || null,
         payment_status: 'pending' as const,
         status: 'new' as const,
         custom_id: serviceBasedCustomId,
-        user_id: null, // Explicitly set to null for anonymous submissions
       };
 
       // Validate the transformed data
@@ -196,13 +190,10 @@ export async function POST(request: NextRequest): Promise<NextResponse<LeadSubmi
       location: validatedData.location,
       whatsapp_number: validatedData.whatsappNumber,
       service: validatedData.service,
-      service_details: validatedData.serviceDetails,
-      payment_choice: validatedData.paymentChoice || 'submit-only', // Default if not set
-      whatsapp_consent: validatedData.whatsappConsent,
+      description: validatedData.description || null,
       payment_status: 'pending' as const,
       status: 'new' as const,
       custom_id: customId,
-      user_id: null, // Explicitly set to null for anonymous submissions
     };
 
     // Validate the transformed data

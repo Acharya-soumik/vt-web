@@ -33,11 +33,10 @@ function Footerdemo() {
           <div className="relative">
             <div className="mb-4">
               <Image
-                src="/logo.png"
+                src="/vt-logo.svg"
                 alt="Vakil Tech"
                 width={120}
                 height={120}
-                className="dark: dark:p-2 dark:rounded-lg dark:shadow-md"
               />
             </div>
             <p className="mb-6 text-muted-foreground">

@@ -223,12 +223,17 @@ export function Header() {
           {/* Logo */}
           <Link
             href="/"
-            className="flex items-center space-x-2 dark: dark:p-2 dark:rounded-lg dark:shadow-md"
+            className="flex items-center space-x-2"
             onClick={() =>
               handleNavigationClick("logo", "Vakil Tech Logo", "/")
             }
           >
-            <Image src="/logo.png" alt="Vakil Tech" width={150} height={150} />
+            <Image
+              src="/vt-logo.svg"
+              alt="Vakil Tech"
+              width={150}
+              height={150}
+            />
           </Link>
 
           {/* Desktop Navigation */}
@@ -266,6 +271,15 @@ export function Header() {
               }
             >
               Contact
+            </Link>
+            <Link
+              href="/docs"
+              className="text-muted-foreground hover:text-primary transition-colors"
+              onClick={() =>
+                handleNavigationClick("nav_link", "Resources", "/docs")
+              }
+            >
+              Resources
             </Link>
             {/* <Link
               href="/careers"
@@ -435,6 +449,20 @@ export function Header() {
                     }}
                   >
                     Contact
+                  </Link>
+                  <Link
+                    href="/docs"
+                    className="text-left text-muted-foreground hover:text-primary transition-colors py-2 px-3 rounded-md hover:bg-accent"
+                    onClick={() => {
+                      handleMobileMenuClose();
+                      handleNavigationClick(
+                        "mobile_nav_link",
+                        "Resources",
+                        "/docs"
+                      );
+                    }}
+                  >
+                    Resources
                   </Link>
                   <Link
                     href="/careers"

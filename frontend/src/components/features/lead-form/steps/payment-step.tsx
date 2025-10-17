@@ -2,25 +2,21 @@
 
 import React from "react";
 import { motion } from "framer-motion";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { formElementVariants, staggerContainer } from "@/lib/animations";
 import { LeadFormData } from "@/types/lead-form";
-import { LucideIcon } from "lucide-react";
 import {
   Shield,
   CheckCircle,
-  CreditCard,
-  Lock,
-  Info,
   UserCheck,
   Phone,
   FileCheck,
   RefreshCw,
+  Star,
 } from "lucide-react";
 import { getPaymentConfig, formatAmount } from "@/lib/payment-config";
 import Image from "next/image";
-import { useState } from "react";
-import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
+import { useState, useEffect } from "react";
+import { AnimatePresence } from "framer-motion";
 import { useFormContext } from "@/contexts/form-context";
 import { useAnalytics } from "@/hooks/use-analytics";
 
@@ -42,12 +38,48 @@ const getServiceName = (service: string) => {
 
 export const PaymentStep = ({ formData }: PaymentStepProps) => {
   const { submissionError, paymentError } = useFormContext();
-  const [isRefundDialogOpen, setIsRefundDialogOpen] = useState(false);
-  const { logCTAClick } = useAnalytics();
+  const [expandedStep, setExpandedStep] = useState<number | null>(null);
+
+  // Dynamic data for live feel
+  const [currentTestimonial, setCurrentTestimonial] = useState(0);
+
+  const testimonials = [
+    {
+      text: "Recovered ₹2 lakh stuck for 3 years. Finally got justice!",
+      author: "Priya S.",
+    },
+    {
+      text: "Got my security deposit back after landlord refused.",
+      author: "Rahul M.",
+    },
+    {
+      text: "Property dispute resolved in weeks. Saved my family home!",
+      author: "Anita K.",
+    },
+    {
+      text: "Got my security deposit back after landlord refused.",
+      author: "Vikram P.",
+    },
+    {
+      text: "Fired without pay. VakilTech helped me receive my FnF!",
+      author: "Meera R.",
+    },
+  ];
+
+  useEffect(() => {
+    // Testimonial rotation every 5 seconds
+    const testimonialInterval = setInterval(() => {
+      setCurrentTestimonial((prev) => (prev + 1) % testimonials.length);
+    }, 5000); // 2 minutes
+
+    // Booking count increment every 2 minutes, starting low and increasing
+    return () => {
+      clearInterval(testimonialInterval);
+    };
+  }, []);
 
   const service = formData.service || "";
   const name = formData.name || "";
-  const servicePrice = getServicePrice(service);
   const serviceName = getServiceName(service);
 
   // Get service-specific configuration
@@ -78,12 +110,19 @@ export const PaymentStep = ({ formData }: PaymentStepProps) => {
               description:
                 "review the drafted notice and approve it to proceed",
             },
+            {
+              icon: Shield,
+              title: "Money Back Guarantee",
+              description:
+                "if you are not satisfied with the notice before approval, we will refund your money",
+            },
           ],
         };
       case "consultation":
         return {
-          headerTitle: "Secure a Lawyer with an Advance",
-          headerSubtitle: "Pay an advance so we can connect you with a lawyer",
+          headerTitle: "Get Your Legal Expert Today",
+          headerSubtitle:
+            "Personal lawyer assigned within 3 hours - guaranteed",
           isAdvancePayment: false,
           totalPrice: null,
           crossedPrice: null,
@@ -142,150 +181,236 @@ export const PaymentStep = ({ formData }: PaymentStepProps) => {
       variants={staggerContainer}
       initial="hidden"
       animate="visible"
-      className="space-y-6 px-4 py-2 max-w-md mx-auto"
+      className="flex flex-col h-full w-full"
     >
-      {/* Header with Asset */}
-      <motion.div
-        variants={formElementVariants}
-        className="text-center space-y-3"
-      >
-        <div className="flex justify-center">
-          <Image
-            src="/pay_now.svg"
-            alt="Secure Payment"
-            width={80}
-            height={50}
-            className="object-contain"
-          />
-        </div>
-      </motion.div>
-
-      {/* Compact Service Summary */}
-      <motion.div variants={formElementVariants}>
-        <Card className="border-primary/20 bg-primary/5">
-          <CardContent className="pt-4 pb-4 space-y-2">
-            <div className="flex justify-between items-center">
-              <span className="text-gray-700 font-medium text-sm">
-                {serviceName}
-              </span>
-              {config.totalPrice && (
-                <div className="text-right">
-                  {config.crossedPrice && (
-                    <span className="text-xs text-gray-500 line-through mr-1">
-                      {config.crossedPrice}
-                    </span>
-                  )}
-                  <span className="text-sm font-semibold text-gray-700">
-                    Total: {config.totalPrice}
-                  </span>
-                </div>
-              )}
-            </div>
-            <div className="flex justify-between items-center">
-              <span className="text-gray-600 text-sm">
-                {config.paymentLabel}
-              </span>
-              <span className="text-xl font-bold text-primary">
-                {servicePrice}
-              </span>
-            </div>
-            <div className="flex items-center justify-between text-xs pt-1">
-              <div className="flex items-center gap-1 text-gray-600">
-                <Lock className="w-3 h-3" />
-                <span>Secure payment</span>
-              </div>
-              <div className="flex items-center gap-1 text-gray-600">
-                <span>100% refund available</span>
-                <Dialog
-                  open={isRefundDialogOpen}
-                  onOpenChange={setIsRefundDialogOpen}
-                >
-                  <DialogTrigger asChild>
-                    <button
-                      className="p-1 hover:bg-gray-100 rounded-full transition-colors"
-                      onClick={() =>
-                        logCTAClick(
-                          "refund_policy_info",
-                          "Refund Policy Info",
-                          typeof window !== "undefined"
-                            ? window.location.pathname
-                            : undefined,
-                          formData.service
-                        )
-                      }
-                    >
-                      <Info className="w-3 h-3 text-blue-600 cursor-pointer" />
-                    </button>
-                  </DialogTrigger>
-                  <DialogContent className="max-w-md">
-                    <div className="space-y-4">
-                      <h3 className="text-lg font-semibold text-gray-900">
-                        100% Refund Policy
-                      </h3>
-                      <div className="space-y-3 text-sm text-gray-600">
-                        <p>We offer a full refund if:</p>
-                        <ul className="list-disc pl-5 space-y-1">
-                          <li>
-                            You&apos;re not satisfied with our service quality
-                          </li>
-                          <li>We cannot deliver the service as promised</li>
-                          <li>You cancel within 24 hours of payment</li>
-                        </ul>
-                        <p className="font-medium text-gray-700">
-                          No questions asked - your satisfaction is guaranteed.
-                        </p>
-                      </div>
-                    </div>
-                  </DialogContent>
-                </Dialog>
-              </div>
-            </div>
-          </CardContent>
-        </Card>
-      </motion.div>
-
-      {/* Prominent What Happens After Payment Section */}
-      <motion.div variants={formElementVariants}>
-        <div className="space-y-4">
-          <h3 className="text-xl font-bold text-gray-900 text-center">
-            What happens after you pay?
-          </h3>
-          <div className="space-y-3">
-            {config.steps.map((item, index) => {
-              const IconComponent = item.icon;
-              return (
-                <div
-                  key={index}
-                  className="flex items-center gap-3 p-3 bg-gradient-to-r from-primary/5 to-primary/10 rounded-lg border border-primary/20"
-                >
-                  <div className="flex-shrink-0">
-                    <IconComponent className="w-6 h-6 text-primary" />
-                  </div>
-                  <div className="flex-1 min-w-0">
-                    <h4 className="text-sm font-semibold text-gray-900 mb-1">
-                      {item.title}
-                    </h4>
-                    <p className="text-sm text-gray-600 leading-relaxed">
-                      {item.description}
-                    </p>
-                  </div>
-                </div>
-              );
-            })}
+      {/* Scrollable Content */}
+      <div className="flex-1 overflow-y-auto space-y-6 w-full">
+        {/* Header with Asset */}
+        <motion.div variants={formElementVariants} className="text-center">
+          <div className="flex justify-center p-0 m-0">
+            <Image
+              src="/pay_now.svg"
+              alt="Secure Payment"
+              width={70}
+              height={50}
+              className="object-contain p-0 m-0 relative -top-2"
+            />
           </div>
-        </div>
-      </motion.div>
-
-      {/* Error Messages */}
-      {(submissionError || paymentError) && (
-        <motion.div variants={formElementVariants}>
-          <div className="p-3 bg-red-50 border border-red-200 rounded-md">
-            <p className="text-sm text-red-600">
-              {submissionError || paymentError}
-            </p>
+          <div className="flex justify-center items-center gap-2 relative">
+            <h2 className="text-xl ml-4 font-bold text-gray-900 p-0 m-0 leading-1 flex justify-center items-center gap-2 relative">
+              You&apos;re Almost There!
+            </h2>
+            {/* <Image
+              src="/icons/court-gavel.png"
+              alt="Legal Guarantee"
+              width={38}
+              height={38}
+              className="object-contain flex-shrink-0 relative -top-2"
+            /> */}
           </div>
         </motion.div>
-      )}
+
+        {/* Compact Payment Structure */}
+        <motion.div variants={formElementVariants}>
+          <div className="text-center space-y-2">
+            {/* Service & Pricing */}
+            {service === "consultation" ? (
+              <motion.div
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.3 }}
+                className="space-y-1"
+              >
+                <h3 className="text-xs font-medium text-gray-600 uppercase tracking-wide">
+                  Legal Consultation
+                </h3>
+                <div className="flex items-baseline justify-center gap-2">
+                  <span className="text-3xl font-bold text-[#76bf76]">
+                    ₹299
+                  </span>
+                  <span className="text-sm text-gray-600">one-time</span>
+                </div>
+              </motion.div>
+            ) : (
+              <motion.div
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.3 }}
+                className="space-y-1"
+              >
+                <h3 className="text-lg font-bold text-gray-600 uppercase tracking-wide">
+                  Legal Notice
+                </h3>
+                <div className="flex items-baseline justify-center gap-2">
+                  <span className="text-3xl font-bold text-[#76bf76]">
+                    ₹499
+                  </span>
+                  <span className="text-sm text-gray-600 relative top-2 right-2">
+                    advance
+                  </span>
+                </div>
+                <hr />
+                <motion.p
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  transition={{ delay: 0.2, duration: 0.3 }}
+                  className="text-xs text-gray-600 py-1"
+                >
+                  + ₹1,000 after approval ={" "}
+                  <span className="font-semibold text-gray-800">
+                    ₹1,499 total
+                  </span>{" "}
+                  <span className="line-through text-gray-400">₹1,999</span>
+                </motion.p>
+              </motion.div>
+            )}
+            {/* Payment Methods Row */}
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ delay: 0.3, duration: 0.3 }}
+              className="flex items-center justify-center gap-2 py-2 rounded bg-secondary/30 shadow-md p-0"
+            >
+              <Image
+                src="/icons/razorpay.svg"
+                alt="Razorpay"
+                width={48}
+                height={48}
+                className="object-contain"
+              />
+              <Image
+                src="/icons/gpay.png"
+                alt="Google Pay"
+                width={20}
+                height={20}
+                className="object-contain"
+              />
+              <Image
+                src="/icons/phone-pe.png"
+                alt="PhonePe"
+                width={20}
+                height={20}
+                className="object-contain"
+              />
+              <div className="flex items-center gap-1 ml-1 rounded bg-secondary/30 p-1 leading-0">
+                <CheckCircle className="w-3 h-3 text-green-600" />
+                <span className="text-xs text-gray-600">
+                  Secure & 100% refundable
+                </span>
+              </div>
+            </motion.div>
+          </div>
+        </motion.div>
+
+        {/* What Happens Next */}
+        <motion.div variants={formElementVariants}>
+          <div className="space-y-3">
+            <h3 className="font-semibold text-gray-900 text-sm">
+              What&apos;s Next
+            </h3>
+            <div className="space-y-1">
+              {config.steps.map((item, index) => {
+                const IconComponent = item.icon;
+                const isExpanded = expandedStep === index;
+
+                return (
+                  <div
+                    key={index}
+                    className="border border-gray-100 rounded-lg overflow-hidden"
+                  >
+                    <button
+                      className="w-full cursor-pointer"
+                      onClick={() => setExpandedStep(isExpanded ? null : index)}
+                    >
+                      <div className="flex items-center gap-3 py-3 px-3 hover:bg-gray-50 transition-colors">
+                        <div className="flex-shrink-0">
+                          <IconComponent className="w-4 h-4 text-primary" />
+                        </div>
+                        <h4 className="text-sm font-medium text-gray-900 flex-1 text-left">
+                          {item.title}
+                        </h4>
+                        <motion.div
+                          animate={{ rotate: isExpanded ? 180 : 0 }}
+                          transition={{ duration: 0.2, ease: "easeInOut" }}
+                        >
+                          <RefreshCw className="w-3 h-3 text-gray-500" />
+                        </motion.div>
+                      </div>
+                    </button>
+                    <AnimatePresence>
+                      {isExpanded && (
+                        <motion.div
+                          initial={{ height: 0, opacity: 0 }}
+                          animate={{ height: "auto", opacity: 1 }}
+                          exit={{ height: 0, opacity: 0 }}
+                          transition={{
+                            duration: 0.3,
+                            ease: "easeInOut",
+                            opacity: { duration: 0.2 },
+                          }}
+                          className="overflow-hidden"
+                        >
+                          <div className="px-3 pb-3 pt-0 border-t border-gray-100">
+                            <motion.p
+                              initial={{ y: -10, opacity: 0 }}
+                              animate={{ y: 0, opacity: 1 }}
+                              exit={{ y: -10, opacity: 0 }}
+                              transition={{ delay: 0.1, duration: 0.2 }}
+                              className="text-sm text-gray-600 leading-relaxed pl-7"
+                            >
+                              {item.description}
+                            </motion.p>
+                          </div>
+                        </motion.div>
+                      )}
+                    </AnimatePresence>
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+        </motion.div>
+        {/* Social Proof */}
+        <motion.div variants={formElementVariants}>
+          <div className="bg-secondary/20 shadow rounded shadow-black p-4 text-center">
+            <div className="flex items-center justify-center gap-2 mb-2">
+              <div className="flex text-yellow-400">
+                {[...Array(5)].map((_, i) => (
+                  <Star key={i} className="w-4 h-4 fill-current" />
+                ))}
+              </div>
+              <span className="text-sm font-semibold text-blue-900">
+                4.9/5 rating from 3k+ clients
+              </span>
+            </div>
+            <AnimatePresence mode="wait">
+              <motion.p
+                key={currentTestimonial}
+                initial={{ opacity: 0, x: 30 }}
+                animate={{ opacity: 1, x: 0 }}
+                exit={{ opacity: 0, x: -30 }}
+                transition={{ duration: 0.5, ease: "easeInOut" }}
+                className="text-xs text-secondary-foreground italic"
+              >
+                &quot;{testimonials[currentTestimonial].text}&quot; -{" "}
+                <span className="font-semibold">
+                  {testimonials[currentTestimonial].author}
+                </span>
+              </motion.p>
+            </AnimatePresence>
+          </div>
+        </motion.div>
+        {/* Error Messages */}
+        {(submissionError || paymentError) && (
+          <motion.div variants={formElementVariants}>
+            <div className="bg-red-50 border border-red-200 p-3 text-center">
+              <p className="text-sm text-red-600">
+                {submissionError || paymentError}
+              </p>
+            </div>
+          </motion.div>
+        )}
+      </div>
     </motion.div>
   );
 };

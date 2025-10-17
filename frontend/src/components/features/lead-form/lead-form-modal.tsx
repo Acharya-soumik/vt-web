@@ -74,9 +74,9 @@ export const LeadFormModal = () => {
   const getStepTitle = () => {
     switch (currentStep) {
       case 1:
-        return "Your Details";
+        return "Share Your Details";
       case 2:
-        return "Secure a Lawyer with an Advance";
+        return "Get Your Legal Expert Today";
       case 3:
         if (paymentStatus === "success") {
           return "Payment Successful!";
@@ -93,9 +93,9 @@ export const LeadFormModal = () => {
   const getStepDescription = () => {
     switch (currentStep) {
       case 1:
-        return "Provide your contact information";
+        return "Provide contact information to connect to the lawyer";
       case 2:
-        return "Pay an advance so we can connect you with a lawyer";
+        return "Personal lawyer assigned within 3 hours - guaranteed";
       case 3:
         if (paymentStatus === "success") {
           return "Your payment has been processed successfully!";
@@ -196,7 +196,7 @@ export const LeadFormModal = () => {
         {isFormOpen && (
           <Dialog open={isFormOpen} onOpenChange={handleCloseAttempt}>
             <DialogContent
-              className="w-[95vw] max-w-4xl h-[90svh] sm:h-[95dvh] max-h-[90svh] sm:max-h-[95dvh] flex flex-col p-0 mx-auto overflow-hidden touch-manipulation form-scroll-container"
+              className="w-[100vw] max-w-md h-[90svh] sm:h-[95dvh] max-h-[90svh] sm:max-h-[95dvh] flex flex-col p-0 mx-auto overflow-hidden touch-manipulation form-scroll-container"
               style={{ zIndex: modalZIndex }}
             >
               {/* Fixed Header */}
@@ -223,9 +223,12 @@ export const LeadFormModal = () => {
 
               {/* Fixed Footer */}
               <div className="px-4 sm:px-6 py-3 sm:py-4 border-t bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 flex-shrink-0">
-                <div className="flex justify-between items-center">
+                {/* Desktop Layout */}
+                <div className="hidden sm:flex justify-between items-center">
                   <div className="text-xs sm:text-sm text-muted-foreground">
-                    Step {currentStep} of 3
+                    {currentStep === 2
+                      ? "Almost Done (2 of 3)"
+                      : `Step ${currentStep} of 3`}
                   </div>
                   <div className="flex gap-2 sm:gap-3">
                     {currentStep > 1 &&
@@ -261,12 +264,12 @@ export const LeadFormModal = () => {
                         onClick={handlePayAdvance}
                         disabled={isProcessingPayment}
                         size="sm"
-                        className="min-w-[140px] sm:min-w-[160px] sm:text-base"
+                        className="min-w-[140px] sm:min-w-[180px] sm:text-base bg-primary hover:bg-primary/90 text-white font-semibold shadow-lg"
                       >
                         <CreditCard className="w-4 h-4 mr-2" />
                         {isProcessingPayment
                           ? "Processing..."
-                          : `Pay ${getPaymentAmount()}`}
+                          : `Secure Lawyer for ${getPaymentAmount()}`}
                       </Button>
                     ) : currentStep === 3 &&
                       !formData.paymentSuccess &&
@@ -298,6 +301,68 @@ export const LeadFormModal = () => {
                       </Button>
                     ) : null}
                   </div>
+                </div>
+
+                {/* Mobile Layout - Full Width CTA */}
+                <div className="sm:hidden space-y-2">
+                  <div className="text-center text-xs text-muted-foreground">
+                    {currentStep === 2
+                      ? "Almost Done (2 of 3)"
+                      : `Step ${currentStep} of 3`}
+                  </div>
+                  {currentStep === 1 ? (
+                    <Button
+                      onClick={handleRaiseTicket}
+                      disabled={!isStepValid || isSubmitting}
+                      className="w-full h-12 text-base font-semibold"
+                    >
+                      {isSubmitting ? (
+                        <>
+                          <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                          Raising Ticket...
+                        </>
+                      ) : (
+                        "Raise Ticket"
+                      )}
+                    </Button>
+                  ) : currentStep === 2 ? (
+                    <Button
+                      onClick={handlePayAdvance}
+                      disabled={isProcessingPayment}
+                      className="w-full h-12 text-base font-semibold bg-primary hover:bg-primary/90 text-white shadow-lg"
+                    >
+                      <CreditCard className="w-4 h-4 mr-2" />
+                      {isProcessingPayment
+                        ? "Processing..."
+                        : `Secure My Lawyer for ${getPaymentAmount()}`}
+                    </Button>
+                  ) : currentStep === 3 &&
+                    !formData.paymentSuccess &&
+                    paymentStatus !== "success" ? (
+                    <Button
+                      onClick={
+                        paymentStatus === "failed"
+                          ? handleRetryPayment
+                          : handlePayAdvance
+                      }
+                      disabled={isProcessingPayment}
+                      className="w-full h-12 text-base font-semibold"
+                    >
+                      <CreditCard className="w-4 h-4 mr-2" />
+                      {isProcessingPayment
+                        ? "Processing..."
+                        : paymentStatus === "failed"
+                        ? "Retry Payment"
+                        : `Pay ${getPaymentAmount()}`}
+                    </Button>
+                  ) : currentStep === 3 && paymentStatus === "success" ? (
+                    <Button
+                      onClick={closeForm}
+                      className="w-full h-12 text-base font-semibold bg-green-600 hover:bg-green-700"
+                    >
+                      Close
+                    </Button>
+                  ) : null}
                 </div>
               </div>
             </DialogContent>

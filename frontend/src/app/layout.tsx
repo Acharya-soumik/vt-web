@@ -4,7 +4,7 @@ import "./globals.css";
 import { ClientLayout } from "@/components/shared/client-layout";
 import { Suspense } from "react";
 import Script from "next/script";
-import { GA_MEASUREMENT_ID, GOOGLE_ADS_ID, CLARITY_PROJECT_ID } from "@/lib/analytics-config";
+import { GTM_CONTAINER_ID, CLARITY_PROJECT_ID } from "@/lib/analytics-config";
 import { defaultMetadata } from "@/lib/seo";
 
 const geistSans = Geist({
@@ -35,25 +35,15 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-        {(GA_MEASUREMENT_ID || GOOGLE_ADS_ID) && (
+        {GTM_CONTAINER_ID && (
           <>
-            <Script
-              src={`https://www.googletagmanager.com/gtag/js?id=${
-                GA_MEASUREMENT_ID || GOOGLE_ADS_ID
-              }`}
-              strategy="afterInteractive"
-            />
-            <Script id="gtag-init" strategy="afterInteractive">
+            <Script id="gtm-init" strategy="afterInteractive">
               {`
-                window.dataLayer = window.dataLayer || [];
-                function gtag(){dataLayer.push(arguments);}
-                gtag('js', new Date());
-                ${
-                  GA_MEASUREMENT_ID
-                    ? `gtag('config', '${GA_MEASUREMENT_ID}', { page_path: window.location.pathname });`
-                    : ""
-                }
-                ${GOOGLE_ADS_ID ? `gtag('config', '${GOOGLE_ADS_ID}');` : ""}
+                (function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+                new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+                j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+                'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+                })(window,document,'script','dataLayer','${GTM_CONTAINER_ID}');
               `}
             </Script>
           </>
@@ -68,6 +58,16 @@ export default function RootLayout({
               })(window, document, "clarity", "script", "${CLARITY_PROJECT_ID}");
             `}
           </Script>
+        )}
+        {GTM_CONTAINER_ID && (
+          <noscript>
+            <iframe
+              src={`https://www.googletagmanager.com/ns.html?id=${GTM_CONTAINER_ID}`}
+              height="0"
+              width="0"
+              style={{ display: 'none', visibility: 'hidden' }}
+            ></iframe>
+          </noscript>
         )}
         <Suspense fallback={null}>
           <ClientLayout>{children}</ClientLayout>

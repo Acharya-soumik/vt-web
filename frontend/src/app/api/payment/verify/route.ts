@@ -61,7 +61,7 @@ export async function POST(
           Number(paymentDetails.amount),
           String(paymentDetails.currency)
         );
-      } catch (e) {
+      } catch {
         return NextResponse.json(
           {
             success: false,
@@ -98,14 +98,16 @@ export async function POST(
       );
     }
 
-    // Update lead status in Supabase
+    // Update lead status in Supabase with advance payment details
     const { error: updateError } = await getSupabaseServer()
       .from("leads")
       .update({
-        payment_status: "paid",
+        payment_status: "advance_paid",
         payment_id: paymentId,
         payment_amount: paymentDetails.amount,
-        updated_at: new Date().toISOString(),
+        mark_advance_paid: true,
+        advance_amount: paymentDetails.amount,
+        status: "paid_customer",
       })
       .eq("id", leadId);
 

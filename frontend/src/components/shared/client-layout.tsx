@@ -4,6 +4,7 @@ import { Header } from "@/components/shared/header";
 import { Footer } from "@/components/ui/footer";
 import { FormProvider, useFormContext } from "@/contexts/form-context";
 import { LeadFormModal } from "@/components/features/lead-form";
+import { WhatsAppFloater } from "@/components/ui/whatsapp-floater";
 import { useAnalytics } from "@/hooks/use-analytics";
 import { usePathname, useSearchParams } from "next/navigation";
 import { useEffect, useMemo, useRef } from "react";
@@ -139,6 +140,9 @@ export function ClientLayout({ children }: ClientLayoutProps) {
 
       {/* Lead Form Modal */}
       <LeadFormModal />
+
+      {/* WhatsApp Floater */}
+      <WhatsAppFloater />
 
       {/* Toast Notifications */}
       <Toaster />

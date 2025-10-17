@@ -1,8 +1,9 @@
-// Analytics Service for Google Analytics 4
-import { GA_MEASUREMENT_ID } from "../lib/analytics-config";
+// Analytics Service for Google Tag Manager
+import { GTM_CONTAINER_ID } from "../lib/analytics-config";
 
 declare global {
   interface Window {
+    dataLayer?: unknown[];
     gtag?: (...args: unknown[]) => void;
   }
 }
@@ -85,9 +86,11 @@ export const EVENT_NAMES = {
 } as const;
 
 export function trackPageView(url: string, title?: string) {
-  if (!GA_MEASUREMENT_ID || typeof window === "undefined") return;
+  if (!GTM_CONTAINER_ID || typeof window === "undefined") return;
   try {
-    window.gtag?.("config", GA_MEASUREMENT_ID, {
+    window.dataLayer = window.dataLayer || [];
+    window.dataLayer.push({
+      event: 'page_view',
       page_path: url,
       page_title: title,
     });
@@ -107,9 +110,13 @@ export function trackEvent(
   event: string,
   params: Record<string, unknown> = {}
 ) {
-  if (!GA_MEASUREMENT_ID || typeof window === "undefined") return;
+  if (!GTM_CONTAINER_ID || typeof window === "undefined") return;
   try {
-    window.gtag?.("event", event, params);
+    window.dataLayer = window.dataLayer || [];
+    window.dataLayer.push({
+      event,
+      ...params,
+    });
     if (ANALYTICS_DEBUG) {
       // eslint-disable-next-line no-console
       console.log("[Analytics] Event tracked:", event, params);
@@ -125,7 +132,9 @@ export function trackEvent(
       process.env.NODE_ENV === "production"
     ) {
       try {
-        window.gtag?.("event", "analytics_error", {
+        window.dataLayer = window.dataLayer || [];
+        window.dataLayer.push({
+          event: "analytics_error",
           error_type: "event_tracking_failed",
           event_name: event,
           error_message: err instanceof Error ? err.message : String(err),
@@ -574,11 +583,11 @@ export function getPageType(url: string): string {
 
 export function validateAnalyticsSetup() {
   if (typeof window === "undefined") return;
-  if (!window.gtag) {
+  if (!window.dataLayer) {
     if (ANALYTICS_DEBUG) {
       // eslint-disable-next-line no-console
       console.warn(
-        "[Analytics] gtag is not available. Analytics may not be working."
+        "[Analytics] dataLayer is not available. GTM may not be working."
       );
     }
     return false;

@@ -28,10 +28,7 @@ import {
   CountryCode,
   defaultCountryCode,
 } from "@/data/indian-cities";
-import {
-  getPhoneNumberExample,
-  getPhoneNumberPlaceholder,
-} from "@/lib/validators/phone-validation";
+import { getPhoneNumberPlaceholder } from "@/lib/validators/phone-validation";
 import { useState, useEffect } from "react";
 import { useAnalytics } from "@/hooks/use-analytics";
 
@@ -267,14 +264,14 @@ export const PersonalDetailsStep = ({
       className="space-y-6 px-4 py-2 max-w-md mx-auto"
     >
       {/* Form Introduction */}
-      <motion.div
+      {/* <motion.div
         variants={formElementVariants}
         className="text-center space-y-2"
       >
         <p className="text-gray-600 text-base">
           We will use this information to connect you with the right lawyer.
         </p>
-      </motion.div>
+      </motion.div> */}
 
       <form onSubmit={handleSubmit(onSubmit)} className="space-y-5">
         <motion.div variants={formElementVariants} className="space-y-2">
@@ -418,7 +415,9 @@ export const PersonalDetailsStep = ({
               register("caseDescription").onChange(e);
               onDataUpdate?.({ caseDescription: e.target.value });
             }}
-            onFocus={() => logFormFieldInteraction("caseDescription", "focus", 1)}
+            onFocus={() =>
+              logFormFieldInteraction("caseDescription", "focus", 1)
+            }
             onBlur={() => logFormFieldInteraction("caseDescription", "blur", 1)}
             className="h-20 text-base resize-none"
             maxLength={1000}

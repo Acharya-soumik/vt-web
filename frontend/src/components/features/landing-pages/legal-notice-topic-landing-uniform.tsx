@@ -1,11 +1,11 @@
 "use client";
 
 import { useFormContext } from "@/contexts/form-context";
-import Link from "next/link";
 import { ExpertCarousel } from "@/components/ui/expert-carousel";
 import { legalExperts } from "@/data/experts";
-import { comprehensiveLegalNoticeTopicFAQMap } from "@/data/comprehensive-faqs";
 import { topicDescriptions } from "@/data/topic-descriptions";
+import { ProvenProcess } from "../legal-notice/proven-process";
+import { TimelineOutcomes } from "../legal-notice/timeline-outcomes";
 
 interface LegalNoticeTopicLandingProps {
   topicTitle: string;
@@ -102,7 +102,7 @@ export function LegalNoticeTopicLandingUniform({
             <div className="relative">
               <div className="relative w-full h-80 md:h-96 rounded-2xl overflow-hidden bg-gradient-to-br from-primary/20 to-primary/5 p-8 flex items-center justify-center">
                 <img
-                  src="/legal-notice/consumer-disputes.png"
+                  src="/legal-notice/lawyer-customer-desk.svg"
                   alt={`${topicTitle} legal notice service`}
                   className="w-full h-full object-contain drop-shadow-2xl"
                 />
@@ -211,91 +211,10 @@ export function LegalNoticeTopicLandingUniform({
           </div>
 
           {/* Standard Process */}
-          <div className="space-y-6">
-            <h2 className="text-3xl font-bold text-foreground text-center">
-              Our proven process
-            </h2>
-            <div className="grid md:grid-cols-2 gap-6">
-              {[
-                {
-                  icon: "📋",
-                  title: "Document Review",
-                  text: "We analyze your case and review all relevant documents",
-                },
-                {
-                  icon: "⚖️",
-                  title: "Legal Drafting",
-                  text: "Expert lawyers draft a compelling notice citing relevant laws",
-                },
-                {
-                  icon: "📮",
-                  title: "Professional Dispatch",
-                  text: "Notice served via registered post with delivery confirmation",
-                },
-                {
-                  icon: "📞",
-                  title: "Follow-up Support",
-                  text: "Guidance on next legal steps and response handling",
-                },
-              ].map((step, index) => (
-                <div
-                  key={step.title}
-                  className="relative bg-gradient-to-br from-card to-primary/5 border border-primary/10 rounded-2xl p-6 hover:shadow-lg transition-all duration-300 group"
-                >
-                  <div className="flex items-start gap-4">
-                    <div className="w-12 h-12 bg-primary/10 rounded-full flex items-center justify-center text-2xl group-hover:scale-110 transition-transform duration-300">
-                      {step.icon}
-                    </div>
-                    <div className="flex-1">
-                      <div className="flex items-center gap-2 mb-2">
-                        <span className="bg-primary/20 text-primary px-2 py-1 rounded-full text-xs font-bold">
-                          {String(index + 1).padStart(2, "0")}
-                        </span>
-                        <h3 className="font-bold text-foreground">
-                          {step.title}
-                        </h3>
-                      </div>
-                      <p className="text-muted-foreground leading-relaxed">
-                        {step.text}
-                      </p>
-                    </div>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
+          <ProvenProcess />
 
           {/* Standard Timeline */}
-          <div className="space-y-6">
-            <h2 className="text-3xl font-bold text-foreground text-center">
-              Timeline & Expected Outcomes
-            </h2>
-            <div className="grid md:grid-cols-4 gap-4">
-              {[
-                { label: "Document Review", value: "Same day" },
-                { label: "Notice Drafting", value: "24-48 hours" },
-                { label: "Dispatch & Delivery", value: "2-3 days" },
-                { label: "Response Period", value: "15-30 days" },
-              ].map((timeline, index) => (
-                <div key={timeline.label} className="relative">
-                  <div className="bg-gradient-to-br from-primary/10 to-primary/5 border border-primary/20 rounded-xl p-6 text-center hover:shadow-lg transition-all duration-300">
-                    <div className="w-12 h-12 bg-primary/20 rounded-full flex items-center justify-center mx-auto mb-3 text-primary font-bold">
-                      {index + 1}
-                    </div>
-                    <div className="text-sm text-muted-foreground mb-1">
-                      {timeline.label}
-                    </div>
-                    <div className="font-bold text-lg text-primary">
-                      {timeline.value}
-                    </div>
-                  </div>
-                  {index < 3 && (
-                    <div className="hidden md:block absolute top-1/2 -right-2 w-4 h-0.5 bg-primary/30" />
-                  )}
-                </div>
-              ))}
-            </div>
-          </div>
+          <TimelineOutcomes />
         </div>
 
         {/* Standard CTA Card */}
@@ -313,6 +232,13 @@ export function LegalNoticeTopicLandingUniform({
                 <div className="flex items-center justify-between p-3 bg-background/50 rounded-lg">
                   <span className="text-sm font-medium">Advance Payment</span>
                   <span className="text-2xl font-bold text-primary">₹499</span>
+                </div>
+                <div className="flex items-center justify-between p-3 bg-background/50 rounded-lg">
+                  <span className="text-sm font-medium">Final Payment</span>
+                  <span className="text-2xl font-bold text-primary">
+                    <span className="line-through text-gray-400">₹1,499</span>{" "}
+                    ₹1,000
+                  </span>
                 </div>
                 <p className="text-xs text-muted-foreground">
                   Balance due only after draft approval

@@ -70,7 +70,7 @@ export const MultiStepForm = ({ setIsStepValid }: MultiStepFormProps) => {
             animate="visible"
             exit="exit"
             transition={{ duration: 0.3 }}
-            className="w-full p-4"
+            className="w-full px-2"
           >
             {renderCurrentStep()}
           </motion.div>

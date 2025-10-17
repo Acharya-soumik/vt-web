@@ -9,8 +9,8 @@ import { SimpleProcess } from "../homepage/simple-process";
 import { legalExperts } from "@/data/experts";
 import Image from "next/image";
 import { LegalNoticePayCard } from "./legal-notice-pay-card";
-import { useAnalytics } from "@/hooks/use-analytics";
-import { useEffect } from "react";
+import { ProvenProcess } from "../legal-notice/proven-process";
+import { TimelineOutcomes } from "../legal-notice/timeline-outcomes";
 
 export function LegalNoticeLanding({
   topicTitle,
@@ -41,7 +41,7 @@ export function LegalNoticeLanding({
       title: "Consumer Disputes",
       description:
         "Expert legal assistance for consumer rights and dispute resolution",
-      image: "/legal-notice/consumer-disputes.png",
+      image: "/legal-notice/hero.png",
       features: ["Seek Refund", "Seek Compensation"],
     },
   ];
@@ -180,6 +180,12 @@ export function LegalNoticeLanding({
 
       {/* Pay Card Section */}
       <LegalNoticePayCard />
+
+      {/* Our Proven Process */}
+      <ProvenProcess />
+
+      {/* Timeline & Expected Outcomes */}
+      <TimelineOutcomes />
 
       {/* 3-Step Process */}
       <section id="legal-process" className="py-16">

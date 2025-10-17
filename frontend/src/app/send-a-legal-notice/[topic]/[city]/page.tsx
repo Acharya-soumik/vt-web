@@ -91,6 +91,13 @@ export default async function LegalNoticeTopicCityPage({
                 <span className="text-sm">Advance to initiate case</span>
                 <span className="font-semibold">₹499</span>
               </div>
+              <div className="flex items-center justify-between p-3 bg-background/50 rounded-lg">
+                <span className="text-sm font-medium">Final Payment</span>
+                <span className="text-2xl font-bold text-primary">
+                  <span className="line-through text-gray-400">₹1,499</span>{" "}
+                  ₹1,000
+                </span>
+              </div>
               <Link
                 href={`?type=legal-notice`}
                 className="block text-center bg-primary text-primary-foreground rounded-md py-2 mt-2"

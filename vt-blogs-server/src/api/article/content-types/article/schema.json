@@ -1,0 +1,120 @@
+{
+  "kind": "collectionType",
+  "collectionName": "articles",
+  "info": {
+    "singularName": "article",
+    "pluralName": "articles",
+    "displayName": "Article",
+    "description": "Create your blog content"
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "title": {
+      "type": "string",
+      "required": true,
+      "maxLength": 255
+    },
+    "description": {
+      "type": "text",
+      "maxLength": 160,
+      "required": true
+    },
+    "slug": {
+      "type": "uid",
+      "targetField": "title",
+      "required": true
+    },
+    "cover": {
+      "type": "media",
+      "multiple": false,
+      "required": false,
+      "allowedTypes": ["images"]
+    },
+    "coverAlt": {
+      "type": "string",
+      "maxLength": 100
+    },
+    "author": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "api::author.author",
+      "inversedBy": "articles"
+    },
+    "category": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "api::category.category",
+      "inversedBy": "articles"
+    },
+    "tags": {
+      "type": "relation",
+      "relation": "manyToMany",
+      "target": "api::tag.tag",
+      "inversedBy": "articles"
+    },
+    "legalTopics": {
+      "type": "relation",
+      "relation": "manyToMany",
+      "target": "api::legal-topic.legal-topic",
+      "inversedBy": "articles"
+    },
+    "blocks": {
+      "type": "dynamiczone",
+      "components": ["shared.media", "shared.quote", "shared.rich-text", "shared.slider", "shared.faq", "shared.table-of-contents", "shared.legal-disclaimer"]
+    },
+    "seo": {
+      "type": "component",
+      "repeatable": false,
+      "component": "shared.seo"
+    },
+    "excerpt": {
+      "type": "text",
+      "maxLength": 300
+    },
+    "readingTime": {
+      "type": "integer",
+      "default": 5
+    },
+    "isFeatured": {
+      "type": "boolean",
+      "default": false
+    },
+    "isLegal": {
+      "type": "boolean",
+      "default": true
+    },
+    "viewCount": {
+      "type": "integer",
+      "default": 0
+    },
+    "publishedDate": {
+      "type": "datetime"
+    },
+    "lastUpdated": {
+      "type": "datetime"
+    },
+    "relatedArticles": {
+      "type": "relation",
+      "relation": "manyToMany",
+      "target": "api::article.article"
+    },
+    "legalActsReferenced": {
+      "type": "text"
+    },
+    "jurisdiction": {
+      "type": "enumeration",
+      "enum": ["India", "State-Specific", "Central", "International"]
+    },
+    "difficultyLevel": {
+      "type": "enumeration",
+      "enum": ["Beginner", "Intermediate", "Advanced", "Expert"]
+    },
+    "articleType": {
+      "type": "enumeration",
+      "enum": ["Guide", "Analysis", "News", "Case Study", "Opinion", "How-to", "FAQ"]
+    }
+  }
+}
